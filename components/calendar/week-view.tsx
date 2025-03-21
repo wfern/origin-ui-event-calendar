@@ -43,7 +43,6 @@ interface PositionedEvent {
 
 export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: WeekViewProps) {
   const hourHeight = 56 // height of hour cell in pixels
-  const quarterHourHeight = hourHeight / 4 // height of 15-minute interval
 
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
@@ -390,4 +389,3 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
     </div>
   )
 }
-
