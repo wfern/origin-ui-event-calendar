@@ -7,9 +7,11 @@ export interface CalendarEvent {
   start: Date
   end: Date
   allDay?: boolean
-  color?: string
+  color?: EventColor
   location?: string
 }
+
+export type EventColor = "blue" | "green" | "red" | "yellow" | "purple" | "pink" | "orange"
 
 export interface TimeSlot {
   start: Date

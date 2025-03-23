@@ -71,7 +71,23 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
         // For regular events, include them on their day
         return isSameDay(day, eventStart)
       })
-      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+      .sort((a, b) => {
+        const aStart = new Date(a.start)
+        const bStart = new Date(b.start)
+        const aEnd = new Date(a.end)
+        const bEnd = new Date(b.end)
+
+        // Check if either event is multi-day
+        const aIsMultiDay = differenceInDays(aEnd, aStart) >= 1 || a.allDay
+        const bIsMultiDay = differenceInDays(bEnd, bStart) >= 1 || b.allDay
+
+        // If one is multi-day and the other isn't, prioritize the multi-day event
+        if (aIsMultiDay && !bIsMultiDay) return -1
+        if (!aIsMultiDay && bIsMultiDay) return 1
+
+        // If both are the same type, sort by start time
+        return aStart.getTime() - bStart.getTime()
+      })
   }
 
   // Add a function to get multi-day events that span this day but don't start on it
@@ -99,7 +115,23 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
         const eventEnd = new Date(event.end)
         return isSameDay(day, eventStart) || isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd)
       })
-      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+      .sort((a, b) => {
+        const aStart = new Date(a.start)
+        const bStart = new Date(b.start)
+        const aEnd = new Date(a.end)
+        const bEnd = new Date(b.end)
+
+        // Check if either event is multi-day
+        const aIsMultiDay = differenceInDays(aEnd, aStart) >= 1 || a.allDay
+        const bIsMultiDay = differenceInDays(bEnd, bStart) >= 1 || b.allDay
+
+        // If one is multi-day and the other isn't, prioritize the multi-day event
+        if (aIsMultiDay && !bIsMultiDay) return -1
+        if (!aIsMultiDay && bIsMultiDay) return 1
+
+        // If both are the same type, sort by start time
+        return aStart.getTime() - bStart.getTime()
+      })
   }
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
@@ -178,46 +210,42 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                     </span>
                   </div>
                   <div className="mt-1 space-y-0.5 sm:space-y-1 flex-1 overflow-hidden">
-                    {/* Show spanning events first (non-draggable) */}
-                    {spanningEvents.slice(0, 3).map((event) => {
-                      const eventStart = new Date(event.start)
-                      const eventEnd = new Date(event.end)
-                      const isFirstDay = isSameDay(day, eventStart)
-                      const isLastDay = isSameDay(day, eventEnd)
-
-                      return (
-                        <div key={`spanning-${event.id}`} onClick={(e) => e.stopPropagation()}>
-                          <div
-                            className={cn(
-                              "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none",
-                              getEventColorClasses(event.color || "blue"),
-                              isFirstDay && isLastDay
-                                ? "rounded-md"
-                                : isFirstDay
-                                  ? "rounded-l-md rounded-r-none"
-                                  : isLastDay
-                                    ? "rounded-r-md rounded-l-none"
-                                    : "rounded-none",
-                            )}
-                            onClick={(e) => handleEventClick(event, e)}
-                          >
-                            <div className={cn(!isFirstDay && "invisible")} aria-hidden={!isFirstDay}>
-                              {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
-                              {event.title}
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-
-                    {/* Show draggable events */}
-                    {dayEvents.slice(0, Math.max(0, 3 - spanningEvents.length)).map((event) => {
+                    {/* Combine all events and sort them with multi-day events first */}
+                    {[...spanningEvents, ...dayEvents].slice(0, 3).map((event) => {
                       const eventStart = new Date(event.start)
                       const eventEnd = new Date(event.end)
                       const isMultiDay = differenceInDays(eventEnd, eventStart) >= 1 || event.allDay
-                      const isFirstDay = true // Always first day in this section
-                      const isLastDay = !isMultiDay || isSameDay(eventEnd, day)
+                      const isFirstDay = isSameDay(day, eventStart)
+                      const isLastDay = isSameDay(day, eventEnd)
 
+                      // For spanning events (that don't start on this day)
+                      if (!isFirstDay) {
+                        return (
+                          <div key={`spanning-${event.id}`} onClick={(e) => e.stopPropagation()}>
+                            <div
+                              className={cn(
+                                "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none",
+                                getEventColorClasses(event.color || "blue"),
+                                isFirstDay && isLastDay
+                                  ? "rounded-md"
+                                  : isFirstDay
+                                    ? "rounded-l-md rounded-r-none"
+                                    : isLastDay
+                                      ? "rounded-r-md rounded-l-none"
+                                      : "rounded-none",
+                              )}
+                              onClick={(e) => handleEventClick(event, e)}
+                            >
+                              <div className="invisible" aria-hidden={true}>
+                                {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
+                                {event.title}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }
+
+                      // For events that start on this day (either multi-day or single-day)
                       return (
                         <div key={event.id} onClick={(e) => e.stopPropagation()}>
                           <DraggableEvent
