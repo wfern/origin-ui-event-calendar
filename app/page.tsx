@@ -81,7 +81,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col p-4 md:p-8">
       <h1 className="text-2xl font-bold mb-6">Calendar</h1>
-      <div className="flex-1 border rounded-lg overflow-hidden">
+      <div className="border rounded-lg overflow-hidden">
         <Calendar
           events={events}
           onEventAdd={handleEventAdd}

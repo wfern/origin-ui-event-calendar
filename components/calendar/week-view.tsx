@@ -303,10 +303,10 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
       )}
 
       <div className="grid grid-cols-8 flex-1 overflow-auto relative">
-        <div className="border-r relative">
+        <div className="border-r border-border/50 relative">
           <div className="sticky top-0 z-10 bg-background border-b py-1 text-center text-xs font-medium">Time</div>
           {hours.map((hour) => (
-            <div key={hour.toString()} className="h-14 border-b relative">
+            <div key={hour.toString()} className="h-14 border-b border-border/50 last:border-b-0 relative">
               <span className="absolute -top-3 left-2 text-xs text-muted-foreground">{format(hour, "h a")}</span>
             </div>
           ))}
@@ -315,9 +315,9 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         {days.map((day, dayIndex) => (
           <div
             key={day.toString()}
-            className={cn("border-r relative", isToday(day) && "bg-blue-50 dark:bg-blue-950/20")}
+            className={cn("border-r border-border/50 last:border-r-0 relative", isToday(day) && "bg-blue-50 dark:bg-blue-950/20")}
           >
-            <div className="sticky top-0 z-10 bg-background border-b py-1 text-center text-xs font-medium">
+            <div className="sticky top-0 z-10 bg-background border-b border-border/50 py-1 text-center text-xs font-medium">
               {format(day, "EEE dd")}
             </div>
 
@@ -326,7 +326,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               {hours.map((hour) => {
                 const hourValue = getHours(hour)
                 return (
-                  <div key={hour.toString()} className="h-14 border-b relative">
+                  <div key={hour.toString()} className="h-14 border-b border-border/50 last:border-b-0 relative">
                     {/* Quarter-hour intervals */}
                     {[0, 1, 2, 3].map((quarter) => {
                       const quarterHourTime = hourValue + quarter * 0.25

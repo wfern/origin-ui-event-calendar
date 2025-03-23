@@ -138,9 +138,9 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
           </div>
         ))}
       </div>
-      <div className="flex-1 grid grid-rows-6 h-full">
+      <div className="flex-1 grid">
         {weeks.map((week, weekIndex) => (
-          <div key={`week-${weekIndex}`} className="grid grid-cols-7">
+          <div key={`week-${weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
             {week.map((day) => {
               const dayEvents = getEventsForDay(day)
               const spanningEvents = getSpanningEventsForDay(day)
@@ -155,9 +155,9 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                   key={day.toString()}
                   id={cellId}
                   date={day}
+                  outsideDay={!isCurrentMonth}
                   className={cn(
-                    "min-h-[100px] p-1 border-b border-r relative",
-                    !isCurrentMonth && "bg-muted/30",
+                    "h-24 sm:h-[7.5rem] lg:h-[9.25rem] flex flex-col p-0.5 sm:p-1 border-b border-r last:border-r-0 border-border/50 relative",
                     isToday(day) && "bg-blue-50 dark:bg-blue-950/20",
                   )}
                   onClick={() => {
@@ -169,16 +169,15 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                   <div className="flex justify-between">
                     <span
                       className={cn(
-                        "inline-flex h-6 w-6 items-center justify-center rounded-full text-sm",
+                        "inline-flex size-6 items-center justify-center rounded-full text-sm mt-1",
                         isToday(day) && "bg-primary text-primary-foreground font-medium",
                         isSelected && !isToday(day) && "bg-muted font-medium",
                       )}
                     >
                       {format(day, "d")}
                     </span>
-                    {/* Removed weekday display for mobile screens */}
                   </div>
-                  <div className="mt-1 space-y-1 max-h-[80%] overflow-hidden">
+                  <div className="mt-1 space-y-0.5 sm:space-y-1 flex-1 overflow-hidden">
                     {/* Show spanning events first (non-draggable) */}
                     {spanningEvents.slice(0, 3).map((event) => {
                       const eventStart = new Date(event.start)
@@ -190,7 +189,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                         <div key={`spanning-${event.id}`} onClick={(e) => e.stopPropagation()}>
                           <div
                             className={cn(
-                              "px-1 py-0.5 text-xs truncate cursor-pointer select-none",
+                              "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none",
                               getEventColorClasses(event.color || "blue"),
                               isFirstDay && isLastDay
                                 ? "rounded-md"
@@ -236,7 +235,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                       <Popover>
                         <PopoverTrigger asChild>
                           <div
-                            className="text-xs text-muted-foreground px-1 cursor-pointer hover:text-foreground hover:bg-muted/50 rounded"
+                            className="px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded"
                             onClick={(e) => e.stopPropagation()}
                           >
                             + {allDayEvents.length - 3} more
@@ -248,7 +247,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                             {allEvents.map((event) => {
                               const eventStart = new Date(event.start)
                               const eventEnd = new Date(event.end)
-                              const isMultiDay = differenceInDays(eventEnd, eventStart) >= 1 || event.allDay
                               const isFirstDay = isSameDay(day, eventStart)
                               const isLastDay = isSameDay(day, eventEnd)
 
@@ -262,7 +260,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                                 >
                                   <div
                                     className={cn(
-                                      "px-1 py-0.5 text-xs cursor-pointer select-none",
+                                      "px-2 py-1 text-xs cursor-pointer select-none",
                                       getEventColorClasses(event.color || "blue"),
                                       isFirstDay && isLastDay
                                         ? "rounded-md"

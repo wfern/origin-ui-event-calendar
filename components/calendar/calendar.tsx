@@ -161,7 +161,7 @@ export function Calendar({
 
   return (
     <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-      <div className={cn("flex flex-col h-full", className)}>
+      <div className={cn("flex flex-col", className)}>
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" onClick={handlePrevious}>

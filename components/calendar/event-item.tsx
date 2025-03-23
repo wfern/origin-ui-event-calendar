@@ -115,7 +115,7 @@ export function EventItem({
     return (
       <div
         className={cn(
-          "px-1 py-0.5 text-xs truncate cursor-pointer select-none",
+          "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none",
           getColorClasses(),
           getBorderRadiusClasses(),
           isDragging && "opacity-70 shadow-md",
