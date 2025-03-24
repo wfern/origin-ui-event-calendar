@@ -253,7 +253,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                       })}
 
                       {hasMore && (
-                        <Popover>
+                        <Popover modal>
                           <PopoverTrigger asChild>
                             <button 
                               type="button"

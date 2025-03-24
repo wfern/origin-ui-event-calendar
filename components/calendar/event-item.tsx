@@ -2,12 +2,20 @@
 
 import type React from "react"
 
-import { format, differenceInMinutes } from "date-fns"
+import { format, differenceInMinutes, getMinutes } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { Clock, MapPin } from "lucide-react"
 import { useMemo } from "react"
 import { getEventColorClasses, getBorderRadiusClasses } from "@/components/calendar/utils"
+
+// Using date-fns format with custom formatting:
+// 'h' - hours (1-12)
+// 'a' - am/pm
+// ':mm' - minutes with leading zero (only if the token 'mm' is present)
+const formatTimeWithOptionalMinutes = (date: Date) => {
+  return format(date, getMinutes(date) === 0 ? 'ha' : 'h:mma').toLowerCase();
+};
 
 interface EventItemProps {
   event: CalendarEvent
@@ -48,11 +56,11 @@ export function EventItem({
 
     // For short events (less than 45 minutes), only show start time
     if (durationMinutes < 45) {
-      return format(displayStart, "h:mm a")
+      return formatTimeWithOptionalMinutes(displayStart)
     }
 
     // For longer events, show both start and end time
-    return `${format(displayStart, "h:mm a")} - ${format(displayEnd, "h:mm a")}`
+    return `${formatTimeWithOptionalMinutes(displayStart)} - ${formatTimeWithOptionalMinutes(displayEnd)}`
   }
 
   if (view === "month") {
@@ -67,7 +75,7 @@ export function EventItem({
         onClick={onClick}
       >
         <span className="truncate">
-          {!event.allDay && <span>{format(displayStart, "h:mm")} </span>}
+          {!event.allDay && <span className="text-[11px] opacity-70 truncate">{formatTimeWithOptionalMinutes(displayStart)} </span>}
           {event.title}
         </span>
       </div>
@@ -88,7 +96,7 @@ export function EventItem({
           onClick={onClick}
         >
           <div className="truncate">
-            {event.title} {showTime && <span className="text-[11px] opacity-70">{format(displayStart, "h:mm a")}</span>}
+            {event.title} {showTime && <span className="text-[11px] opacity-70">{formatTimeWithOptionalMinutes(displayStart)}</span>}
           </div>
         </div>
       )
@@ -118,7 +126,11 @@ export function EventItem({
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
           <Clock className="size-3" />
-          {getEventTime()}
+          {event.allDay ? (
+            <span>All day</span>
+          ) : (
+            <span>{formatTimeWithOptionalMinutes(displayStart)} - {formatTimeWithOptionalMinutes(displayEnd)}</span>
+          )}
         </div>
         {event.location && (
           <div className="flex items-center gap-1">
@@ -131,4 +143,3 @@ export function EventItem({
     </button>
   )
 }
-

@@ -199,6 +199,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
   return (
     <div className="flex flex-col h-full overflow-auto">
+
       {showAllDaySection && (
         <div className="border-b">
           <div className="grid grid-cols-8 border-b">
@@ -206,14 +207,15 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             {days.map((day) => (
               <div
                 key={day.toString()}
-                className={cn("py-1 text-center text-xs font-medium", isToday(day) && "bg-blue-50 dark:bg-blue-950/20")}
+                className="py-1 text-center text-xs font-medium"
+                data-today={isToday(day) || undefined}
               >
                 {format(day, "EEE dd")}
               </div>
             ))}
           </div>
           <div className="grid grid-cols-8 min-h-[40px]">
-            <div className="border-r" />
+            <div className="border-r border-border/70" />
             {days.map((day, dayIndex) => {
               const dayAllDayEvents = allDayEvents.filter((event) => {
                 const eventStart = new Date(event.start)
@@ -224,7 +226,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               return (
                 <div
                   key={day.toString()}
-                  className={cn("p-1 border-r relative", isToday(day) && "bg-blue-50 dark:bg-blue-950/20")}
+                  className="p-1 border-r border-border/70 last:border-r-0 relative"
+                  data-today={isToday(day) || undefined}
                 >
                   {dayAllDayEvents.map((event) => {
                     const eventStart = new Date(event.start)
@@ -296,7 +299,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         {days.map((day, dayIndex) => (
           <div
             key={day.toString()}
-            className={cn("border-r border-border/70 last:border-r-0 relative", isToday(day) && "bg-blue-50 dark:bg-blue-950/20")}
+            className="border-r border-border/70 last:border-r-0 relative"
+            data-today={isToday(day) || undefined}
           >
             <div className="sticky top-0 z-10 bg-background border-b border-border/70 py-1 text-center text-xs font-medium">
               {format(day, "EEE dd")}

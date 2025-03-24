@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { format } from "date-fns"
-import type { CalendarEvent } from "@/components/calendar/types"
+import type { CalendarEvent, EventColor } from "@/components/calendar/types"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -33,7 +33,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
   const [endTime, setEndTime] = useState("10:00")
   const [allDay, setAllDay] = useState(false)
   const [location, setLocation] = useState("")
-  const [color, setColor] = useState("blue")
+  const [color, setColor] = useState<EventColor>("sky")
 
   // Debug log to check what event is being passed
   useEffect(() => {
@@ -54,7 +54,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
       setEndTime(formatTimeForInput(end))
       setAllDay(event.allDay || false)
       setLocation(event.location || "")
-      setColor(event.color || "blue")
+      setColor((event.color as EventColor) || "sky")
     } else {
       resetForm()
     }
@@ -69,7 +69,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     setEndTime("10:00")
     setAllDay(false)
     setLocation("")
-    setColor("blue")
+    setColor("sky")
   }
 
   const formatTimeForInput = (date: Date) => {
@@ -127,14 +127,14 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     }
   }
 
-  const colorOptions = [
-    { value: "blue", label: "Blue" },
-    { value: "green", label: "Green" },
-    { value: "red", label: "Red" },
-    { value: "yellow", label: "Yellow" },
-    { value: "purple", label: "Purple" },
-    { value: "pink", label: "Pink" },
-    { value: "orange", label: "Orange" },
+  // Updated color options to match types.ts
+  const colorOptions: Array<{value: EventColor; label: string; bgClass: string; borderClass: string}> = [
+    { value: "sky", label: "Sky", bgClass: "bg-sky-100", borderClass: "border-sky-200" },
+    { value: "amber", label: "Amber", bgClass: "bg-amber-100", borderClass: "border-amber-200" },
+    { value: "violet", label: "Violet", bgClass: "bg-violet-100", borderClass: "border-violet-200" },
+    { value: "rose", label: "Rose", bgClass: "bg-rose-100", borderClass: "border-rose-200" },
+    { value: "emerald", label: "Emerald", bgClass: "bg-emerald-100", borderClass: "border-emerald-200" },
+    { value: "orange", label: "Orange", bgClass: "bg-orange-100", borderClass: "border-orange-200" },
   ]
 
   return (
@@ -263,14 +263,15 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
 
           <div className="grid gap-2">
             <Label>Color</Label>
-            <RadioGroup value={color} onValueChange={setColor} className="flex flex-wrap gap-2">
+            <RadioGroup value={color} onValueChange={(value: EventColor) => setColor(value)} className="flex flex-wrap gap-2">
               {colorOptions.map((colorOption) => (
                 <div key={colorOption.value} className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value={colorOption.value}
-                    id={`color-${colorOption.value}`}
-                    className={`bg-${colorOption.value}-500 border-2 border-${colorOption.value}-600 text-white`}
-                  />
+                  <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", colorOption.bgClass, colorOption.borderClass)}>
+                    <RadioGroupItem
+                      value={colorOption.value}
+                      id={`color-${colorOption.value}`}
+                    />
+                  </div>
                   <Label htmlFor={`color-${colorOption.value}`} className="text-sm">
                     {colorOption.label}
                   </Label>
@@ -297,4 +298,3 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     </Dialog>
   )
 }
-
