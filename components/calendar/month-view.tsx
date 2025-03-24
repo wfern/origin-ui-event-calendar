@@ -157,9 +157,9 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
 
   return (
     <>
-      <div className="grid grid-cols-7 border-b">
+      <div className="grid grid-cols-7 border-b border-border/70">
         {weekdays.map((day) => (
-          <div key={day} className="py-2 text-center text-sm font-medium text-muted-foreground">
+          <div key={day} className="py-2 text-center text-sm text-muted-foreground/70">
             {day}
           </div>
         ))}
@@ -184,7 +184,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                 <div
                   key={day.toString()}
                   className={cn(
-                    "border-b border-r last:border-r-0 border-border/50 data-[today]:bg-blue-50 dark:data-[today]:bg-blue-950/20 data-[outside-cell]:bg-muted/25",
+                    "group border-b border-r last:border-r-0 border-border/70 data-[today]:bg-blue-50 dark:data-[today]:bg-blue-950/20 data-[outside-cell]:bg-muted/25 data-[outside-cell]:text-muted-foreground/70",
                   )}
                   data-today={isToday(day) || undefined}
                   data-outside-cell={!isCurrentMonth || undefined}
@@ -198,15 +198,9 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                       onEventCreate(startTime)
                     }}
                   >
-                    <div className="flex justify-between">
-                      <span
-                        className={cn(
-                          "inline-flex size-6 items-center justify-center rounded-full text-sm mt-1",
-                          isToday(day) && "bg-primary text-primary-foreground font-medium",
-                        )}
-                      >
-                        {format(day, "d")}
-                      </span>
+                    <div
+                      className="inline-flex size-6 items-center justify-center rounded-full text-sm mt-1 group-data-[today]:bg-primary group-data-[today]:text-primary-foreground">
+                      {format(day, "d")}
                     </div>
                     <div 
                       ref={isReferenceCell ? contentRef : null}

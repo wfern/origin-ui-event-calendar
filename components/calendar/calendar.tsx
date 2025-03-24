@@ -160,9 +160,9 @@ export function Calendar({
   }, [currentDate, view])
 
   return (
-    <div className="border rounded-lg overflow-hidden flex-1 flex flex-col">
+    <div className="border rounded-xl overflow-hidden flex-1 flex flex-col">
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        <div className={cn("flex items-center justify-between p-4 border-b", className)}>
+        <div className={cn("flex items-center justify-between p-4 border-b border-border/70", className)}>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" onClick={handlePrevious}>
               <ChevronLeft className="h-4 w-4" />

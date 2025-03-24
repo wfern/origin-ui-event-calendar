@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { addDays, addHours, setHours, setMinutes } from "date-fns"
+import { addDays, setHours, setMinutes } from "date-fns"
 import { Calendar } from "@/components/calendar/calendar"
 import type { CalendarEvent } from "@/components/calendar/types"
 
