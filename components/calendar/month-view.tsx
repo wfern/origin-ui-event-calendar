@@ -176,9 +176,9 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
               const allEvents = getAllEventsForDay(day)
 
               const isReferenceCell = weekIndex === 0 && dayIndex === 0;
-              const visibleCount = isMounted ? getVisibleEventCount(allDayEvents.length) : 3;
-              const hasMore = allDayEvents.length > visibleCount;
-              const remainingCount = allDayEvents.length - visibleCount;
+              const visibleCount = isMounted ? getVisibleEventCount(allDayEvents.length) : undefined;
+              const hasMore = visibleCount !== undefined && allDayEvents.length > visibleCount;
+              const remainingCount = hasMore ? allDayEvents.length - visibleCount : 0;
 
               return (
                 <div
@@ -215,12 +215,12 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                       {allDayEvents.map((event, index) => {
                         const eventStart = new Date(event.start)
                         const eventEnd = new Date(event.end)
-                        const isMultiDay = isMultiDayEvent(event)
                         const isFirstDay = isSameDay(day, eventStart)
                         const isLastDay = isSameDay(day, eventEnd)
 
-                        const isHidden = isMounted && index >= visibleCount;
+                        const isHidden = isMounted && visibleCount && index >= visibleCount;
 
+                        if (!visibleCount) return null;
 
                         if (!isFirstDay) {
                           return (
