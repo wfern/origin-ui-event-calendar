@@ -37,10 +37,10 @@ interface PositionedEvent {
   zIndex: number
 }
 
-export function DayView({ currentDate, events, onEventSelect, onEventCreate }: DayViewProps) {
-  const hourHeight = 56 // height of hour cell in pixels
-  const quarterHourHeight = hourHeight / 4 // height of 15-minute interval
+const HOUR_HEIGHT = 64; // in pixels
 
+export function DayView({ currentDate, events, onEventSelect, onEventCreate }: DayViewProps) {
+  
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate)
     return eachHourOfInterval({
@@ -125,8 +125,8 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       // Calculate top position and height
       const startHour = getHours(adjustedStart) + getMinutes(adjustedStart) / 60
       const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60
-      const top = startHour * hourHeight
-      const height = (endHour - startHour) * hourHeight
+      const top = startHour * HOUR_HEIGHT
+      const height = (endHour - startHour) * HOUR_HEIGHT
 
       // Find a column for this event
       let columnIndex = 0
@@ -173,7 +173,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
     })
 
     return result
-  }, [timeEvents, currentDate, hourHeight])
+  }, [timeEvents, currentDate, HOUR_HEIGHT])
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -237,10 +237,10 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
       )}
 
-      <div className="grid grid-cols-[60px_1fr] flex-1">
+      <div className="grid grid-cols-[4rem_1fr] flex-1" style={{ "--hour-height": `${HOUR_HEIGHT}px` } as React.CSSProperties }>
         <div className="border-r border-border/70">
           {hours.map((hour) => (
-            <div key={hour.toString()} className="h-14 border-b border-border/70 last:border-b-0 relative">
+            <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
               <span className="absolute -top-3 left-2 text-xs text-muted-foreground">{format(hour, "h a")}</span>
             </div>
           ))}
@@ -251,7 +251,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
           {hours.map((hour) => {
             const hourValue = getHours(hour)
             return (
-              <div key={hour.toString()} className="h-14 border-b border-border/70 last:border-b-0 relative">
+              <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
                 {/* Quarter-hour intervals */}
                 {[0, 1, 2, 3].map((quarter) => {
                   const quarterHourTime = hourValue + quarter * 0.25
@@ -262,11 +262,11 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                       date={currentDate}
                       time={quarterHourTime}
                       className={cn(
-                        "absolute w-full",
-                        quarter === 0 ? "h-3.5 top-0" : "h-3.5",
-                        quarter === 1 && "top-3.5",
-                        quarter === 2 && "top-7",
-                        quarter === 3 && "top-10.5",
+                        "absolute w-full h-[calc(var(--hour-height)/4)]",
+                        quarter === 0 && "top-0",
+                        quarter === 1 && "top-[calc(var(--hour-height)/4)]",
+                        quarter === 2 && "top-[calc(var(--hour-height)/4*2)]",
+                        quarter === 3 && "top-[calc(var(--hour-height)/4*3)]",
                       )}
                       onClick={() => {
                         const startTime = new Date(currentDate)
@@ -285,14 +285,13 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
           {positionedEvents.map((positionedEvent) => (
             <div
               key={positionedEvent.event.id}
-              className="absolute z-10"
+              className="absolute z-10 px-0.5"
               style={{
                 top: `${positionedEvent.top}px`,
                 height: `${positionedEvent.height}px`,
                 left: `${positionedEvent.left * 100}%`,
                 width: `${positionedEvent.width * 100}%`,
                 zIndex: positionedEvent.zIndex,
-                padding: "0 2px",
               }}
               onClick={(e) => e.stopPropagation()}
             >

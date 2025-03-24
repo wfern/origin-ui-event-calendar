@@ -6,46 +6,20 @@ import type { CalendarEvent, EventColor } from "@/components/calendar/types"
  */
 export function getEventColorClasses(color: EventColor | string): string {
   switch (color) {
-    case "blue":
-      return "bg-blue-100/50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-    case "green":
-      return "bg-green-100/50 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-500"
-    case "red":
-      return "bg-red-100/50 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-500"
-    case "yellow":
-      return "bg-yellow-100/50 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-500"
-    case "purple":
-      return "bg-purple-100/50 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border-purple-500"
-    case "pink":
-      return "bg-pink-100/50 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300 border-pink-500"
+    case "sky":
+      return "bg-sky-100 text-sky-950/80"
+    case "amber":
+      return "bg-amber-100 text-amber-950/80"
+    case "violet":
+      return "bg-violet-100 text-violet-950/80"
+    case "rose":
+      return "bg-rose-100 text-rose-950/80"
+    case "emerald":
+      return "bg-emerald-100 text-emerald-950/80"
     case "orange":
-      return "bg-orange-100/50 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border-orange-500"
+      return "bg-orange-100 text-orange-950/80"
     default:
-      return "bg-blue-100/50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-  }
-}
-
-/**
- * Get CSS classes for event colors in agenda view
- */
-export function getAgendaEventColorClasses(color: EventColor | string): string {
-  switch (color) {
-    case "blue":
-      return "border-blue-500 bg-blue-50/50 dark:bg-blue-900/20"
-    case "green":
-      return "border-green-500 bg-green-50/50 dark:bg-green-900/20"
-    case "red":
-      return "border-red-500 bg-red-50/50 dark:bg-red-900/20"
-    case "yellow":
-      return "border-yellow-500 bg-yellow-50/50 dark:bg-yellow-900/20"
-    case "purple":
-      return "border-purple-500 bg-purple-50/50 dark:bg-purple-900/20"
-    case "pink":
-      return "border-pink-500 bg-pink-50/50 dark:bg-pink-900/20"
-    case "orange":
-      return "border-orange-500 bg-orange-50/50 dark:bg-orange-900/20"
-    default:
-      return "border-blue-500 bg-blue-50/50 dark:bg-blue-900/20"
+      return "bg-sky-100 text-sky-950/80"
   }
 }
 
@@ -54,11 +28,11 @@ export function getAgendaEventColorClasses(color: EventColor | string): string {
  */
 export function getBorderRadiusClasses(isFirstDay: boolean, isLastDay: boolean): string {
   if (isFirstDay && isLastDay) {
-    return "rounded-md" // Both ends rounded
+    return "rounded" // Both ends rounded
   } else if (isFirstDay) {
-    return "rounded-l-md rounded-r-none" // Only left end rounded
+    return "rounded-l rounded-r-none" // Only left end rounded
   } else if (isLastDay) {
-    return "rounded-r-md rounded-l-none" // Only right end rounded
+    return "rounded-r rounded-l-none" // Only right end rounded
   } else {
     return "rounded-none" // No rounded corners
   }

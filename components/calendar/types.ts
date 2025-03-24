@@ -11,7 +11,7 @@ export interface CalendarEvent {
   location?: string
 }
 
-export type EventColor = "blue" | "green" | "red" | "yellow" | "purple" | "pink" | "orange"
+export type EventColor = "sky" | "amber" | "violet" | "rose" | "emerald" | "orange"
 
 export interface TimeSlot {
   start: Date

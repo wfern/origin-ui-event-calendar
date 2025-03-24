@@ -42,8 +42,9 @@ interface PositionedEvent {
   zIndex: number
 }
 
+const HOUR_HEIGHT = 64; // in pixels
+
 export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: WeekViewProps) {
-  const hourHeight = 56 // height of hour cell in pixels
 
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
@@ -135,8 +136,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         // Calculate top position and height
         const startHour = getHours(adjustedStart) + getMinutes(adjustedStart) / 60
         const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60
-        const top = startHour * hourHeight
-        const height = (endHour - startHour) * hourHeight
+        const top = startHour * HOUR_HEIGHT
+        const height = (endHour - startHour) * HOUR_HEIGHT
 
         // Find a column for this event
         let columnIndex = 0
@@ -186,7 +187,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
     })
 
     return result
-  }, [days, events, hourHeight])
+  }, [days, events, HOUR_HEIGHT])
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -282,11 +283,11 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         </div>
       )}
 
-      <div className="grid grid-cols-8 flex-1 relative">
+      <div className="grid grid-cols-8 flex-1 relative" style={{ "--hour-height": `${HOUR_HEIGHT}px` } as React.CSSProperties }>
         <div className="border-r border-border/70 relative">
           <div className="sticky top-0 z-10 bg-background border-b py-1 text-center text-xs font-medium">Time</div>
           {hours.map((hour) => (
-            <div key={hour.toString()} className="h-14 border-b border-border/70 last:border-b-0 relative">
+            <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
               <span className="absolute -top-3 left-2 text-xs text-muted-foreground">{format(hour, "h a")}</span>
             </div>
           ))}
@@ -306,7 +307,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               {hours.map((hour) => {
                 const hourValue = getHours(hour)
                 return (
-                  <div key={hour.toString()} className="h-14 border-b border-border/70 last:border-b-0 relative">
+                  <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
                     {/* Quarter-hour intervals */}
                     {[0, 1, 2, 3].map((quarter) => {
                       const quarterHourTime = hourValue + quarter * 0.25
@@ -317,11 +318,11 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                           date={day}
                           time={quarterHourTime}
                           className={cn(
-                            "absolute w-full",
-                            quarter === 0 ? "h-3.5 top-0" : "h-3.5",
-                            quarter === 1 && "top-3.5",
-                            quarter === 2 && "top-7",
-                            quarter === 3 && "top-[2.625rem]",
+                            "absolute w-full h-[calc(var(--hour-height)/4)]",
+                            quarter === 0 && "top-0",
+                            quarter === 1 && "top-[calc(var(--hour-height)/4)]",
+                            quarter === 2 && "top-[calc(var(--hour-height)/4*2)]",
+                            quarter === 3 && "top-[calc(var(--hour-height)/4*3)]",
                           )}
                           onClick={() => {
                             const startTime = new Date(day)
@@ -340,14 +341,13 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               {processedDayEvents[dayIndex].map((positionedEvent) => (
                 <div
                   key={positionedEvent.event.id}
-                  className="absolute z-10"
+                  className="absolute z-10 px-0.5"
                   style={{
                     top: `${positionedEvent.top}px`,
                     height: `${positionedEvent.height}px`,
                     left: `${positionedEvent.left * 100}%`,
                     width: `${positionedEvent.width * 100}%`,
                     zIndex: positionedEvent.zIndex,
-                    padding: "0 2px",
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >

@@ -13,7 +13,7 @@ const sampleEvents: CalendarEvent[] = [
     description: "Weekly team sync",
     start: setMinutes(setHours(new Date(), 10), 0), // 10:00 AM today
     end: setMinutes(setHours(new Date(), 11), 0),   // 11:00 AM today
-    color: "blue",
+    color: "sky",
     location: "Conference Room A",
   },
   {
@@ -22,7 +22,7 @@ const sampleEvents: CalendarEvent[] = [
     description: "Discuss new project requirements",
     start: setMinutes(setHours(addDays(new Date(), 1), 12), 0), // 12:00 PM tomorrow
     end: setMinutes(setHours(addDays(new Date(), 1), 13), 15),  // 1:15 PM tomorrow
-    color: "green",
+    color: "emerald",
     location: "Downtown Cafe",
   },
   {
@@ -32,7 +32,7 @@ const sampleEvents: CalendarEvent[] = [
     start: addDays(new Date(), 3),
     end: addDays(new Date(), 6),
     allDay: true,
-    color: "purple",
+    color: "violet",
   },
   {
     id: "4",
@@ -40,7 +40,7 @@ const sampleEvents: CalendarEvent[] = [
     description: "Discuss about new clients",
     start: setMinutes(setHours(addDays(new Date(), 4), 14), 30), // 2:30 PM
     end: setMinutes(setHours(addDays(new Date(), 5), 14), 45),   // 2:45 PM
-    color: "pink",
+    color: "rose",
     location: "Downtown Cafe",
   },
   {
@@ -49,7 +49,7 @@ const sampleEvents: CalendarEvent[] = [
     description: "Weekly team sync",
     start: setMinutes(setHours(addDays(new Date(), 5), 9), 0),  // 9:00 AM
     end: setMinutes(setHours(addDays(new Date(), 5), 10), 30),  // 10:30 AM
-    color: "yellow",
+    color: "orange",
     location: "Conference Room A",
   },
   {
@@ -58,7 +58,7 @@ const sampleEvents: CalendarEvent[] = [
     description: "Weekly team sync",
     start: setMinutes(setHours(addDays(new Date(), 5), 14), 0),  // 2:00 PM
     end: setMinutes(setHours(addDays(new Date(), 5), 15), 30),   // 3:30 PM
-    color: "blue",
+    color: "sky",
     location: "Conference Room A",
   },
   {
@@ -67,7 +67,7 @@ const sampleEvents: CalendarEvent[] = [
     description: "Weekly team sync",
     start: setMinutes(setHours(addDays(new Date(), 5), 9), 45),  // 9:45 AM
     end: setMinutes(setHours(addDays(new Date(), 5), 11), 0),  // 11:00 AM
-    color: "red",
+    color: "amber",
     location: "Conference Room A",
   },
 ]

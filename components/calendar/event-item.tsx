@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { Clock, MapPin } from "lucide-react"
 import { useMemo } from "react"
-import { getEventColorClasses } from "@/components/calendar/utils"
+import { getEventColorClasses, getBorderRadiusClasses } from "@/components/calendar/utils"
 
 interface EventItemProps {
   event: CalendarEvent
@@ -55,27 +55,14 @@ export function EventItem({
     return `${format(displayStart, "h:mm a")} - ${format(displayEnd, "h:mm a")}`
   }
 
-  // Determine border radius based on position in multi-day event
-  const getBorderRadiusClasses = () => {
-    if (isFirstDay && isLastDay) {
-      return "rounded-md" // Both ends rounded
-    } else if (isFirstDay) {
-      return "rounded-l-md rounded-r-none" // Only left end rounded
-    } else if (isLastDay) {
-      return "rounded-r-md rounded-l-none" // Only right end rounded
-    } else {
-      return "rounded-none" // No rounded corners
-    }
-  }
-
   if (view === "month") {
     return (
       <div
         className={cn(
-          "h-full flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none",
+          "h-full flex items-center px-1 sm:px-2 text-[10px] sm:text-xs font-medium cursor-pointer select-none",
           getEventColorClasses(eventColor),
-          getBorderRadiusClasses(),
-          isDragging && "opacity-70 shadow-md",
+          getBorderRadiusClasses(isFirstDay, isLastDay),
+          isDragging && "shadow-lg",
         )}
         onClick={onClick}
       >
@@ -93,15 +80,15 @@ export function EventItem({
       return (
         <div
           className={cn(
-            "px-2 py-1 text-xs cursor-pointer select-none h-full flex items-center overflow-hidden",
+            "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex items-center overflow-hidden",
             getEventColorClasses(eventColor),
-            getBorderRadiusClasses(),
-            isDragging ? "opacity-90 shadow-md" : "",
+            getBorderRadiusClasses(isFirstDay, isLastDay),
+            isDragging && "shadow-lg",
           )}
           onClick={onClick}
         >
           <div className="truncate">
-            {event.title} {showTime && <span className="opacity-80">{format(displayStart, "h:mm a")}</span>}
+            {event.title} {showTime && <span className="text-[11px] opacity-70">{format(displayStart, "h:mm a")}</span>}
           </div>
         </div>
       )
@@ -111,22 +98,22 @@ export function EventItem({
     return (
       <div
         className={cn(
-          "px-2 py-1 text-xs cursor-pointer select-none h-full flex flex-col overflow-hidden",
+          "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex flex-col overflow-hidden",
           getEventColorClasses(eventColor),
-          getBorderRadiusClasses(),
-          isDragging ? "opacity-90 shadow-md" : "",
+          getBorderRadiusClasses(isFirstDay, isLastDay),
+          isDragging && "shadow-lg",
         )}
         onClick={onClick}
       >
         <div className="font-medium truncate">{event.title}</div>
-        {showTime && <div className="text-xs opacity-80 truncate">{getEventTime()}</div>}
+        {showTime && <div className="text-[11px] opacity-70 truncate">{getEventTime()}</div>}
       </div>
     )
   }
 
   // Agenda view
   return (
-    <button className={cn("text-left w-full p-2 rounded cursor-pointer", getEventColorClasses(eventColor))} onClick={onClick}>
+    <button className={cn("text-left w-full p-2 rounded font-medium cursor-pointer", getEventColorClasses(eventColor))} onClick={onClick}>
       <div className="font-medium">{event.title}</div>
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
