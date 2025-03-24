@@ -160,9 +160,9 @@ export function Calendar({
   }, [currentDate, view])
 
   return (
-    <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-      <div className={cn("flex flex-col", className)}>
-        <div className="flex items-center justify-between p-4 border-b">
+    <div className="border rounded-lg overflow-hidden flex-1 flex flex-col">
+      <CalendarDndProvider onEventUpdate={handleEventUpdate}>
+        <div className={cn("flex items-center justify-between p-4 border-b", className)}>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" onClick={handlePrevious}>
               <ChevronLeft className="h-4 w-4" />
@@ -198,7 +198,7 @@ export function Calendar({
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 flex flex-col overflow-auto">
           {view === "month" && (
             <MonthView
               currentDate={currentDate}
@@ -244,8 +244,8 @@ export function Calendar({
           onSave={handleEventSave}
           onDelete={handleEventDelete}
         />
-      </div>
-    </CalendarDndProvider>
+      </CalendarDndProvider>
+    </div>
   )
 }
 

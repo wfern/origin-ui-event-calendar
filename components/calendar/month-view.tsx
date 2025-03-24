@@ -156,8 +156,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
   }, []);
 
   return (
-    <div className="h-full flex flex-col"
-      style={{ "--event-height": `${EVENT_HEIGHT}px`, "--event-gap": `${EVENT_GAP}px` } as React.CSSProperties}>
+    <>
       <div className="grid grid-cols-7 border-b">
         {weekdays.map((day) => (
           <div key={day} className="py-2 text-center text-sm font-medium text-muted-foreground">
@@ -165,7 +164,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
           </div>
         ))}
       </div>
-      <div className="flex-1 grid">
+      <div className="flex-1 grid" style={{ "--event-height": `${EVENT_HEIGHT}px`, "--event-gap": `${EVENT_GAP}px` } as React.CSSProperties}>
         {weeks.map((week, weekIndex) => (
           <div key={`week-${weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
             {week.map((day, dayIndex) => {
@@ -189,7 +188,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                     date={day}
                     outsideDay={!isCurrentMonth}
                     className={cn(
-                      "h-[5.75rem] sm:h-[7.5rem] lg:h-[9.25rem] flex flex-col px-0.5 py-1 sm:px-1",
+                      "h-full min-h-[5.75rem] sm:min-h-[7.5rem] lg:min-h-[9.25rem] flex flex-col px-0.5 py-1 sm:px-1",
                       isToday(day) && "bg-blue-50 dark:bg-blue-950/20",
                     )}
                     onClick={() => {
@@ -343,6 +342,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
           </div>
         ))}
       </div>
-    </div>
+    </>
   )
 }
