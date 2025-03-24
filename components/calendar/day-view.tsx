@@ -20,6 +20,7 @@ import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
 import { getEventColorClasses } from "@/components/calendar/utils"
+import { useCurrentTimeIndicator } from "@/components/calendar/utils"
 
 interface DayViewProps {
   currentDate: Date
@@ -178,8 +179,8 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
     onEventSelect(event)
   }
 
-  // Determine if we need to show the all-day section
   const showAllDaySection = allDayEvents.length > 0
+  const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(currentDate, "day")
 
   return (
     <>
@@ -304,9 +305,21 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
               </div>
             </div>
           ))}
+
+          {/* Current time indicator */}
+          {currentTimeVisible && (
+            <div 
+              className="absolute left-0 right-0 z-20 pointer-events-none"
+              style={{ top: `${currentTimePosition}%` }}
+            >
+              <div className="relative flex items-center">
+                <div className="absolute -left-1 w-2 h-2 bg-primary rounded-full"></div>
+                <div className="w-full h-[2px] bg-primary"></div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
   )
 }
-

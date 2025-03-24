@@ -19,12 +19,13 @@ import {
   areIntervalsOverlapping,
   differenceInDays,
   isBefore,
+  isWithinInterval,
 } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
-import { getEventColorClasses } from "@/components/calendar/utils"
+import { getEventColorClasses, useCurrentTimeIndicator } from "@/components/calendar/utils"
 
 interface WeekViewProps {
   currentDate: Date
@@ -194,8 +195,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
     onEventSelect(event)
   }
 
-  // Determine if we need to show the all-day section
   const showAllDaySection = allDayEvents.length > 0
+  const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(currentDate, "week")
 
   return (
     <div className="flex flex-col h-full overflow-auto">
@@ -366,6 +367,19 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                   </div>
                 </div>
               ))}
+
+              {/* Current time indicator - only show for today's column */}
+              {currentTimeVisible && isToday(day) && (
+                <div 
+                  className="absolute left-0 right-0 z-20 pointer-events-none"
+                  style={{ top: `${currentTimePosition}%` }}
+                >
+                  <div className="relative flex items-center">
+                    <div className="absolute -left-1 w-2 h-2 bg-primary rounded-full"></div>
+                    <div className="w-full h-[2px] bg-primary"></div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}
