@@ -60,7 +60,7 @@ export function useEventVisibility({
         observerRef.current.disconnect();
       }
     };
-  }, [contentHeight]);
+  }, []);
   
   // Function to calculate visible events for a cell
   const getVisibleEventCount = useMemo(() => {

@@ -210,7 +210,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                     </div>
                     <div 
                       ref={isReferenceCell ? contentRef : null}
-                      className="h-full overflow-hidden"
+                      className="overflow-hidden min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
                     >
                       {allDayEvents.map((event, index) => {
                         const eventStart = new Date(event.start)

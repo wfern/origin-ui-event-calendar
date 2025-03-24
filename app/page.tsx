@@ -69,7 +69,7 @@ const sampleEvents: CalendarEvent[] = [
     end: setMinutes(setHours(addDays(new Date(), 5), 11), 0),  // 11:00 AM
     color: "red",
     location: "Conference Room A",
-  }
+  },
 ]
 
 export default function Home() {
@@ -89,7 +89,7 @@ export default function Home() {
 
   return (
     // Add min-h-screen to make it full height
-    <div className="min-h-screen flex flex-col p-4 md:p-8">
+    <div className="flex flex-col p-4 md:p-8">
       <Calendar
         events={events}
         onEventAdd={handleEventAdd}
