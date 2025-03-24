@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useDraggable } from "@dnd-kit/core"
 import { CSS } from "@dnd-kit/utilities"
-import { useRef, useEffect, useState } from "react"
+import { useRef, useState } from "react"
 import { differenceInDays } from "date-fns"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { EventItem } from "@/components/calendar/event-item"

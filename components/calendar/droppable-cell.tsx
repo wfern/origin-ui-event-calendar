@@ -15,7 +15,7 @@ interface DroppableCellProps {
 }
 
 export function DroppableCell({ id, date, time, children, className, onClick }: DroppableCellProps) {
-  const { activeEvent, activeView } = useCalendarDnd()
+  const { activeEvent } = useCalendarDnd()
 
   const { setNodeRef, isOver } = useDroppable({
     id,
@@ -38,16 +38,12 @@ export function DroppableCell({ id, date, time, children, className, onClick }: 
       ref={setNodeRef}
       onClick={onClick}
       className={cn(
-        "h-full flex flex-col px-0.5 py-1 sm:px-1",
+        "h-full flex flex-col px-0.5 py-1 sm:px-1 data-[dragging]:bg-accent",
         className,
-        isOver &&
-          activeEvent &&
-          (activeView === "month"
-            ? "bg-primary/10 dark:bg-primary/20"
-            : "bg-primary/5 dark:bg-primary/10 border-primary/20"),
       )}
       title={formattedTime ? `${formattedTime}` : undefined}
       data-slot="droppable-cell"
+      data-dragging={(isOver && activeEvent) || undefined}
     >
       {children}
     </div>

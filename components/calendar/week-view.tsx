@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
+import { getEventColorClasses } from "@/components/calendar/utils"
 
 interface WeekViewProps {
   currentDate: Date
@@ -194,27 +195,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
   // Determine if we need to show the all-day section
   const showAllDaySection = allDayEvents.length > 0
-
-  const getEventColorClasses = (color: string) => {
-    switch (color) {
-      case "blue":
-        return "bg-blue-100/50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-      case "green":
-        return "bg-green-100/50 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-500"
-      case "red":
-        return "bg-red-100/50 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-500"
-      case "yellow":
-        return "bg-yellow-100/50 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-500"
-      case "purple":
-        return "bg-purple-100/50 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border-purple-500"
-      case "pink":
-        return "bg-pink-100/50 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300 border-pink-500"
-      case "orange":
-        return "bg-orange-100/50 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border-orange-500"
-      default:
-        return "bg-blue-100/50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-    }
-  }
 
   return (
     <div className="flex flex-col h-full overflow-auto">

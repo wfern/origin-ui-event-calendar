@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { Clock, MapPin } from "lucide-react"
 import { useMemo } from "react"
+import { getEventColorClasses } from "@/components/calendar/utils"
 
 interface EventItemProps {
   event: CalendarEvent
@@ -54,50 +55,6 @@ export function EventItem({
     return `${format(displayStart, "h:mm a")} - ${format(displayEnd, "h:mm a")}`
   }
 
-  // Helper function to get color classes based on the event color
-  const getColorClasses = () => {
-    switch (eventColor) {
-      case "blue":
-        return "bg-blue-100/50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-      case "green":
-        return "bg-green-100/50 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-500"
-      case "red":
-        return "bg-red-100/50 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-500"
-      case "yellow":
-        return "bg-yellow-100/50 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-500"
-      case "purple":
-        return "bg-purple-100/50 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border-purple-500"
-      case "pink":
-        return "bg-pink-100/50 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300 border-pink-500"
-      case "orange":
-        return "bg-orange-100/50 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border-orange-500"
-      default:
-        return "bg-blue-100/50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-500"
-    }
-  }
-
-  // Helper function to get agenda color classes
-  const getAgendaColorClasses = () => {
-    switch (eventColor) {
-      case "blue":
-        return "border-blue-500 bg-blue-50/50 dark:bg-blue-900/20"
-      case "green":
-        return "border-green-500 bg-green-50/50 dark:bg-green-900/20"
-      case "red":
-        return "border-red-500 bg-red-50/50 dark:bg-red-900/20"
-      case "yellow":
-        return "border-yellow-500 bg-yellow-50/50 dark:bg-yellow-900/20"
-      case "purple":
-        return "border-purple-500 bg-purple-50/50 dark:bg-purple-900/20"
-      case "pink":
-        return "border-pink-500 bg-pink-50/50 dark:bg-pink-900/20"
-      case "orange":
-        return "border-orange-500 bg-orange-50/50 dark:bg-orange-900/20"
-      default:
-        return "border-blue-500 bg-blue-50/50 dark:bg-blue-900/20"
-    }
-  }
-
   // Determine border radius based on position in multi-day event
   const getBorderRadiusClasses = () => {
     if (isFirstDay && isLastDay) {
@@ -116,7 +73,7 @@ export function EventItem({
       <div
         className={cn(
           "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none",
-          getColorClasses(),
+          getEventColorClasses(eventColor),
           getBorderRadiusClasses(),
           isDragging && "opacity-70 shadow-md",
         )}
@@ -137,7 +94,7 @@ export function EventItem({
         <div
           className={cn(
             "px-2 py-1 text-xs cursor-pointer select-none h-full flex items-center overflow-hidden",
-            getColorClasses(),
+            getEventColorClasses(eventColor),
             getBorderRadiusClasses(),
             isDragging ? "opacity-90 shadow-md" : "",
           )}
@@ -155,7 +112,7 @@ export function EventItem({
       <div
         className={cn(
           "px-2 py-1 text-xs cursor-pointer select-none h-full flex flex-col overflow-hidden",
-          getColorClasses(),
+          getEventColorClasses(eventColor),
           getBorderRadiusClasses(),
           isDragging ? "opacity-90 shadow-md" : "",
         )}
@@ -169,22 +126,22 @@ export function EventItem({
 
   // Agenda view
   return (
-    <div className={cn("p-2 rounded-md border-l-4 cursor-pointer", getAgendaColorClasses())} onClick={onClick}>
+    <button className={cn("text-left w-full p-2 rounded cursor-pointer", getEventColorClasses(eventColor))} onClick={onClick}>
       <div className="font-medium">{event.title}</div>
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
-          <Clock className="h-3 w-3" />
+          <Clock className="size-3" />
           {getEventTime()}
         </div>
         {event.location && (
           <div className="flex items-center gap-1">
-            <MapPin className="h-3 w-3" />
+            <MapPin className="size-3" />
             {event.location}
           </div>
         )}
       </div>
       {event.description && <div className="mt-1 text-sm">{event.description}</div>}
-    </div>
+    </button>
   )
 }
 
