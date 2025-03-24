@@ -204,7 +204,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
   }
 
   return (
-    <div className="flex flex-col h-full overflow-auto">
+    <>
       {showAllDaySection && (
         <div className="border-b p-2">
           <div className="text-xs font-medium text-muted-foreground mb-1">All day</div>
@@ -257,7 +257,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
       )}
 
-      <div className="grid grid-cols-[60px_1fr] flex-1 overflow-auto relative">
+      <div className="grid grid-cols-[60px_1fr] flex-1">
         <div className="border-r border-border/50">
           {hours.map((hour) => (
             <div key={hour.toString()} className="h-14 border-b border-border/50 last:border-b-0 relative">
@@ -329,7 +329,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
           ))}
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

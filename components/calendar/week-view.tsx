@@ -302,7 +302,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         </div>
       )}
 
-      <div className="grid grid-cols-8 flex-1 overflow-auto relative">
+      <div className="grid grid-cols-8 flex-1 relative">
         <div className="border-r border-border/50 relative">
           <div className="sticky top-0 z-10 bg-background border-b py-1 text-center text-xs font-medium">Time</div>
           {hours.map((hour) => (

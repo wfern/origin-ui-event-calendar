@@ -41,7 +41,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
   }
 
   return (
-    <div className="h-full overflow-auto p-4">
+    <div className="p-4">
       {days.map((day) => {
         const dayEvents = getEventsForDay(day)
 

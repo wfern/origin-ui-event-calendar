@@ -164,7 +164,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
           </div>
         ))}
       </div>
-      <div className="flex-1 grid" style={{ "--event-height": `${EVENT_HEIGHT}px`, "--event-gap": `${EVENT_GAP}px` } as React.CSSProperties}>
+      <div className="flex-1 grid auto-rows-fr" style={{ "--event-height": `${EVENT_HEIGHT}px`, "--event-gap": `${EVENT_GAP}px` } as React.CSSProperties}>
         {weeks.map((week, weekIndex) => (
           <div key={`week-${weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
             {week.map((day, dayIndex) => {
@@ -210,7 +210,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                     </div>
                     <div 
                       ref={isReferenceCell ? contentRef : null}
-                      className="overflow-hidden min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
+                      className="h-full overflow-hidden"
                     >
                       {allDayEvents.map((event, index) => {
                         const eventStart = new Date(event.start)
