@@ -56,16 +56,6 @@ export function DraggableEvent({
     },
   })
 
-  // Update height in data when it changes
-  useEffect(() => {
-    if (elementRef.current) {
-      const currentHeight = elementRef.current.offsetHeight
-      if (currentHeight > 0 && attributes.data) {
-        attributes.data.height = currentHeight
-      }
-    }
-  }, [attributes, event])
-
   // Handle mouse down to track where on the event the user clicked
   const handleMouseDown = (e: React.MouseEvent) => {
     if (elementRef.current) {

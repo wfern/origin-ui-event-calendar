@@ -1,17 +1,17 @@
 "use client"
 
-import { useState, createContext, useContext, type ReactNode, useRef } from "react"
+import { useState, createContext, useContext, type ReactNode, useRef, useId } from "react"
 import {
   DndContext,
   type DragEndEvent,
-  type DragStartEvent,
   type DragOverEvent,
+  type DragStartEvent,
   DragOverlay,
-  useSensor,
-  useSensors,
-  PointerSensor,
   MouseSensor,
   TouchSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
   type UniqueIdentifier,
 } from "@dnd-kit/core"
 import { restrictToWindowEdges } from "@dnd-kit/modifiers"
@@ -58,9 +58,9 @@ export function CalendarDndProvider({ children, onEventUpdate }: CalendarDndProv
   const [activeView, setActiveView] = useState<"month" | "week" | "day" | null>(null)
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
   const [eventHeight, setEventHeight] = useState<number | null>(null)
-  const [isMultiDay, setIsMultiDay] = useState<boolean>(false)
+  const [isMultiDay, setIsMultiDay] = useState(false)
   const [multiDayWidth, setMultiDayWidth] = useState<number | null>(null)
-  const [dragHandlePosition, setDragHandlePosition] = useState<{ x: number; y: number } | null>(null)
+  const [dragHandlePosition, setDragHandlePosition] = useState<any>(null)
 
   // Store original event dimensions
   const eventDimensions = useRef<{ height: number }>({ height: 0 })
@@ -87,6 +87,9 @@ export function CalendarDndProvider({ children, onEventUpdate }: CalendarDndProv
       },
     }),
   )
+
+  // Generate a stable ID for the DndContext
+  const dndContextId = useId()
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
@@ -277,6 +280,7 @@ export function CalendarDndProvider({ children, onEventUpdate }: CalendarDndProv
 
   return (
     <DndContext
+      id={dndContextId}
       sensors={sensors}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
@@ -322,4 +326,3 @@ export function CalendarDndProvider({ children, onEventUpdate }: CalendarDndProv
     </DndContext>
   )
 }
-

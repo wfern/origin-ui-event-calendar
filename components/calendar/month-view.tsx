@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
+import { useMemo, useEffect, useState } from "react"
 
-import { useMemo } from "react"
 import {
   eachDayOfInterval,
   endOfMonth,
@@ -20,6 +20,7 @@ import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useEventVisibility } from "@/hooks/use-event-visibility"
 
 interface MonthViewProps {
   currentDate: Date
@@ -28,6 +29,9 @@ interface MonthViewProps {
   onEventSelect: (event: CalendarEvent) => void
   onEventCreate: (startTime: Date) => void
 }
+
+const EVENT_HEIGHT = 24; // in pixels
+const EVENT_GAP = 4; // in pixels
 
 export function MonthView({ currentDate, events, onDateSelect, onEventSelect, onEventCreate }: MonthViewProps) {
   const days = useMemo(() => {
@@ -41,7 +45,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
 
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
-  // Group days into weeks for better multi-day event handling
   const weeks = useMemo(() => {
     const result = []
     let week = []
@@ -57,81 +60,63 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
     return result
   }, [days])
 
+  // Helper function to determine if an event is multi-day
+  const isMultiDayEvent = (event: CalendarEvent) => {
+    const eventStart = new Date(event.start)
+    const eventEnd = new Date(event.end)
+    return differenceInDays(eventEnd, eventStart) >= 1 || event.allDay
+  }
+
+  // Helper function to sort events (multi-day first, then by start time)
+  const sortEvents = (events: CalendarEvent[]) => {
+    return [...events].sort((a, b) => {
+      const aIsMultiDay = isMultiDayEvent(a)
+      const bIsMultiDay = isMultiDayEvent(b)
+
+      if (aIsMultiDay && !bIsMultiDay) return -1
+      if (!aIsMultiDay && bIsMultiDay) return 1
+
+      return new Date(a.start).getTime() - new Date(b.start).getTime()
+    })
+  }
+
+  // Get events that start on this day
   const getEventsForDay = (day: Date) => {
-    return events
-      .filter((event) => {
-        const eventStart = new Date(event.start)
-        const eventEnd = new Date(event.end)
-
-        // For multi-day events, only include them on their start day
-        if (differenceInDays(eventEnd, eventStart) >= 1 || event.allDay) {
-          return isSameDay(day, eventStart)
-        }
-
-        // For regular events, include them on their day
-        return isSameDay(day, eventStart)
-      })
-      .sort((a, b) => {
-        const aStart = new Date(a.start)
-        const bStart = new Date(b.start)
-        const aEnd = new Date(a.end)
-        const bEnd = new Date(b.end)
-
-        // Check if either event is multi-day
-        const aIsMultiDay = differenceInDays(aEnd, aStart) >= 1 || a.allDay
-        const bIsMultiDay = differenceInDays(bEnd, bStart) >= 1 || b.allDay
-
-        // If one is multi-day and the other isn't, prioritize the multi-day event
-        if (aIsMultiDay && !bIsMultiDay) return -1
-        if (!aIsMultiDay && bIsMultiDay) return 1
-
-        // If both are the same type, sort by start time
-        return aStart.getTime() - bStart.getTime()
-      })
+    const dayEvents = events.filter(event => {
+      const eventStart = new Date(event.start)
+      return isSameDay(day, eventStart)
+    })
+    
+    return sortEvents(dayEvents)
   }
 
-  // Add a function to get multi-day events that span this day but don't start on it
+  // Get multi-day events that span across this day (but don't start on this day)
   const getSpanningEventsForDay = (day: Date) => {
-    return events
-      .filter((event) => {
-        const eventStart = new Date(event.start)
-        const eventEnd = new Date(event.end)
-
-        // Only include multi-day events that span this day but don't start on it
-        if ((differenceInDays(eventEnd, eventStart) >= 1 || event.allDay) && !isSameDay(day, eventStart)) {
-          return isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd)
-        }
-
-        return false
-      })
-      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+    const spanningEvents = events.filter(event => {
+      if (!isMultiDayEvent(event)) return false
+      
+      const eventStart = new Date(event.start)
+      const eventEnd = new Date(event.end)
+      
+      // Only include if it's not the start day but is either the end day or a middle day
+      return !isSameDay(day, eventStart) && 
+             (isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd))
+    })
+    
+    return sortEvents(spanningEvents)
   }
 
-  // Get all events for a day (for the popover)
+  // Get all events visible on this day (starting, ending, or spanning)
   const getAllEventsForDay = (day: Date) => {
-    return events
-      .filter((event) => {
-        const eventStart = new Date(event.start)
-        const eventEnd = new Date(event.end)
-        return isSameDay(day, eventStart) || isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd)
-      })
-      .sort((a, b) => {
-        const aStart = new Date(a.start)
-        const bStart = new Date(b.start)
-        const aEnd = new Date(a.end)
-        const bEnd = new Date(b.end)
-
-        // Check if either event is multi-day
-        const aIsMultiDay = differenceInDays(aEnd, aStart) >= 1 || a.allDay
-        const bIsMultiDay = differenceInDays(bEnd, bStart) >= 1 || b.allDay
-
-        // If one is multi-day and the other isn't, prioritize the multi-day event
-        if (aIsMultiDay && !bIsMultiDay) return -1
-        if (!aIsMultiDay && bIsMultiDay) return 1
-
-        // If both are the same type, sort by start time
-        return aStart.getTime() - bStart.getTime()
-      })
+    const allEvents = events.filter(event => {
+      const eventStart = new Date(event.start)
+      const eventEnd = new Date(event.end)
+      return isSameDay(day, eventStart) || 
+             isSameDay(day, eventEnd) || 
+             (day > eventStart && day < eventEnd)
+    })
+    
+    return sortEvents(allEvents)
   }
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
@@ -139,7 +124,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
     onEventSelect(event)
   }
 
-  // Add a helper function to get color classes
   const getEventColorClasses = (color: string) => {
     switch (color) {
       case "blue":
@@ -161,8 +145,19 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
     }
   }
 
+  const [isMounted, setIsMounted] = useState(false);
+  const { contentRef, getVisibleEventCount } = useEventVisibility({
+    eventHeight: EVENT_HEIGHT,
+    eventGap: EVENT_GAP
+  });
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col"
+      style={{ "--event-height": `${EVENT_HEIGHT}px`, "--event-gap": `${EVENT_GAP}px` } as React.CSSProperties}>
       <div className="grid grid-cols-7 border-b">
         {weekdays.map((day) => (
           <div key={day} className="py-2 text-center text-sm font-medium text-muted-foreground">
@@ -173,144 +168,174 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
       <div className="flex-1 grid">
         {weeks.map((week, weekIndex) => (
           <div key={`week-${weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
-            {week.map((day) => {
+            {week.map((day, dayIndex) => {
               const dayEvents = getEventsForDay(day)
               const spanningEvents = getSpanningEventsForDay(day)
               const isCurrentMonth = isSameMonth(day, currentDate)
               const isSelected = isSameDay(day, currentDate)
               const cellId = `month-cell-${day.toISOString()}`
-              const allDayEvents = [...dayEvents, ...spanningEvents]
+              const allDayEvents = [...spanningEvents, ...dayEvents]
               const allEvents = getAllEventsForDay(day)
 
-              return (
-                <DroppableCell
-                  key={day.toString()}
-                  id={cellId}
-                  date={day}
-                  outsideDay={!isCurrentMonth}
-                  className={cn(
-                    "h-24 sm:h-[7.5rem] lg:h-[9.25rem] flex flex-col p-0.5 sm:p-1 border-b border-r last:border-r-0 border-border/50 relative",
-                    isToday(day) && "bg-blue-50 dark:bg-blue-950/20",
-                  )}
-                  onClick={() => {
-                    const startTime = new Date(day)
-                    startTime.setHours(9, 0, 0) // Default to 9:00 AM
-                    onEventCreate(startTime)
-                  }}
-                >
-                  <div className="flex justify-between">
-                    <span
-                      className={cn(
-                        "inline-flex size-6 items-center justify-center rounded-full text-sm mt-1",
-                        isToday(day) && "bg-primary text-primary-foreground font-medium",
-                        isSelected && !isToday(day) && "bg-muted font-medium",
-                      )}
-                    >
-                      {format(day, "d")}
-                    </span>
-                  </div>
-                  <div className="mt-1 space-y-0.5 sm:space-y-1 flex-1 overflow-hidden">
-                    {/* Combine all events and sort them with multi-day events first */}
-                    {[...spanningEvents, ...dayEvents].slice(0, 3).map((event) => {
-                      const eventStart = new Date(event.start)
-                      const eventEnd = new Date(event.end)
-                      const isMultiDay = differenceInDays(eventEnd, eventStart) >= 1 || event.allDay
-                      const isFirstDay = isSameDay(day, eventStart)
-                      const isLastDay = isSameDay(day, eventEnd)
+              const isReferenceCell = weekIndex === 0 && dayIndex === 0;
+              const visibleCount = isMounted ? getVisibleEventCount(allDayEvents.length) : 3;
+              const hasMore = allDayEvents.length > visibleCount;
+              const remainingCount = allDayEvents.length - visibleCount;
 
-                      // For spanning events (that don't start on this day)
-                      if (!isFirstDay) {
-                        return (
-                          <div key={`spanning-${event.id}`} onClick={(e) => e.stopPropagation()}>
-                            <div
+              return (
+                <div key={day.toString()} className="border-b border-r last:border-r-0 border-border/50 relative">
+                  <DroppableCell
+                    id={cellId}
+                    date={day}
+                    outsideDay={!isCurrentMonth}
+                    className={cn(
+                      "h-24 sm:h-[7.5rem] lg:h-[9.25rem] flex flex-col p-0.5 sm:p-1",
+                      isToday(day) && "bg-blue-50 dark:bg-blue-950/20",
+                    )}
+                    onClick={() => {
+                      const startTime = new Date(day)
+                      startTime.setHours(9, 0, 0) // Default to 9:00 AM
+                      onEventCreate(startTime)
+                    }}
+                  >
+                    <div className="flex justify-between">
+                      <span
+                        className={cn(
+                          "inline-flex size-6 items-center justify-center rounded-full text-sm mt-1",
+                          isToday(day) && "bg-primary text-primary-foreground font-medium",
+                          isSelected && !isToday(day) && "bg-muted font-medium",
+                        )}
+                      >
+                        {format(day, "d")}
+                      </span>
+                    </div>
+                    <div 
+                      className="flex-1 overflow-hidden"
+                      ref={isReferenceCell ? contentRef : null}
+                    >
+                      {allDayEvents.map((event, index) => {
+                        const eventStart = new Date(event.start)
+                        const eventEnd = new Date(event.end)
+                        const isMultiDay = isMultiDayEvent(event)
+                        const isFirstDay = isSameDay(day, eventStart)
+                        const isLastDay = isSameDay(day, eventEnd)
+
+                        const isHidden = isMounted && index >= visibleCount;
+
+
+                        if (!isFirstDay) {
+                          return (
+                            <div 
+                              key={`spanning-${event.id}`} 
+                              onClick={(e) => e.stopPropagation()}
                               className={cn(
-                                "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none",
-                                getEventColorClasses(event.color || "blue"),
-                                isFirstDay && isLastDay
-                                  ? "rounded-md"
-                                  : isFirstDay
-                                    ? "rounded-l-md rounded-r-none"
-                                    : isLastDay
-                                      ? "rounded-r-md rounded-l-none"
-                                      : "rounded-none",
+                                "mt-0.5 sm:mt-1",
+                                isHidden ? "hidden" : ""
                               )}
-                              onClick={(e) => handleEventClick(event, e)}
+                              aria-hidden={isHidden ? "true" : undefined}
                             >
-                              <div className="invisible" aria-hidden={true}>
-                                {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
-                                {event.title}
+                              <div
+                                className={cn(
+                                  "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none h-[var(--event-height)]",
+                                  getEventColorClasses(event.color || "blue"),
+                                  isFirstDay && isLastDay
+                                    ? "rounded-md"
+                                    : isFirstDay
+                                      ? "rounded-l-md rounded-r-none"
+                                      : isLastDay
+                                        ? "rounded-r-md rounded-l-none"
+                                        : "rounded-none",
+                                )}
+                                onClick={(e) => handleEventClick(event, e)}
+                              >
+                                <div className="invisible" aria-hidden={true}>
+                                  {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
+                                  {event.title}
+                                </div>
                               </div>
                             </div>
+                          )
+                        }
+
+                        return (
+                          <div 
+                            key={event.id} 
+                            onClick={(e) => e.stopPropagation()}
+                            className={cn(
+                              "mt-0.5 sm:mt-1",
+                              isHidden ? "hidden" : ""
+                            )}
+                            aria-hidden={isHidden ? "true" : undefined}
+                          >
+                            <DraggableEvent
+                              event={event}
+                              view="month"
+                              onClick={(e) => handleEventClick(event, e)}
+                              isFirstDay={isFirstDay}
+                              isLastDay={isLastDay}
+                            />
                           </div>
                         )
-                      }
+                      })}
 
-                      // For events that start on this day (either multi-day or single-day)
-                      return (
-                        <div key={event.id} onClick={(e) => e.stopPropagation()}>
-                          <DraggableEvent
-                            event={event}
-                            view="month"
-                            onClick={(e) => handleEventClick(event, e)}
-                            isFirstDay={isFirstDay}
-                            isLastDay={isLastDay}
-                          />
-                        </div>
-                      )
-                    })}
+                      {hasMore && (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button 
+                              type="button"
+                              className="w-full mt-0.5 sm:mt-1 text-left"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div
+                                className="px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded h-[var(--event-height)]"
+                              >
+                                + {remainingCount} more
+                              </div>
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-80 p-0" align="start" onClick={(e) => e.stopPropagation()}>
+                            <div className="p-2 border-b font-medium">{format(day, "d MMMM yyyy")}</div>
+                            <div className="p-2 max-h-[300px] overflow-auto space-y-1">
+                              {allEvents.map((event) => {
+                                const eventStart = new Date(event.start)
+                                const eventEnd = new Date(event.end)
+                                const isFirstDay = isSameDay(day, eventStart)
+                                const isLastDay = isSameDay(day, eventEnd)
 
-                    {allDayEvents.length > 3 && (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <div
-                            className="px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            + {allDayEvents.length - 3} more
-                          </div>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-80 p-0" align="start" onClick={(e) => e.stopPropagation()}>
-                          <div className="p-2 border-b font-medium">{format(day, "d MMMM yyyy")}</div>
-                          <div className="p-2 max-h-[300px] overflow-auto space-y-1">
-                            {allEvents.map((event) => {
-                              const eventStart = new Date(event.start)
-                              const eventEnd = new Date(event.end)
-                              const isFirstDay = isSameDay(day, eventStart)
-                              const isLastDay = isSameDay(day, eventEnd)
-
-                              return (
-                                <div
-                                  key={event.id}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleEventClick(event, e)
-                                  }}
-                                >
+                                return (
                                   <div
-                                    className={cn(
-                                      "px-2 py-1 text-xs cursor-pointer select-none",
-                                      getEventColorClasses(event.color || "blue"),
-                                      isFirstDay && isLastDay
-                                        ? "rounded-md"
-                                        : isFirstDay
-                                          ? "rounded-l-md rounded-r-none"
-                                          : isLastDay
-                                            ? "rounded-r-md rounded-l-none"
-                                            : "rounded-none",
-                                    )}
+                                    key={event.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleEventClick(event, e)
+                                    }}
                                   >
-                                    {!event.allDay && isFirstDay && <span>{format(eventStart, "h:mm")} </span>}
-                                    {event.title}
+                                    <div
+                                      className={cn(
+                                        "px-2 py-1 text-xs cursor-pointer select-none",
+                                        getEventColorClasses(event.color || "blue"),
+                                        isFirstDay && isLastDay
+                                          ? "rounded-md"
+                                          : isFirstDay
+                                            ? "rounded-l-md rounded-r-none"
+                                            : isLastDay
+                                              ? "rounded-r-md rounded-l-none"
+                                              : "rounded-none",
+                                      )}
+                                    >
+                                      {!event.allDay && isFirstDay && <span>{format(eventStart, "h:mm")} </span>}
+                                      {event.title}
+                                    </div>
                                   </div>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    )}
-                  </div>
-                </DroppableCell>
+                                )
+                              })}
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    </div>
+                  </DroppableCell>
+                </div>
               )
             })}
           </div>
@@ -319,4 +344,3 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
     </div>
   )
 }
-

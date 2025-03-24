@@ -1,18 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import { addDays, addHours } from "date-fns"
+import { addDays, addHours, setHours, setMinutes } from "date-fns"
 import { Calendar } from "@/components/calendar/calendar"
 import type { CalendarEvent } from "@/components/calendar/types"
 
-// Sample events data
+// Sample events data with hardcoded times
 const sampleEvents: CalendarEvent[] = [
   {
     id: "1",
     title: "Team Meeting",
     description: "Weekly team sync",
-    start: addHours(new Date(), 1),
-    end: addHours(new Date(), 2),
+    start: setMinutes(setHours(new Date(), 10), 0), // 10:00 AM today
+    end: setMinutes(setHours(new Date(), 11), 0),   // 11:00 AM today
     color: "blue",
     location: "Conference Room A",
   },
@@ -20,8 +20,8 @@ const sampleEvents: CalendarEvent[] = [
     id: "2",
     title: "Lunch with Client",
     description: "Discuss new project requirements",
-    start: addHours(addDays(new Date(), 1), 12),
-    end: addHours(addDays(new Date(), 1), 13),
+    start: setMinutes(setHours(addDays(new Date(), 1), 12), 0), // 12:00 PM tomorrow
+    end: setMinutes(setHours(addDays(new Date(), 1), 13), 15),  // 1:15 PM tomorrow
     color: "green",
     location: "Downtown Cafe",
   },
@@ -38,8 +38,8 @@ const sampleEvents: CalendarEvent[] = [
     id: "4",
     title: "Call with Lisa",
     description: "Discuss about new clients",
-    start: addHours(addDays(new Date(), 4), 14),
-    end: addHours(addDays(new Date(), 5), 14),
+    start: setMinutes(setHours(addDays(new Date(), 4), 14), 30), // 2:30 PM
+    end: setMinutes(setHours(addDays(new Date(), 5), 14), 45),   // 2:45 PM
     color: "pink",
     location: "Downtown Cafe",
   },
@@ -47,8 +47,8 @@ const sampleEvents: CalendarEvent[] = [
     id: "5",
     title: "Team Meeting",
     description: "Weekly team sync",
-    start: addDays(new Date(), 5),
-    end: addDays(new Date(), 5),
+    start: setMinutes(setHours(addDays(new Date(), 5), 9), 0),  // 9:00 AM
+    end: setMinutes(setHours(addDays(new Date(), 5), 10), 30),  // 10:30 AM
     color: "yellow",
     location: "Conference Room A",
   },
@@ -56,8 +56,8 @@ const sampleEvents: CalendarEvent[] = [
     id: "6",
     title: "Review contracts",
     description: "Weekly team sync",
-    start: addDays(new Date(), 5),
-    end: addDays(new Date(), 5),
+    start: setMinutes(setHours(addDays(new Date(), 5), 14), 0),  // 2:00 PM
+    end: setMinutes(setHours(addDays(new Date(), 5), 15), 30),   // 3:30 PM
     color: "blue",
     location: "Conference Room A",
   },
@@ -92,4 +92,3 @@ export default function Home() {
     </main>
   )
 }
-
