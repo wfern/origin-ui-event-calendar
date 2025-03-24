@@ -153,7 +153,7 @@ export function Calendar({
         return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`
       }
     } else if (view === "day") {
-      return format(currentDate, "EEEE, MMMM d, yyyy")
+      return format(currentDate, "EEE MMMM d, yyyy")
     } else {
       return format(currentDate, "MMMM yyyy")
     }
@@ -259,4 +259,3 @@ function addHoursToDate(date: Date, hours: number): Date {
 function generateId(): string {
   return Math.random().toString(36).substring(2, 11)
 }
-

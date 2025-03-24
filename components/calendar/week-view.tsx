@@ -291,7 +291,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
           <div className="sticky top-0 z-10 bg-background border-b py-1 text-center text-xs font-medium">Time</div>
           {hours.map((hour) => (
             <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
-              <span className="absolute -top-3 left-2 text-xs text-muted-foreground">{format(hour, "h a")}</span>
+              <span className="absolute h-4 -top-2 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">{format(hour, "h a")}</span>
             </div>
           ))}
         </div>

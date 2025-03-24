@@ -156,8 +156,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       // Add event to its column
       columns[columnIndex].push({ event, end: adjustedEnd })
 
-      // Calculate width and left position based on number of columns
-      const totalColumns = columns.length
       // First column takes full width, others are indented by 10% and take 90% width
       const width = columnIndex === 0 ? 1 : 0.9
       const left = columnIndex === 0 ? 0 : columnIndex * 0.1
@@ -237,11 +235,11 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
       )}
 
-      <div className="grid grid-cols-[4rem_1fr] flex-1" style={{ "--hour-height": `${HOUR_HEIGHT}px` } as React.CSSProperties }>
-        <div className="border-r border-border/70">
+      <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr] flex-1" style={{ "--hour-height": `${HOUR_HEIGHT}px` } as React.CSSProperties }>
+        <div>
           {hours.map((hour) => (
             <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
-              <span className="absolute -top-3 left-2 text-xs text-muted-foreground">{format(hour, "h a")}</span>
+              <span className="absolute h-4 -top-2 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">{format(hour, "h a")}</span>
             </div>
           ))}
         </div>
