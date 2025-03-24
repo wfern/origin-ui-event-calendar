@@ -259,8 +259,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                         <div
                           key={`${event.id}-${day.toISOString()}`}
                           className={cn(
-                            "px-2 py-1 text-xs cursor-pointer select-none mb-1",
-                            getEventColorClasses(event.color || "blue"),
+                            "px-2 py-1 text-xs cursor-pointer select-none mb-1 backdrop-blur-md transition",
+                            getEventColorClasses(event.color),
                             isFirstDay && isLastDay
                               ? "rounded-md"
                               : isFirstDay

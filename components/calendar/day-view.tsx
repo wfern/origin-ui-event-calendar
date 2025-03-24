@@ -40,7 +40,7 @@ interface PositionedEvent {
 const HOUR_HEIGHT = 64; // in pixels
 
 export function DayView({ currentDate, events, onEventSelect, onEventCreate }: DayViewProps) {
-  
+
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate)
     return eachHourOfInterval({
@@ -215,8 +215,8 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                   <div
                     key={`spanning-${event.id}`}
                     className={cn(
-                      "px-2 py-1 text-xs cursor-pointer select-none mb-1",
-                      getEventColorClasses(event.color || "blue"),
+                      "px-2 py-1 text-xs cursor-pointer select-none backdrop-blur-md transition mb-1",
+                      getEventColorClasses(event.color),
                       isFirstDay && isLastDay
                         ? "rounded-md"
                         : isFirstDay

@@ -4,22 +4,24 @@ import type { CalendarEvent, EventColor } from "@/components/calendar/types"
 /**
  * Get CSS classes for event colors
  */
-export function getEventColorClasses(color: EventColor | string): string {
-  switch (color) {
+export function getEventColorClasses(color?: EventColor | string): string {
+  const eventColor = color || "sky";
+  
+  switch (eventColor) {
     case "sky":
-      return "bg-sky-100 text-sky-950/80"
+      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80"
     case "amber":
-      return "bg-amber-100 text-amber-950/80"
+      return "bg-amber-200/50 hover:bg-amber-200/40 text-amber-950/80"
     case "violet":
-      return "bg-violet-100 text-violet-950/80"
+      return "bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80"
     case "rose":
-      return "bg-rose-100 text-rose-950/80"
+      return "bg-rose-200/50 hover:bg-rose-200/40 text-rose-950/80"
     case "emerald":
-      return "bg-emerald-100 text-emerald-950/80"
+      return "bg-emerald-200/50 hover:bg-emerald-200/40 text-emerald-950/80"
     case "orange":
-      return "bg-orange-100 text-orange-950/80"
+      return "bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80"
     default:
-      return "bg-sky-100 text-sky-950/80"
+      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80"
   }
 }
 
@@ -93,4 +95,3 @@ export function addHoursToDate(date: Date, hours: number): Date {
   result.setHours(result.getHours() + hours)
   return result
 }
-

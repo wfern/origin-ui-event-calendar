@@ -209,8 +209,8 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                             >
                               <div
                                 className={cn(
-                                  "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none",
-                                  getEventColorClasses(event.color || "blue"),
+                                  "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none backdrop-blur-md transition",
+                                  getEventColorClasses(event.color),
                                   isFirstDay && isLastDay
                                     ? "rounded-md"
                                     : isFirstDay
@@ -288,8 +288,8 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                                   >
                                     <div
                                       className={cn(
-                                        "px-2 py-1 text-xs cursor-pointer select-none",
-                                        getEventColorClasses(event.color || "blue"),
+                                        "px-2 py-1 text-xs cursor-pointer select-none backdrop-blur-md transition",
+                                        getEventColorClasses(event.color),
                                         isFirstDay && isLastDay
                                           ? "rounded-md"
                                           : isFirstDay

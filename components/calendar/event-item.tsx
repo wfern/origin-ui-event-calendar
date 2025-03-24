@@ -38,7 +38,7 @@ export function EventItem({
   isFirstDay = true,
   isLastDay = true,
 }: EventItemProps) {
-  const eventColor = event.color || "blue"
+  const eventColor = event.color
 
   // Use the provided currentTime (for dragging) or the event's actual time
   const displayStart = currentTime || new Date(event.start)
@@ -67,7 +67,7 @@ export function EventItem({
     return (
       <div
         className={cn(
-          "h-full flex items-center px-1 sm:px-2 text-[10px] sm:text-xs font-medium cursor-pointer select-none",
+          "h-full flex items-center px-1 sm:px-2 text-[10px] sm:text-xs font-medium cursor-pointer select-none backdrop-blur-md transition",
           getEventColorClasses(eventColor),
           getBorderRadiusClasses(isFirstDay, isLastDay),
           isDragging && "shadow-lg",
@@ -88,7 +88,7 @@ export function EventItem({
       return (
         <div
           className={cn(
-            "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex items-center overflow-hidden",
+            "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex items-center overflow-hidden backdrop-blur-md transition",
             getEventColorClasses(eventColor),
             getBorderRadiusClasses(isFirstDay, isLastDay),
             isDragging && "shadow-lg",
@@ -106,7 +106,7 @@ export function EventItem({
     return (
       <div
         className={cn(
-          "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex flex-col overflow-hidden",
+          "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex flex-col overflow-hidden backdrop-blur-md transition",
           getEventColorClasses(eventColor),
           getBorderRadiusClasses(isFirstDay, isLastDay),
           isDragging && "shadow-lg",
@@ -121,7 +121,7 @@ export function EventItem({
 
   // Agenda view
   return (
-    <button className={cn("text-left w-full p-2 rounded font-medium cursor-pointer", getEventColorClasses(eventColor))} onClick={onClick}>
+    <button className={cn("text-left w-full p-2 rounded font-medium cursor-pointer backdrop-blur-md transition", getEventColorClasses(eventColor))} onClick={onClick}>
       <div className="font-medium">{event.title}</div>
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
