@@ -9,13 +9,12 @@ interface DroppableCellProps {
   id: string
   date: Date
   time?: number // For week/day views, represents hours (e.g., 9.25 for 9:15)
-  outsideDay?: boolean,
   children?: ReactNode
   className?: string
   onClick?: () => void
 }
 
-export function DroppableCell({ id, date, time, outsideDay = false, children, className, onClick }: DroppableCellProps) {
+export function DroppableCell({ id, date, time, children, className, onClick }: DroppableCellProps) {
   const { activeEvent, activeView } = useCalendarDnd()
 
   const { setNodeRef, isOver } = useDroppable({
@@ -39,7 +38,7 @@ export function DroppableCell({ id, date, time, outsideDay = false, children, cl
       ref={setNodeRef}
       onClick={onClick}
       className={cn(
-        "data-[outside-cell]:bg-muted/25",
+        "h-full flex flex-col px-0.5 py-1 sm:px-1",
         className,
         isOver &&
           activeEvent &&
@@ -49,7 +48,6 @@ export function DroppableCell({ id, date, time, outsideDay = false, children, cl
       )}
       title={formattedTime ? `${formattedTime}` : undefined}
       data-slot="droppable-cell"
-      data-outside-cell={outsideDay || undefined}
     >
       {children}
     </div>

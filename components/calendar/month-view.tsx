@@ -171,7 +171,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
               const dayEvents = getEventsForDay(day)
               const spanningEvents = getSpanningEventsForDay(day)
               const isCurrentMonth = isSameMonth(day, currentDate)
-              const isSelected = isSameDay(day, currentDate)
               const cellId = `month-cell-${day.toISOString()}`
               const allDayEvents = [...spanningEvents, ...dayEvents]
               const allEvents = getAllEventsForDay(day)
@@ -182,15 +181,17 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
               const remainingCount = allDayEvents.length - visibleCount;
 
               return (
-                <div key={day.toString()} className="border-b border-r last:border-r-0 border-border/50 relative">
+                <div
+                  key={day.toString()}
+                  className={cn(
+                    "border-b border-r last:border-r-0 border-border/50 data-[today]:bg-blue-50 dark:data-[today]:bg-blue-950/20 data-[outside-cell]:bg-muted/25",
+                  )}
+                  data-today={isToday(day) || undefined}
+                  data-outside-cell={!isCurrentMonth || undefined}
+                >
                   <DroppableCell
                     id={cellId}
                     date={day}
-                    outsideDay={!isCurrentMonth}
-                    className={cn(
-                      "h-full min-h-[5.75rem] sm:min-h-[7.5rem] lg:min-h-[9.25rem] flex flex-col px-0.5 py-1 sm:px-1",
-                      isToday(day) && "bg-blue-50 dark:bg-blue-950/20",
-                    )}
                     onClick={() => {
                       const startTime = new Date(day)
                       startTime.setHours(9, 0, 0) // Default to 9:00 AM
@@ -202,15 +203,14 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                         className={cn(
                           "inline-flex size-6 items-center justify-center rounded-full text-sm mt-1",
                           isToday(day) && "bg-primary text-primary-foreground font-medium",
-                          isSelected && !isToday(day) && "bg-muted font-medium",
                         )}
                       >
                         {format(day, "d")}
                       </span>
                     </div>
                     <div 
-                      className="flex-1 overflow-hidden"
                       ref={isReferenceCell ? contentRef : null}
+                      className="overflow-hidden min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
                     >
                       {allDayEvents.map((event, index) => {
                         const eventStart = new Date(event.start)
