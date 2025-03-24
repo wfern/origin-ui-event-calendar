@@ -246,6 +246,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                               onClick={(e) => handleEventClick(event, e)}
                               isFirstDay={isFirstDay}
                               isLastDay={isLastDay}
+                              height={EVENT_HEIGHT}
                             />
                           </div>
                         )

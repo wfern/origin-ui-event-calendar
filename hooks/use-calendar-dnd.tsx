@@ -305,7 +305,7 @@ export function CalendarDndProvider({ children, onEventUpdate }: CalendarDndProv
           {activeEvent && activeView && (
             <div
               style={{
-                height: activeView !== "month" && eventHeight ? `${eventHeight}px` : "auto",
+                height: eventHeight ? `${eventHeight}px` : "auto",
                 width: isMultiDay && multiDayWidth ? `${multiDayWidth}%` : "100%",
                 // Remove the transform that was causing the shift
               }}

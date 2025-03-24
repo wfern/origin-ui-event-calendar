@@ -72,7 +72,7 @@ export function EventItem({
     return (
       <div
         className={cn(
-          "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none",
+          "h-full flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none",
           getEventColorClasses(eventColor),
           getBorderRadiusClasses(),
           isDragging && "opacity-70 shadow-md",
