@@ -115,15 +115,17 @@ export function EventItem({
     return (
       <div
         className={cn(
-          "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none",
+          "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none",
           getColorClasses(),
           getBorderRadiusClasses(),
           isDragging && "opacity-70 shadow-md",
         )}
         onClick={onClick}
       >
-        {!event.allDay && <span>{format(displayStart, "h:mm")} </span>}
-        {event.title}
+        <span className="truncate">
+          {!event.allDay && <span>{format(displayStart, "h:mm")} </span>}
+          {event.title}
+        </span>
       </div>
     )
   }

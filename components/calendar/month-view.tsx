@@ -189,7 +189,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                     date={day}
                     outsideDay={!isCurrentMonth}
                     className={cn(
-                      "h-24 sm:h-[7.5rem] lg:h-[9.25rem] flex flex-col p-0.5 sm:p-1",
+                      "h-[5.75rem] sm:h-[7.5rem] lg:h-[9.25rem] flex flex-col px-0.5 py-1 sm:px-1",
                       isToday(day) && "bg-blue-50 dark:bg-blue-950/20",
                     )}
                     onClick={() => {
@@ -229,14 +229,14 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                               key={`spanning-${event.id}`} 
                               onClick={(e) => e.stopPropagation()}
                               className={cn(
-                                "mt-0.5 sm:mt-1",
+                                "mt-[var(--event-gap)]",
                                 isHidden ? "hidden" : ""
                               )}
                               aria-hidden={isHidden ? "true" : undefined}
                             >
                               <div
                                 className={cn(
-                                  "px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none h-[var(--event-height)]",
+                                  "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none",
                                   getEventColorClasses(event.color || "blue"),
                                   isFirstDay && isLastDay
                                     ? "rounded-md"
@@ -262,7 +262,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                             key={event.id} 
                             onClick={(e) => e.stopPropagation()}
                             className={cn(
-                              "mt-0.5 sm:mt-1",
+                              "mt-[var(--event-gap)]",
                               isHidden ? "hidden" : ""
                             )}
                             aria-hidden={isHidden ? "true" : undefined}
@@ -283,13 +283,15 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                           <PopoverTrigger asChild>
                             <button 
                               type="button"
-                              className="w-full mt-0.5 sm:mt-1 text-left"
+                              className="w-full mt-[var(--event-gap)] text-left"
                               onClick={(e) => e.stopPropagation()}
                             >
                               <div
-                                className="px-0.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded h-[var(--event-height)]"
+                                className="h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded"
                               >
-                                + {remainingCount} more
+                                <span>
+                                  + {remainingCount} <span className="max-sm:sr-only">more</span>
+                                </span>
                               </div>
                             </button>
                           </PopoverTrigger>
