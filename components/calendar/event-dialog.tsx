@@ -165,7 +165,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="title">Title</Label>
-            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
+            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
 
           <div className="grid gap-2">
@@ -174,7 +174,6 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Event description"
               rows={3}
             />
           </div>
@@ -311,7 +310,6 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Event location"
             />
           </div>
           <fieldset className="space-y-4">
