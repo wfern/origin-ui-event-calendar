@@ -257,12 +257,22 @@ export function CalendarDndProvider({ children, onEventUpdate }: CalendarDndProv
       const durationMinutes = differenceInMinutes(originalEnd, originalStart)
       const newEnd = addMinutes(newStart, durationMinutes)
 
-      // Update the event
-      onEventUpdate({
-        ...calendarEvent,
-        start: newStart,
-        end: newEnd,
-      })
+      // Only update if the start time has actually changed
+      const hasStartTimeChanged = 
+        originalStart.getFullYear() !== newStart.getFullYear() ||
+        originalStart.getMonth() !== newStart.getMonth() ||
+        originalStart.getDate() !== newStart.getDate() ||
+        originalStart.getHours() !== newStart.getHours() ||
+        originalStart.getMinutes() !== newStart.getMinutes();
+
+      if (hasStartTimeChanged) {
+        // Update the event only if the time has changed
+        onEventUpdate({
+          ...calendarEvent,
+          start: newStart,
+          end: newEnd,
+        });
+      }
     } catch (error) {
       console.error("Error in drag end handler:", error)
     } finally {
