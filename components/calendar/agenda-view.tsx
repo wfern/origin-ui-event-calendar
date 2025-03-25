@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useMemo } from "react"
-import { addDays, format, isSameDay, isToday } from "date-fns"
+import { addDays, format, isToday } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { EventItem } from "@/components/calendar/event-item"

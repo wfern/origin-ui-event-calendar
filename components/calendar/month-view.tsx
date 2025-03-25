@@ -13,7 +13,6 @@ import {
   isToday,
   startOfMonth,
   startOfWeek,
-  differenceInDays,
 } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
