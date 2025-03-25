@@ -5,7 +5,7 @@ import type React from "react"
 import { format, differenceInMinutes, getMinutes, isPast } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
-import { Clock, MapPin } from "lucide-react"
+import { ClockIcon, MapPinIcon } from "lucide-react"
 import { useMemo } from "react"
 import { getEventColorClasses, getBorderRadiusClasses } from "@/components/calendar/utils"
 
@@ -173,7 +173,7 @@ export function EventItem({
       <div className="font-medium">{event.title}</div>
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
-          <Clock className="size-3" />
+          <ClockIcon className="size-3" />
           {event.allDay ? (
             <span>All day</span>
           ) : (
@@ -182,7 +182,7 @@ export function EventItem({
         </div>
         {event.location && (
           <div className="flex items-center gap-1">
-            <MapPin className="size-3" />
+            <MapPinIcon className="size-3" />
             {event.location}
           </div>
         )}

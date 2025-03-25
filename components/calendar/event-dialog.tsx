@@ -13,7 +13,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { CalendarIcon, Trash2 } from "lucide-react"
+import { CalendarIcon, Trash2Icon } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 interface EventDialogProps {
@@ -305,7 +305,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
         <DialogFooter className="flex justify-between">
           {event?.id && (
             <Button variant="destructive" onClick={handleDelete} type="button">
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2Icon className="h-4 w-4 mr-2" />
               Delete
             </Button>
           )}

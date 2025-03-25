@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import { format, isSameDay } from "date-fns"
-import { X } from "lucide-react"
+import { XIcon } from "lucide-react"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { EventItem } from "@/components/calendar/event-item"
 
@@ -83,7 +83,7 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
       <div className="flex items-center justify-between p-3 border-b sticky top-0 bg-background">
         <h3 className="font-medium">{format(date, "d MMMM yyyy")}</h3>
         <button onClick={onClose} className="rounded-full p-1 hover:bg-muted" aria-label="Close">
-          <X className="h-4 w-4" />
+          <XIcon className="h-4 w-4" />
         </button>
       </div>
 
