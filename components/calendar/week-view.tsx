@@ -266,7 +266,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
           {hours.map((hour, index) => (
             <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
               {index > 0 && (
-                <span className="absolute flex items-center h-6 -top-3 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full justify-right">
+                <span className="absolute flex items-center h-6 -top-3 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full justify-end">
                   {format(hour, "h a")}
                 </span>
               )}
