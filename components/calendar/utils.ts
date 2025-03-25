@@ -54,7 +54,7 @@ export function getBorderRadiusClasses(isFirstDay: boolean, isLastDay: boolean):
 export function isMultiDayEvent(event: CalendarEvent): boolean {
   const eventStart = new Date(event.start)
   const eventEnd = new Date(event.end)
-  return event.allDay || differenceInDays(eventEnd, eventStart) >= 1
+  return event.allDay || eventStart.getDate() !== eventEnd.getDate()
 }
 
 /**
@@ -86,13 +86,6 @@ export function formatEventTime(event: CalendarEvent, durationMinutes: number): 
 
   // For longer events, show both start and end time
   return `${format(displayStart, "h:mm a")} - ${format(displayEnd, "h:mm a")}`
-}
-
-/**
- * Generate a unique ID for new events
- */
-export function generateEventId(): string {
-  return Math.random().toString(36).substring(2, 11)
 }
 
 /**

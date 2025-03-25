@@ -22,7 +22,8 @@ import { DroppableCell } from "@/components/calendar/droppable-cell"
 import { getEventColorClasses } from "@/components/calendar/utils"
 import { useCurrentTimeIndicator } from "@/components/calendar/utils"
 import { EventItem } from "@/components/calendar/event-item"
-import { WeekCellsHeight } from "@/components/calendar/constants"
+import { EventHeight, EventGap, WeekCellsHeight } from "@/components/calendar/constants"
+import { isMultiDayEvent } from "@/components/calendar/utils"
 
 interface DayViewProps {
   currentDate: Date
@@ -64,29 +65,19 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
   }, [currentDate, events])
 
-  // Get all-day events and multi-day events
+  // Filter all-day events
   const allDayEvents = useMemo(() => {
     return dayEvents.filter((event) => {
-      // Include explicitly marked all-day events
-      if (event.allDay) return true
-
-      // Include events that span multiple days
-      const eventStart = new Date(event.start)
-      const eventEnd = new Date(event.end)
-      return differenceInDays(eventEnd, eventStart) >= 1
+      // Include explicitly marked all-day events or multi-day events
+      return event.allDay || isMultiDayEvent(event)
     })
   }, [dayEvents])
 
   // Get only single-day time-based events
   const timeEvents = useMemo(() => {
     return dayEvents.filter((event) => {
-      // Exclude all-day events
-      if (event.allDay) return false
-
-      // Exclude events that span multiple days
-      const eventStart = new Date(event.start)
-      const eventEnd = new Date(event.end)
-      return differenceInDays(eventEnd, eventStart) < 1
+      // Exclude all-day events and multi-day events
+      return !event.allDay && !isMultiDayEvent(event)
     })
   }, [dayEvents])
 
@@ -191,7 +182,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
             {allDayEvents.map((event) => {
               const eventStart = new Date(event.start)
               const eventEnd = new Date(event.end)
-              const isMultiDay = differenceInDays(eventEnd, eventStart) >= 1
+              const isMultiDay = isMultiDayEvent(event)
               const isFirstDay = isSameDay(currentDate, eventStart)
               const isLastDay = isSameDay(currentDate, eventEnd)
 

@@ -19,10 +19,11 @@ import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
+import { EventHeight, EventGap } from "@/components/calendar/constants"
+import { isMultiDayEvent } from "@/components/calendar/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useEventVisibility } from "@/hooks/use-event-visibility"
 import { EventItem } from "@/components/calendar/event-item"
-import { EventHeight, EventGap } from "@/components/calendar/constants"
 
 interface MonthViewProps {
   currentDate: Date
@@ -58,13 +59,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
 
     return result
   }, [days])
-
-  // Helper function to determine if an event is multi-day
-  const isMultiDayEvent = (event: CalendarEvent) => {
-    const eventStart = new Date(event.start)
-    const eventEnd = new Date(event.end)
-    return differenceInDays(eventEnd, eventStart) >= 1 || event.allDay
-  }
 
   // Helper function to sort events (multi-day first, then by start time)
   const sortEvents = (events: CalendarEvent[]) => {

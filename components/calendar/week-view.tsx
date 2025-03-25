@@ -17,16 +17,15 @@ import {
   startOfWeek,
   differenceInMinutes,
   areIntervalsOverlapping,
-  differenceInDays,
   isBefore,
 } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
-import { useCurrentTimeIndicator } from "@/components/calendar/utils"
+import {  WeekCellsHeight } from "@/components/calendar/constants"
+import { useCurrentTimeIndicator, isMultiDayEvent } from "@/components/calendar/utils"
 import { EventItem } from "./event-item"
-import { WeekCellsHeight } from "@/components/calendar/constants"
 
 interface WeekViewProps {
   currentDate: Date
@@ -62,17 +61,12 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
     })
   }, [currentDate])
 
-  // Get all-day events and multi-day events
+  // Get all-day events and multi-day events for the week
   const allDayEvents = useMemo(() => {
     return events
       .filter((event) => {
-        // Include explicitly marked all-day events
-        if (event.allDay) return true
-
-        // Include events that span multiple days
-        const eventStart = new Date(event.start)
-        const eventEnd = new Date(event.end)
-        return differenceInDays(eventEnd, eventStart) >= 1
+        // Include explicitly marked all-day events or multi-day events
+        return event.allDay || isMultiDayEvent(event)
       })
       .filter((event) => {
         const eventStart = new Date(event.start)
@@ -88,14 +82,11 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
     const result = days.map((day) => {
       // Get events for this day that are not all-day events or multi-day events
       const dayEvents = events.filter((event) => {
-        // Skip all-day events
-        if (event.allDay) return false
+        // Skip all-day events and multi-day events
+        if (event.allDay || isMultiDayEvent(event)) return false
 
         const eventStart = new Date(event.start)
         const eventEnd = new Date(event.end)
-
-        // Skip events that span multiple days
-        if (differenceInDays(eventEnd, eventStart) >= 1) return false
 
         // Check if event is on this day
         return isSameDay(day, eventStart) || isSameDay(day, eventEnd) || (eventStart < day && eventEnd > day)
@@ -232,7 +223,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                   {dayAllDayEvents.map((event) => {
                     const eventStart = new Date(event.start)
                     const eventEnd = new Date(event.end)
-                    const isMultiDay = differenceInDays(eventEnd, eventStart) >= 1
+                    const isMultiDay = isMultiDayEvent(event)
                     const isFirstDay = isSameDay(day, eventStart)
                     const isLastDay = isSameDay(day, eventEnd)
 

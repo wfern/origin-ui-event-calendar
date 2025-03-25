@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { format, isSameDay, differenceInDays } from "date-fns"
+import { format, isSameDay } from "date-fns"
 import { X } from "lucide-react"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { EventItem } from "@/components/calendar/event-item"
@@ -94,7 +94,6 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
           events.map((event) => {
             const eventStart = new Date(event.start)
             const eventEnd = new Date(event.end)
-            const isMultiDay = differenceInDays(eventEnd, eventStart) >= 1
             const isFirstDay = isSameDay(date, eventStart)
             const isLastDay = isSameDay(date, eventEnd)
 
