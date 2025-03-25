@@ -13,6 +13,8 @@ import {
   subWeeks,
 } from "date-fns"
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, ChevronDownIcon } from "lucide-react"
+import { RiCalendarCheckLine } from "@remixicon/react"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,7 +34,6 @@ import { EventDialog } from "@/components/calendar/event-dialog"
 import { CalendarDndProvider } from "@/hooks/use-calendar-dnd"
 import { EventHeight, EventGap, WeekCellsHeight } from "@/components/calendar/constants"
 import { addHoursToDate } from "@/components/calendar/utils"
-import { RiCalendarCheckLine } from "@remixicon/react"
 
 export interface CalendarProps {
   events?: CalendarEvent[]
@@ -168,10 +169,20 @@ export function Calendar({
   const handleEventSave = (event: CalendarEvent) => {
     if (event.id) {
       onEventUpdate?.(event)
+      // Show toast notification when an event is updated
+      toast(`Event "${event.title}" updated`, {
+        description: format(new Date(event.start), "MMM d, yyyy"),
+        position: "bottom-left",
+      })
     } else {
       onEventAdd?.({
         ...event,
         id: Math.random().toString(36).substring(2, 11),
+      })
+      // Show toast notification when an event is added
+      toast(`Event "${event.title}" added`, {
+        description: format(new Date(event.start), "MMM d, yyyy"),
+        position: "bottom-left",
       })
     }
     setIsEventDialogOpen(false)
@@ -179,13 +190,29 @@ export function Calendar({
   }
 
   const handleEventDelete = (eventId: string) => {
+    const deletedEvent = events.find(e => e.id === eventId)
+    const newEvents = events.filter(e => e.id !== eventId)
     onEventDelete?.(eventId)
     setIsEventDialogOpen(false)
     setSelectedEvent(null)
+    
+    // Show toast notification when an event is deleted
+    if (deletedEvent) {
+      toast(`Event "${deletedEvent.title}" deleted`, {
+        description: format(new Date(deletedEvent.start), "MMM d, yyyy"),
+        position: "bottom-left",
+      })
+    }
   }
 
   const handleEventUpdate = (updatedEvent: CalendarEvent) => {
     onEventUpdate?.(updatedEvent)
+    
+    // Show toast notification when an event is updated via drag and drop
+    toast(`Event "${updatedEvent.title}" moved`, {
+      description: format(new Date(updatedEvent.start), "MMM d, yyyy"),
+      position: "bottom-left",
+    })
   }
 
   const viewTitle = useMemo(() => {

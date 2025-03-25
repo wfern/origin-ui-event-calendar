@@ -12,8 +12,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { CalendarIcon } from "lucide-react"
-import { RiDeleteBinLine } from "@remixicon/react"
+import { RiDeleteBinLine, RiCalendarLine } from "@remixicon/react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -164,12 +163,12 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
           </div>
         )}
         <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
+          <div className="*:not-first:mt-1.5">
             <Label htmlFor="title">Title</Label>
             <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
 
-          <div className="grid gap-2">
+          <div className="*:not-first:mt-1.5">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
@@ -180,7 +179,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
           </div>
 
           <div className="flex gap-4">
-            <div className="grid gap-2 flex-1">
+            <div className="*:not-first:mt-1.5 flex-1">
               <Label htmlFor="start-date">Start Date</Label>
               <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
                 <PopoverTrigger asChild>
@@ -195,7 +194,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                     <span className={cn("truncate", !startDate && "text-muted-foreground")}>
                       {startDate ? format(startDate, "PPP") : "Pick a date"}
                     </span>
-                    <CalendarIcon
+                    <RiCalendarLine
                       size={16}
                       className="text-muted-foreground/80 shrink-0"
                       aria-hidden="true"
@@ -219,7 +218,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             </div>
 
             {!allDay && (
-              <div className="grid gap-2 min-w-28">
+              <div className="*:not-first:mt-1.5 min-w-28">
                 <Label htmlFor="start-time">Start Time</Label>
                 <Select value={startTime} onValueChange={setStartTime}>
                   <SelectTrigger id="start-time">
@@ -238,7 +237,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
           </div>
 
           <div className="flex gap-4">
-            <div className="grid gap-2 flex-1">
+            <div className="*:not-first:mt-1.5 flex-1">
               <Label htmlFor="end-date">End Date</Label>
               <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
                 <PopoverTrigger asChild>
@@ -253,7 +252,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                     <span className={cn("truncate", !endDate && "text-muted-foreground")}>
                       {endDate ? format(endDate, "PPP") : "Pick a date"}
                     </span>
-                    <CalendarIcon
+                    <RiCalendarLine
                       size={16}
                       className="text-muted-foreground/80 shrink-0"
                       aria-hidden="true"
@@ -278,7 +277,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             </div>
 
             {!allDay && (
-              <div className="grid gap-2 min-w-28">
+              <div className="*:not-first:mt-1.5 min-w-28">
                 <Label htmlFor="end-time">End Time</Label>
                 <Select value={endTime} onValueChange={setEndTime}>
                   <SelectTrigger id="end-time">
@@ -305,7 +304,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             <Label htmlFor="all-day">All day</Label>
           </div>          
 
-          <div className="grid gap-2">
+          <div className="*:not-first:mt-1.5">
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
