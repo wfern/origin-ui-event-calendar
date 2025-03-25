@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { EventItem } from "@/components/calendar/event-item"
 import { RiCalendarEventLine } from "@remixicon/react"
+import { getAgendaEventsForDay } from "@/components/calendar/utils"
 
 interface AgendaViewProps {
   currentDate: Date
@@ -26,13 +27,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
   }, [currentDate, daysToShow])
 
   const getEventsForDay = (day: Date) => {
-    return events
-      .filter((event) => {
-        const eventStart = new Date(event.start)
-        const eventEnd = new Date(event.end)
-        return isSameDay(day, eventStart) || isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd)
-      })
-      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+    return getAgendaEventsForDay(events, day)
   }
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {

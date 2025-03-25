@@ -20,7 +20,7 @@ import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
 import { EventHeight, EventGap } from "@/components/calendar/constants"
-import { isMultiDayEvent } from "@/components/calendar/utils"
+import { getEventsForDay, getSpanningEventsForDay, getAllEventsForDay, sortEvents } from "@/components/calendar/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useEventVisibility } from "@/hooks/use-event-visibility"
 import { EventItem } from "@/components/calendar/event-item"
@@ -60,58 +60,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
     return result
   }, [days])
 
-  // Helper function to sort events (multi-day first, then by start time)
-  const sortEvents = (events: CalendarEvent[]) => {
-    return [...events].sort((a, b) => {
-      const aIsMultiDay = isMultiDayEvent(a)
-      const bIsMultiDay = isMultiDayEvent(b)
-
-      if (aIsMultiDay && !bIsMultiDay) return -1
-      if (!aIsMultiDay && bIsMultiDay) return 1
-
-      return new Date(a.start).getTime() - new Date(b.start).getTime()
-    })
-  }
-
-  // Get events that start on this day
-  const getEventsForDay = (day: Date) => {
-    const dayEvents = events.filter(event => {
-      const eventStart = new Date(event.start)
-      return isSameDay(day, eventStart)
-    })
-
-    return sortEvents(dayEvents)
-  }
-
-  // Get multi-day events that span across this day (but don't start on this day)
-  const getSpanningEventsForDay = (day: Date) => {
-    const spanningEvents = events.filter(event => {
-      if (!isMultiDayEvent(event)) return false
-
-      const eventStart = new Date(event.start)
-      const eventEnd = new Date(event.end)
-
-      // Only include if it's not the start day but is either the end day or a middle day
-      return !isSameDay(day, eventStart) &&
-        (isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd))
-    })
-
-    return sortEvents(spanningEvents)
-  }
-
-  // Get all events visible on this day (starting, ending, or spanning)
-  const getAllEventsForDay = (day: Date) => {
-    const allEvents = events.filter(event => {
-      const eventStart = new Date(event.start)
-      const eventEnd = new Date(event.end)
-      return isSameDay(day, eventStart) ||
-        isSameDay(day, eventEnd) ||
-        (day > eventStart && day < eventEnd)
-    })
-
-    return sortEvents(allEvents)
-  }
-
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
     onEventSelect(event)
@@ -140,12 +88,12 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
         {weeks.map((week, weekIndex) => (
           <div key={`week-${weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
             {week.map((day, dayIndex) => {
-              const dayEvents = getEventsForDay(day)
-              const spanningEvents = getSpanningEventsForDay(day)
+              const dayEvents = getEventsForDay(events, day)
+              const spanningEvents = getSpanningEventsForDay(events, day)
               const isCurrentMonth = isSameMonth(day, currentDate)
               const cellId = `month-cell-${day.toISOString()}`
               const allDayEvents = [...spanningEvents, ...dayEvents]
-              const allEvents = getAllEventsForDay(day)
+              const allEvents = getAllEventsForDay(events, day)
 
               const isReferenceCell = weekIndex === 0 && dayIndex === 0;
               const visibleCount = isMounted ? getVisibleEventCount(allDayEvents.length) : undefined;
@@ -178,7 +126,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                       ref={isReferenceCell ? contentRef : null}
                       className="overflow-hidden min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
                     >
-                      {allDayEvents.map((event, index) => {
+                      {sortEvents(allDayEvents).map((event, index) => {
                         const eventStart = new Date(event.start)
                         const eventEnd = new Date(event.end)
                         const isFirstDay = isSameDay(day, eventStart)
@@ -191,7 +139,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                         if (!isFirstDay) {
                           return (
                             <EventItem
-                              key={`spanning-${event.id}`}
+                              key={`spanning-${event.id}-${day.toISOString().slice(0, 10)}`}
                               onClick={(e) => handleEventClick(event, e)}
                               className={cn(
                                 isHidden && "hidden"
@@ -249,7 +197,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                           <PopoverContent className="w-80 p-0" align="start" style={{ "--event-height": `${EventHeight}px` } as React.CSSProperties}>
                             <div className="p-2 border-b font-medium">{format(day, "d MMMM yyyy")}</div>
                             <div className="p-2 max-h-[300px] overflow-auto space-y-1">
-                              {allEvents.map((event) => {
+                              {sortEvents(allEvents).map((event) => {
                                 const eventStart = new Date(event.start)
                                 const eventEnd = new Date(event.end)
                                 const isFirstDay = isSameDay(day, eventStart)
