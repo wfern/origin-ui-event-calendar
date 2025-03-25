@@ -8,13 +8,13 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { CalendarIcon, Trash2Icon } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface EventDialogProps {
   event: CalendarEvent | null
@@ -35,6 +35,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
   const [location, setLocation] = useState("")
   const [color, setColor] = useState<EventColor>("sky")
   const [error, setError] = useState<string | null>(null)
+  const [startDateOpen, setStartDateOpen] = useState(false)
+  const [endDateOpen, setEndDateOpen] = useState(false)
 
   // Debug log to check what event is being passed
   useEffect(() => {
@@ -141,12 +143,12 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
 
   // Updated color options to match types.ts
   const colorOptions: Array<{ value: EventColor; label: string; bgClass: string; borderClass: string }> = [
-    { value: "sky", label: "Sky", bgClass: "bg-sky-100", borderClass: "border-sky-200" },
-    { value: "amber", label: "Amber", bgClass: "bg-amber-100", borderClass: "border-amber-200" },
-    { value: "violet", label: "Violet", bgClass: "bg-violet-100", borderClass: "border-violet-200" },
-    { value: "rose", label: "Rose", bgClass: "bg-rose-100", borderClass: "border-rose-200" },
-    { value: "emerald", label: "Emerald", bgClass: "bg-emerald-100", borderClass: "border-emerald-200" },
-    { value: "orange", label: "Orange", bgClass: "bg-orange-100", borderClass: "border-orange-200" },
+    { value: "sky", label: "Sky", bgClass: "bg-sky-400 data-[state=checked]:bg-sky-400", borderClass: "border-sky-400 data-[state=checked]:border-sky-400" },
+    { value: "amber", label: "Amber", bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400", borderClass: "border-amber-400 data-[state=checked]:border-amber-400" },
+    { value: "violet", label: "Violet", bgClass: "bg-violet-400 data-[state=checked]:bg-violet-400", borderClass: "border-violet-400 data-[state=checked]:border-violet-400" },
+    { value: "rose", label: "Rose", bgClass: "bg-rose-400 data-[state=checked]:bg-rose-400", borderClass: "border-rose-400 data-[state=checked]:border-rose-400" },
+    { value: "emerald", label: "Emerald", bgClass: "bg-emerald-400 data-[state=checked]:bg-emerald-400", borderClass: "border-emerald-400 data-[state=checked]:border-emerald-400" },
+    { value: "orange", label: "Orange", bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400", borderClass: "border-orange-400 data-[state=checked]:border-orange-400" },
   ]
 
   return (
@@ -177,15 +179,10 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             />
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Switch id="all-day" checked={allDay} onCheckedChange={setAllDay} />
-            <Label htmlFor="all-day">All day</Label>
-          </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="start-date">Start Date</Label>
-              <Popover>
+              <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     id="start-date"
@@ -209,7 +206,13 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                   <Calendar
                     mode="single"
                     selected={startDate}
-                    onSelect={(date) => date && setStartDate(date)}
+                    onSelect={(date) => {
+                      if (date) {
+                        setStartDate(date)
+                        setError(null)
+                        setStartDateOpen(false)
+                      }
+                    }}
                   />
                 </PopoverContent>
               </Popover>
@@ -237,18 +240,18 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="end-date">End Date</Label>
-              <Popover>
+              <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     id="end-date"
                     variant={"outline"}
                     className={cn(
                       "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-                      !startDate && "text-muted-foreground",
+                      !endDate && "text-muted-foreground",
                     )}
                   >
-                    <span className={cn("truncate", !startDate && "text-muted-foreground")}>
-                      {startDate ? format(startDate, "PPP") : "Pick a date"}
+                    <span className={cn("truncate", !endDate && "text-muted-foreground")}>
+                      {endDate ? format(endDate, "PPP") : "Pick a date"}
                     </span>
                     <CalendarIcon
                       size={16}
@@ -264,7 +267,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                     onSelect={(date) => {
                       if (date) {
                         setEndDate(date)
-                        setError(null) // Clear error when user changes the date
+                        setError(null)
+                        setEndDateOpen(false)
                       }
                     }}
                   />
@@ -291,6 +295,15 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             )}
           </div>
 
+          <div className="flex items-center gap-2">
+            <Checkbox 
+              id="all-day" 
+              checked={allDay} 
+              onCheckedChange={(checked) => setAllDay(checked === true)}
+            />
+            <Label htmlFor="all-day">All day</Label>
+          </div>          
+
           <div className="grid gap-2">
             <Label htmlFor="location">Location</Label>
             <Input
@@ -300,25 +313,24 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
               placeholder="Event location"
             />
           </div>
-
-          <div className="grid gap-2">
-            <Label>Color</Label>
-            <RadioGroup value={color} onValueChange={(value: EventColor) => setColor(value)} className="flex flex-wrap gap-2">
+          <fieldset className="space-y-4">
+            <legend className="text-foreground text-sm leading-none font-medium">Etiquette</legend>
+            <RadioGroup className="flex gap-1.5" defaultValue={colorOptions[0].value} value={color} onValueChange={(value: EventColor) => setColor(value)}>
               {colorOptions.map((colorOption) => (
-                <div key={colorOption.value} className="flex items-center space-x-2">
-                  <div className={cn("w-6 h-6 rounded-full flex items-center justify-center", colorOption.bgClass, colorOption.borderClass)}>
-                    <RadioGroupItem
-                      value={colorOption.value}
-                      id={`color-${colorOption.value}`}
-                    />
-                  </div>
-                  <Label htmlFor={`color-${colorOption.value}`} className="text-sm">
-                    {colorOption.label}
-                  </Label>
-                </div>
+                <RadioGroupItem
+                  key={colorOption.value}
+                  id={`color-${colorOption.value}`}
+                  value={colorOption.value}
+                  aria-label={colorOption.label}
+                  className={cn(
+                    "size-6 shadow-none",
+                    colorOption.bgClass,
+                    colorOption.borderClass
+                  )}
+                />
               ))}
             </RadioGroup>
-          </div>
+          </fieldset>
         </div>
         <DialogFooter className="flex justify-between">
           {event?.id && (
