@@ -191,7 +191,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
   return (
     <div className="flex flex-col h-full">
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md grid grid-cols-8 border-b border-border/70">
+      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md grid grid-cols-8 border-b border-border/70">
         <div className="py-2 text-center text-sm text-muted-foreground/70"><span className="max-[479px]:sr-only">{format(new Date(), "O")}</span></div>
         {days.map((day) => (
           <div 
