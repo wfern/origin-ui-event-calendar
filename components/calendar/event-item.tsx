@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { format, differenceInMinutes, getMinutes } from "date-fns"
+import { format, differenceInMinutes, getMinutes, isPast } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { Clock, MapPin } from "lucide-react"
@@ -37,6 +37,9 @@ function EventWrapper({
   className,
   children
 }: EventWrapperProps) {
+  // Check if the event is in the past
+  const isEventInPast = isPast(new Date(event.end))
+
   return (
     <div
       className={cn(
@@ -44,6 +47,7 @@ function EventWrapper({
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         isDragging && "shadow-lg",
+        isEventInPast && "line-through opacity-75",
         className
       )}
       onClick={onClick}
@@ -157,7 +161,15 @@ export function EventItem({
 
   // Agenda view - kept separate since it's significantly different
   return (
-    <button className={cn("text-left w-full p-2 rounded font-medium backdrop-blur-md transition", getEventColorClasses(eventColor), className)} onClick={onClick}>
+    <button 
+      className={cn(
+        "text-left w-full p-2 rounded font-medium backdrop-blur-md transition", 
+        getEventColorClasses(eventColor), 
+        isPast(new Date(event.end)) && "line-through opacity-75",
+        className
+      )} 
+      onClick={onClick}
+    >
       <div className="font-medium">{event.title}</div>
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
