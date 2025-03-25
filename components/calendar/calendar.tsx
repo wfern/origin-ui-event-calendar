@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, useId } from "react"
 import {
   addDays,
   addMonths,
@@ -54,12 +54,15 @@ export function Calendar({
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
   const isMobile = useMediaQuery("(max-width: 640px)")
+  const eventId = useId()
 
   // Add keyboard shortcuts for view switching
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Skip if user is typing in an input, textarea or contentEditable element
+      // or if the event dialog is open
       if (
+        isEventDialogOpen ||
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||
         (e.target instanceof HTMLElement && e.target.isContentEditable)
@@ -88,7 +91,7 @@ export function Calendar({
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
     }
-  }, [])
+  }, [isEventDialogOpen])
 
   const handlePrevious = () => {
     if (view === "month") {
@@ -165,7 +168,7 @@ export function Calendar({
     } else {
       onEventAdd?.({
         ...event,
-        id: generateId(),
+        id: eventId,
       })
     }
     setIsEventDialogOpen(false)
@@ -201,7 +204,14 @@ export function Calendar({
   }, [currentDate, view])
 
   return (
-    <div className="border rounded-xl overflow-hidden flex-1 flex flex-col" style={{ "--event-height": `${EventHeight}px`, "--event-gap": `${EventGap}px`, "--week-cells-height": `${WeekCellsHeight}px` } as React.CSSProperties}>
+    <div 
+      className="border rounded-xl overflow-hidden flex-1 flex flex-col" 
+      style={{
+        "--event-height": `${EventHeight}px`, 
+        "--event-gap": `${EventGap}px`, 
+        "--week-cells-height": `${WeekCellsHeight}px`
+      } as React.CSSProperties} 
+    >
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
         <div className={cn("flex items-center justify-between p-4 border-b border-border/70", className)}>
           <div className="flex items-center gap-2">
@@ -309,10 +319,6 @@ function addHoursToDate(date: Date, hours: number): Date {
   const result = new Date(date)
   result.setHours(result.getHours() + hours)
   return result
-}
-
-function generateId(): string {
-  return Math.random().toString(36).substring(2, 11)
 }
 
 // Helper functions for view names
