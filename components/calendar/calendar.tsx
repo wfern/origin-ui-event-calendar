@@ -20,6 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import type { CalendarEvent, CalendarView } from "@/components/calendar/types"
@@ -31,6 +32,7 @@ import { EventDialog } from "@/components/calendar/event-dialog"
 import { CalendarDndProvider } from "@/hooks/use-calendar-dnd"
 import { EventHeight, EventGap, WeekCellsHeight } from "@/components/calendar/constants"
 import { addHoursToDate } from "@/components/calendar/utils"
+import { RiCalendarCheckLine } from "@remixicon/react"
 
 export interface CalendarProps {
   events?: CalendarEvent[]
@@ -206,7 +208,7 @@ export function Calendar({
 
   return (
     <div 
-      className="border rounded-xl overflow-hidden flex-1 flex flex-col" 
+      className="border rounded-lg overflow-hidden flex-1 flex flex-col" 
       style={{
         "--event-height": `${EventHeight}px`, 
         "--event-gap": `${EventGap}px`, 
@@ -214,45 +216,48 @@ export function Calendar({
       } as React.CSSProperties} 
     >
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        <div className={cn("flex items-center justify-between p-4 border-b border-border/70", className)}>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={handlePrevious}>
-              <ChevronLeftIcon className="h-4 w-4" />
+        <div className={cn("flex items-center justify-between p-2 sm:p-4 border-b border-border/70", className)}>
+          <div className="flex items-center gap-1 sm:gap-4">
+            <Button variant="outline" className="aspect-square max-[480px]:p-0 max-[480px]:size-8" onClick={handleToday}>
+              <RiCalendarCheckLine className="min-[480px]:hidden" size={16} aria-hidden="true" />
+              <span className="max-[480px]:sr-only">Today</span>
             </Button>
-            <Button variant="outline" size="icon" onClick={handleNext}>
-              <ChevronRightIcon className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" className="ml-2" onClick={handleToday}>
-              Today
-            </Button>
-            <h2 className="text-lg font-semibold ml-4">{viewTitle}</h2>
+            <div className="flex items-center sm:gap-2">
+              <Button variant="ghost" size="icon" className="max-[480px]:size-8" onClick={handlePrevious} aria-label="Previous">
+                <ChevronLeftIcon size={16} aria-hidden="true" />
+              </Button>
+              <Button variant="ghost" size="icon" className="max-[480px]:size-8" onClick={handleNext} aria-label="Next">
+                <ChevronRightIcon size={16} aria-hidden="true" />
+              </Button>            
+            </div>
+            <h2 className="text-sm sm:text-lg md:text-xl font-semibold">{viewTitle}</h2>
           </div>
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="px-3 gap-1.5">
-                  <span>{isMobile ? getViewShortName(view) : getViewFullName(view)}</span>
+                <Button variant="outline" size="sm" className="max-[480px]:h-8 gap-1.5">
+                  <span><span className="min-[480px]:hidden" aria-hidden="true">{view.charAt(0).toUpperCase()}</span><span className="max-[480px]:sr-only">{view.charAt(0).toUpperCase() + view.slice(1)}</span></span>
                   <ChevronDownIcon className="-me-1 opacity-60" size={16} aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setView("month")}>
-                  Month <span className="ml-auto text-xs text-muted-foreground">M</span>
+                  Month <DropdownMenuShortcut>M</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("week")}>
-                  Week <span className="ml-auto text-xs text-muted-foreground">W</span>
+                  Week <DropdownMenuShortcut>W</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("day")}>
-                  Day <span className="ml-auto text-xs text-muted-foreground">D</span>
+                  Day <DropdownMenuShortcut>D</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("agenda")}>
-                  Agenda <span className="ml-auto text-xs text-muted-foreground">A</span>
+                  Agenda <DropdownMenuShortcut>A</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button 
               size="sm" 
-              className="aspect-square max-sm:p-0"
+              className="aspect-square max-sm:p-0 max-[480px]:size-8"
               onClick={() => {
                 setSelectedEvent(null) // Ensure we're creating a new event
                 setIsEventDialogOpen(true)
@@ -313,23 +318,4 @@ export function Calendar({
       </CalendarDndProvider>
     </div>
   )
-}
-
-// Helper functions for view names
-function getViewShortName(view: CalendarView): string {
-  switch (view) {
-    case "month": return "M"
-    case "week": return "W"
-    case "day": return "D"
-    case "agenda": return "A"
-  }
-}
-
-function getViewFullName(view: CalendarView): string {
-  switch (view) {
-    case "month": return "Month"
-    case "week": return "Week"
-    case "day": return "Day"
-    case "agenda": return "Agenda"
-  }
 }

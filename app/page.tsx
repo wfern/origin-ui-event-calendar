@@ -89,7 +89,7 @@ export default function Home() {
 
   return (
     // Add min-h-screen to make it full height
-    <div className="flex flex-col p-4 md:p-8">
+    <div className="flex flex-col p-1 sm:p-4 md:p-8">
       <Calendar
         events={events}
         onEventAdd={handleEventAdd}
