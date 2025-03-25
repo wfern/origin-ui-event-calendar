@@ -174,31 +174,18 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
   return (
     <>
       {showAllDaySection && (
-        <div className="border-b p-2">
-          <div className="text-xs font-medium text-muted-foreground mb-1">All day</div>
-          <div className="space-y-1">
-            {allDayEvents.map((event) => {
-              const eventStart = new Date(event.start)
-              const eventEnd = new Date(event.end)
-              const isMultiDay = isMultiDayEvent(event)
-              const isFirstDay = isSameDay(currentDate, eventStart)
-              const isLastDay = isSameDay(currentDate, eventEnd)
+        <div className="border-t border-border/70 bg-muted/50">
+          <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
+            <div className="relative">
+              <span className="absolute h-6 bottom-0 left-0 pe-2 sm:pe-4 text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">All day</span>
+            </div>
+            <div className="p-1 border-r border-border/70 last:border-r-0 relative">
+              {allDayEvents.map((event) => {
+                const eventStart = new Date(event.start)
+                const eventEnd = new Date(event.end)
+                const isFirstDay = isSameDay(currentDate, eventStart)
+                const isLastDay = isSameDay(currentDate, eventEnd)
 
-              // Only make single-day all-day events draggable
-              if (!isMultiDay) {
-                return (
-                  <div key={event.id} onClick={(e) => e.stopPropagation()} className="mb-1">
-                    <DraggableEvent
-                      event={event}
-                      view="day"
-                      onClick={(e) => handleEventClick(event, e)}
-                      isFirstDay={true}
-                      isLastDay={true}
-                    />
-                  </div>
-                )
-              } else {
-                // Non-draggable version for multi-day events
                 return (
                   <EventItem
                     key={`spanning-${event.id}`}
@@ -212,17 +199,19 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                     <div>{event.title}</div>
                   </EventItem>
                 )
-              }
-            })}
+              })}
+            </div>
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr] flex-1">
+      <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr] flex-1 border-t border-border/70">
         <div>
-          {hours.map((hour) => (
+          {hours.map((hour, index) => (
             <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
-              <span className="absolute h-4 -top-2 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">{format(hour, "h a")}</span>
+              {index > 0 && (
+                <span className="absolute flex items-center h-6 -top-3 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full justify-end">{format(hour, "h a")}</span>
+              )}
             </div>
           ))}
         </div>

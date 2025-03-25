@@ -195,12 +195,12 @@ export function Calendar({
       const start = startOfWeek(currentDate, { weekStartsOn: 0 })
       const end = endOfWeek(currentDate, { weekStartsOn: 0 })
       if (isSameMonth(start, end)) {
-        return `${format(start, "MMM d")} - ${format(end, "d, yyyy")}`
+        return format(start, "MMMM yyyy")
       } else {
-        return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`
+        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`
       }
     } else if (view === "day") {
-      return format(currentDate, "EEE MMMM d, yyyy")
+      return <><span className="min-[480px]:hidden" aria-hidden="true">{format(currentDate, "MMM d, yyyy")}</span><span className="max-[479px]:hidden">{format(currentDate, "EEE MMMM d, yyyy")}</span></>
     } else {
       return format(currentDate, "MMMM yyyy")
     }
@@ -208,7 +208,7 @@ export function Calendar({
 
   return (
     <div 
-      className="border rounded-lg overflow-hidden flex-1 flex flex-col" 
+      className="border rounded-lg flex-1 flex flex-col" 
       style={{
         "--event-height": `${EventHeight}px`, 
         "--event-gap": `${EventGap}px`, 
@@ -216,11 +216,11 @@ export function Calendar({
       } as React.CSSProperties} 
     >
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        <div className={cn("flex items-center justify-between p-2 sm:p-4 border-b border-border/70", className)}>
+        <div className={cn("flex items-center justify-between p-2 sm:p-4", className)}>
           <div className="flex items-center gap-1 sm:gap-4">
-            <Button variant="outline" size="sm" className="aspect-square max-[480px]:p-0" onClick={handleToday}>
+            <Button variant="outline" size="sm" className="aspect-square max-[479px]:p-0" onClick={handleToday}>
               <RiCalendarCheckLine className="min-[480px]:hidden" size={16} aria-hidden="true" />
-              <span className="max-[480px]:sr-only">Today</span>
+              <span className="max-[479px]:sr-only">Today</span>
             </Button>
             <div className="flex items-center sm:gap-2">
               <Button variant="ghost" size="icon" onClick={handlePrevious} aria-label="Previous">
@@ -235,8 +235,8 @@ export function Calendar({
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="max-[480px]:h-8 gap-1.5">
-                  <span><span className="min-[480px]:hidden" aria-hidden="true">{view.charAt(0).toUpperCase()}</span><span className="max-[480px]:sr-only">{view.charAt(0).toUpperCase() + view.slice(1)}</span></span>
+                <Button variant="outline" size="sm" className="max-[479px]:h-8 gap-1.5">
+                  <span><span className="min-[480px]:hidden" aria-hidden="true">{view.charAt(0).toUpperCase()}</span><span className="max-[479px]:sr-only">{view.charAt(0).toUpperCase() + view.slice(1)}</span></span>
                   <ChevronDownIcon className="-me-1 opacity-60" size={16} aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>

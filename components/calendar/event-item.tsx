@@ -25,6 +25,7 @@ interface EventWrapperProps {
   onClick?: (e: React.MouseEvent) => void
   className?: string
   children: React.ReactNode
+  currentTime?: Date
 }
 
 // Shared wrapper component for event styling
@@ -35,10 +36,15 @@ function EventWrapper({
   isDragging,
   onClick,
   className,
-  children
+  children,
+  currentTime
 }: EventWrapperProps) {
-  // Check if the event is in the past
-  const isEventInPast = isPast(new Date(event.end))
+  // Always use the currentTime (if provided) to determine if the event is in the past
+  const displayEnd = currentTime
+    ? new Date(new Date(currentTime).getTime() + (new Date(event.end).getTime() - new Date(event.start).getTime()))
+    : new Date(event.end)
+  
+  const isEventInPast = isPast(displayEnd)
 
   return (
     <div
@@ -47,7 +53,7 @@ function EventWrapper({
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         isDragging && "shadow-lg",
-        isEventInPast && "line-through opacity-75",
+        isEventInPast && "line-through",
         className
       )}
       onClick={onClick}
@@ -119,6 +125,7 @@ export function EventItem({
           "h-[var(--event-height)] mt-[var(--event-gap)] items-center text-[10px] sm:text-xs",
           className
         )}
+        currentTime={currentTime}
       >
         {children || (
           <span className="truncate">
@@ -144,6 +151,7 @@ export function EventItem({
           view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
           className
         )}
+        currentTime={currentTime}
       >
         {durationMinutes < 45 ? (
           <div className="truncate">

@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
-import {  WeekCellsHeight } from "@/components/calendar/constants"
+import { WeekCellsHeight } from "@/components/calendar/constants"
 import { isMultiDayEvent } from "@/components/calendar/utils"
 import { useCurrentTimeIndicator } from "@/hooks/use-current-time-indicator"
 import { EventItem } from "./event-item"
@@ -190,24 +190,31 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(currentDate, "week")
 
   return (
-    <div className="flex flex-col h-full overflow-auto">
+    <div className="flex flex-col h-full">
+      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md grid grid-cols-8 border-b border-border/70">
+        <div className="py-2 text-center text-sm text-muted-foreground/70"><span className="max-[479px]:sr-only">{format(new Date(), "O")}</span></div>
+        {days.map((day) => (
+          <div 
+            key={day.toString()} 
+            className={cn(
+              "py-2 text-center text-sm",
+              isToday(day) 
+                ? "font-medium text-foreground" 
+                : "text-muted-foreground/70"
+            )}
+          >
+            <span className="sm:hidden" aria-hidden="true">{format(day, "E")[0]}{" "}{format(day, "d")}</span>
+            <span className="max-sm:hidden">{format(day, "EEE dd")}</span>
+          </div>
+        ))}
+      </div>
 
       {showAllDaySection && (
-        <div className="border-b">
-          <div className="grid grid-cols-8 border-b">
-            <div className="py-1 pl-2 text-xs font-medium text-muted-foreground">All day</div>
-            {days.map((day) => (
-              <div
-                key={day.toString()}
-                className="py-1 text-center text-xs font-medium"
-                data-today={isToday(day) || undefined}
-              >
-                {format(day, "EEE dd")}
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-8 min-h-[40px]">
-            <div className="border-r border-border/70" />
+        <div className="border-b border-border/70 bg-muted/50">
+          <div className="grid grid-cols-8">
+            <div className="border-r border-border/70 relative">
+              <span className="absolute h-6 bottom-0 left-0 pe-2 sm:pe-4 text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">All day</span>
+            </div>
             {days.map((day, dayIndex) => {
               const dayAllDayEvents = allDayEvents.filter((event) => {
                 const eventStart = new Date(event.start)
@@ -224,7 +231,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                   {dayAllDayEvents.map((event) => {
                     const eventStart = new Date(event.start)
                     const eventEnd = new Date(event.end)
-                    const isMultiDay = isMultiDayEvent(event)
                     const isFirstDay = isSameDay(day, eventStart)
                     const isLastDay = isSameDay(day, eventEnd)
 
@@ -232,37 +238,21 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                     const isFirstVisibleDay = dayIndex === 0 && isBefore(eventStart, weekStart)
                     const shouldShowTitle = isFirstDay || isFirstVisibleDay
 
-                    // Only make single-day all-day events draggable
-                    if (!isMultiDay && isFirstDay) {
-                      return (
-                        <div key={event.id} className="mb-1">
-                          <DraggableEvent
-                            event={event}
-                            view="week"
-                            onClick={(e) => handleEventClick(event, e)}
-                            isFirstDay={true}
-                            isLastDay={true}
-                          />
+                    return (
+                      <EventItem
+                        key={`spanning-${event.id}`}
+                        onClick={(e) => handleEventClick(event, e)}
+                        event={event}
+                        view="month"
+                        isFirstDay={isFirstDay}
+                        isLastDay={isLastDay}
+                      >
+                        {/* Show title if it's the first day of the event or the first visible day in the week */}
+                        <div className={cn("truncate", !shouldShowTitle && "invisible")} aria-hidden={!shouldShowTitle}>
+                          {event.title}
                         </div>
-                      )
-                    } else {
-                      // Non-draggable version for multi-day events
-                      return (
-                        <EventItem
-                          key={`spanning-${event.id}`}
-                          onClick={(e) => handleEventClick(event, e)}
-                          event={event}
-                          view="month"
-                          isFirstDay={isFirstDay}
-                          isLastDay={isLastDay}
-                        >
-                          {/* Show title if it's the first day of the event or the first visible day in the week */}
-                          <div className={cn("truncate", !shouldShowTitle && "invisible")} aria-hidden={!shouldShowTitle}>
-                            {event.title}
-                          </div>
-                        </EventItem>
-                      )
-                    }
+                      </EventItem>
+                    )
                   })}
                 </div>
               )
@@ -271,12 +261,15 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         </div>
       )}
 
-      <div className="grid grid-cols-8 flex-1 relative">
-        <div className="border-r border-border/70 relative">
-          <div className="sticky top-0 z-10 bg-background border-b py-1 text-center text-xs font-medium">Time</div>
-          {hours.map((hour) => (
+      <div className="grid grid-cols-8 flex-1">
+        <div className="border-r border-border/70">
+          {hours.map((hour, index) => (
             <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
-              <span className="absolute h-4 -top-2 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">{format(hour, "h a")}</span>
+              {index > 0 && (
+                <span className="absolute flex items-center h-6 -top-3 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full justify-right">
+                  {format(hour, "h a")}
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -287,84 +280,77 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             className="border-r border-border/70 last:border-r-0 relative"
             data-today={isToday(day) || undefined}
           >
-            <div className="sticky top-0 z-10 bg-background border-b border-border/70 py-1 text-center text-xs font-medium">
-              {format(day, "EEE dd")}
-            </div>
-
-            {/* Time grid */}
-            <div className="relative">
-              {hours.map((hour) => {
-                const hourValue = getHours(hour)
-                return (
-                  <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
-                    {/* Quarter-hour intervals */}
-                    {[0, 1, 2, 3].map((quarter) => {
-                      const quarterHourTime = hourValue + quarter * 0.25
-                      return (
-                        <DroppableCell
-                          key={`${hour.toString()}-${quarter}`}
-                          id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
-                          date={day}
-                          time={quarterHourTime}
-                          className={cn(
-                            "absolute w-full h-[calc(var(--week-cells-height)/4)]",
-                            quarter === 0 && "top-0",
-                            quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
-                            quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
-                            quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
-                          )}
-                          onClick={() => {
-                            const startTime = new Date(day)
-                            startTime.setHours(hourValue)
-                            startTime.setMinutes(quarter * 15)
-                            onEventCreate(startTime)
-                          }}
-                        />
-                      )
-                    })}
-                  </div>
-                )
-              })}
-
-              {/* Positioned events */}
-              {processedDayEvents[dayIndex].map((positionedEvent) => (
-                <div
-                  key={positionedEvent.event.id}
-                  className="absolute z-10 px-0.5"
-                  style={{
-                    top: `${positionedEvent.top}px`,
-                    height: `${positionedEvent.height}px`,
-                    left: `${positionedEvent.left * 100}%`,
-                    width: `${positionedEvent.width * 100}%`,
-                    zIndex: positionedEvent.zIndex,
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="h-full w-full">
-                    <DraggableEvent
-                      event={positionedEvent.event}
-                      view="week"
-                      onClick={(e) => handleEventClick(positionedEvent.event, e)}
-                      showTime
-                      height={positionedEvent.height}
-                    />
-                  </div>
+            {hours.map((hour) => {
+              const hourValue = getHours(hour)
+              return (
+                <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
+                  {/* Quarter-hour intervals */}
+                  {[0, 1, 2, 3].map((quarter) => {
+                    const quarterHourTime = hourValue + quarter * 0.25
+                    return (
+                      <DroppableCell
+                        key={`${hour.toString()}-${quarter}`}
+                        id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
+                        date={day}
+                        time={quarterHourTime}
+                        className={cn(
+                          "absolute w-full h-[calc(var(--week-cells-height)/4)]",
+                          quarter === 0 && "top-0",
+                          quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
+                          quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
+                          quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
+                        )}
+                        onClick={() => {
+                          const startTime = new Date(day)
+                          startTime.setHours(hourValue)
+                          startTime.setMinutes(quarter * 15)
+                          onEventCreate(startTime)
+                        }}
+                      />
+                    )
+                  })}
                 </div>
-              ))}
+              )
+            })}
 
-              {/* Current time indicator - only show for today's column */}
-              {currentTimeVisible && isToday(day) && (
-                <div
-                  className="absolute left-0 right-0 z-20 pointer-events-none"
-                  style={{ top: `${currentTimePosition}%` }}
-                >
-                  <div className="relative flex items-center">
-                    <div className="absolute -left-1 w-2 h-2 bg-primary rounded-full"></div>
-                    <div className="w-full h-[2px] bg-primary"></div>
-                  </div>
+            {/* Positioned events */}
+            {processedDayEvents[dayIndex].map((positionedEvent) => (
+              <div
+                key={positionedEvent.event.id}
+                className="absolute z-10 px-0.5"
+                style={{
+                  top: `${positionedEvent.top}px`,
+                  height: `${positionedEvent.height}px`,
+                  left: `${positionedEvent.left * 100}%`,
+                  width: `${positionedEvent.width * 100}%`,
+                  zIndex: positionedEvent.zIndex,
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="h-full w-full">
+                  <DraggableEvent
+                    event={positionedEvent.event}
+                    view="week"
+                    onClick={(e) => handleEventClick(positionedEvent.event, e)}
+                    showTime
+                    height={positionedEvent.height}
+                  />
                 </div>
-              )}
-            </div>
+              </div>
+            ))}
+
+            {/* Current time indicator - only show for today's column */}
+            {currentTimeVisible && isToday(day) && (
+              <div
+                className="absolute left-0 right-0 z-20 pointer-events-none"
+                style={{ top: `${currentTimePosition}%` }}
+              >
+                <div className="relative flex items-center">
+                  <div className="absolute -left-1 w-2 h-2 bg-primary rounded-full"></div>
+                  <div className="w-full h-[2px] bg-primary"></div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
