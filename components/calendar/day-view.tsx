@@ -285,7 +285,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                 width: `${positionedEvent.width * 100}%`,
                 zIndex: positionedEvent.zIndex,
               }}
-              onClick={(e) => e.stopPropagation()}
             >
               <div className="h-full w-full">
                 <DraggableEvent
