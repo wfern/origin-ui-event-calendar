@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { format } from "date-fns"
+import { format, isAfter, isBefore } from "date-fns"
 import type { CalendarEvent, EventColor } from "@/components/calendar/types"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -34,6 +34,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
   const [allDay, setAllDay] = useState(false)
   const [location, setLocation] = useState("")
   const [color, setColor] = useState<EventColor>("sky")
+  const [error, setError] = useState<string | null>(null)
 
   // Debug log to check what event is being passed
   useEffect(() => {
@@ -55,6 +56,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
       setAllDay(event.allDay || false)
       setLocation(event.location || "")
       setColor((event.color as EventColor) || "sky")
+      setError(null) // Reset error when opening dialog
     } else {
       resetForm()
     }
@@ -70,6 +72,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     setAllDay(false)
     setLocation("")
     setColor("sky")
+    setError(null)
   }
 
   const formatTimeForInput = (date: Date) => {
@@ -109,9 +112,18 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
       end.setHours(23, 59, 59, 999)
     }
 
+    // Validate that end date is not before start date
+    if (isBefore(end, start)) {
+      setError("End date cannot be before start date")
+      return
+    }
+
+    // Use generic title if empty
+    const eventTitle = title.trim() ? title : "(no title)"
+
     onSave({
       id: event?.id || "",
-      title,
+      title: eventTitle,
       description,
       start,
       end,
@@ -143,6 +155,11 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
         <DialogHeader>
           <DialogTitle>{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
         </DialogHeader>
+        {error && (
+          <div className="bg-destructive/15 text-destructive px-3 py-2 rounded-md text-sm">
+            {error}
+          </div>
+        )}
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="title">Title</Label>
@@ -225,7 +242,12 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                   <Calendar
                     mode="single"
                     selected={endDate}
-                    onSelect={(date) => date && setEndDate(date)}
+                    onSelect={(date) => {
+                      if (date) {
+                        setEndDate(date)
+                        setError(null) // Clear error when user changes the date
+                      }
+                    }}
                     initialFocus
                   />
                 </PopoverContent>
