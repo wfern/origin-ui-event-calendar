@@ -1,0 +1,8 @@
+// Height of calendar events in pixels - used in month, week and day views
+export const EventHeight = 24;
+
+// Vertical gap between events in pixels - controls spacing in month view
+export const EventGap = 4;
+
+// Height of hour cells in week and day views - controls the scale of time display
+export const WeekCellsHeight = 64;

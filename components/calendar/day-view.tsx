@@ -21,6 +21,8 @@ import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
 import { getEventColorClasses } from "@/components/calendar/utils"
 import { useCurrentTimeIndicator } from "@/components/calendar/utils"
+import { EventItem } from "@/components/calendar/event-item"
+import { WeekCellsHeight } from "@/components/calendar/constants"
 
 interface DayViewProps {
   currentDate: Date
@@ -37,8 +39,6 @@ interface PositionedEvent {
   width: number
   zIndex: number
 }
-
-const HOUR_HEIGHT = 64; // in pixels
 
 export function DayView({ currentDate, events, onEventSelect, onEventCreate }: DayViewProps) {
 
@@ -126,8 +126,8 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       // Calculate top position and height
       const startHour = getHours(adjustedStart) + getMinutes(adjustedStart) / 60
       const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60
-      const top = startHour * HOUR_HEIGHT
-      const height = (endHour - startHour) * HOUR_HEIGHT
+      const top = startHour * WeekCellsHeight
+      const height = (endHour - startHour) * WeekCellsHeight
 
       // Find a column for this event
       let columnIndex = 0
@@ -172,7 +172,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
     })
 
     return result
-  }, [timeEvents, currentDate, HOUR_HEIGHT])
+  }, [timeEvents, currentDate, WeekCellsHeight])
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -211,24 +211,17 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
               } else {
                 // Non-draggable version for multi-day events
                 return (
-                  <div
+                  <EventItem
                     key={`spanning-${event.id}`}
-                    className={cn(
-                      "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex items-center overflow-hidden backdrop-blur-md transition",
-                      getEventColorClasses(event.color),
-                      isFirstDay && isLastDay
-                        ? "rounded-md"
-                        : isFirstDay
-                          ? "rounded-l-md rounded-r-none"
-                          : isLastDay
-                            ? "rounded-r-md rounded-l-none"
-                            : "rounded-none",
-                    )}
                     onClick={(e) => handleEventClick(event, e)}
+                    event={event}
+                    view="month"
+                    isFirstDay={isFirstDay}
+                    isLastDay={isLastDay}
                   >
                     {/* Always show the title in day view for better usability */}
-                    <div className="truncate">{event.title}</div>
-                  </div>
+                    <div>{event.title}</div>
+                  </EventItem>
                 )
               }
             })}
@@ -236,10 +229,10 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
       )}
 
-      <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr] flex-1" style={{ "--hour-height": `${HOUR_HEIGHT}px` } as React.CSSProperties }>
+      <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr] flex-1">
         <div>
           {hours.map((hour) => (
-            <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
+            <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
               <span className="absolute h-4 -top-2 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">{format(hour, "h a")}</span>
             </div>
           ))}
@@ -250,7 +243,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
           {hours.map((hour) => {
             const hourValue = getHours(hour)
             return (
-              <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
+              <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
                 {/* Quarter-hour intervals */}
                 {[0, 1, 2, 3].map((quarter) => {
                   const quarterHourTime = hourValue + quarter * 0.25
@@ -261,11 +254,11 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                       date={currentDate}
                       time={quarterHourTime}
                       className={cn(
-                        "absolute w-full h-[calc(var(--hour-height)/4)]",
+                        "absolute w-full h-[calc(var(--week-cells-height)/4)]",
                         quarter === 0 && "top-0",
-                        quarter === 1 && "top-[calc(var(--hour-height)/4)]",
-                        quarter === 2 && "top-[calc(var(--hour-height)/4*2)]",
-                        quarter === 3 && "top-[calc(var(--hour-height)/4*3)]",
+                        quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
+                        quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
+                        quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
                       )}
                       onClick={() => {
                         const startTime = new Date(currentDate)
@@ -308,7 +301,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
 
           {/* Current time indicator */}
           {currentTimeVisible && (
-            <div 
+            <div
               className="absolute left-0 right-0 z-20 pointer-events-none"
               style={{ top: `${currentTimePosition}%` }}
             >

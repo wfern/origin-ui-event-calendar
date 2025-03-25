@@ -29,6 +29,7 @@ import { DayView } from "@/components/calendar/day-view"
 import { AgendaView } from "@/components/calendar/agenda-view"
 import { EventDialog } from "@/components/calendar/event-dialog"
 import { CalendarDndProvider } from "@/hooks/use-calendar-dnd"
+import { EventHeight, EventGap, WeekCellsHeight } from "@/components/calendar/constants"
 
 export interface CalendarProps {
   events?: CalendarEvent[]
@@ -200,7 +201,7 @@ export function Calendar({
   }, [currentDate, view])
 
   return (
-    <div className="border rounded-xl overflow-hidden flex-1 flex flex-col">
+    <div className="border rounded-xl overflow-hidden flex-1 flex flex-col" style={{ "--event-height": `${EventHeight}px`, "--event-gap": `${EventGap}px`, "--week-cells-height": `${WeekCellsHeight}px` } as React.CSSProperties}>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
         <div className={cn("flex items-center justify-between p-4 border-b border-border/70", className)}>
           <div className="flex items-center gap-2">

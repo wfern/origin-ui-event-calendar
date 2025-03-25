@@ -19,13 +19,14 @@ import {
   areIntervalsOverlapping,
   differenceInDays,
   isBefore,
-  isWithinInterval,
 } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
-import { getEventColorClasses, useCurrentTimeIndicator } from "@/components/calendar/utils"
+import { useCurrentTimeIndicator } from "@/components/calendar/utils"
+import { EventItem } from "./event-item"
+import { WeekCellsHeight } from "@/components/calendar/constants"
 
 interface WeekViewProps {
   currentDate: Date
@@ -42,8 +43,6 @@ interface PositionedEvent {
   width: number
   zIndex: number
 }
-
-const HOUR_HEIGHT = 64; // in pixels
 
 export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: WeekViewProps) {
 
@@ -137,8 +136,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         // Calculate top position and height
         const startHour = getHours(adjustedStart) + getMinutes(adjustedStart) / 60
         const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60
-        const top = startHour * HOUR_HEIGHT
-        const height = (endHour - startHour) * HOUR_HEIGHT
+        const top = startHour * WeekCellsHeight
+        const height = (endHour - startHour) * WeekCellsHeight
 
         // Find a column for this event
         let columnIndex = 0
@@ -188,7 +187,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
     })
 
     return result
-  }, [days, events, HOUR_HEIGHT])
+  }, [days, events, WeekCellsHeight])
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -244,7 +243,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                     // Only make single-day all-day events draggable
                     if (!isMultiDay && isFirstDay) {
                       return (
-                        <div key={event.id} onClick={(e) => e.stopPropagation()} className="mb-1">
+                        <div key={event.id} className="mb-1">
                           <DraggableEvent
                             event={event}
                             view="week"
@@ -257,26 +256,19 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                     } else {
                       // Non-draggable version for multi-day events
                       return (
-                        <div
-                          key={`${event.id}-${day.toISOString()}`}
-                          className={cn(
-                            "px-2 py-1 text-xs font-medium cursor-pointer select-none mb-1 flex items-center overflow-hidden backdrop-blur-md transition",
-                            getEventColorClasses(event.color),
-                            isFirstDay && isLastDay
-                              ? "rounded-md"
-                              : isFirstDay
-                                ? "rounded-l-md rounded-r-none"
-                                : isLastDay
-                                  ? "rounded-r-md rounded-l-none"
-                                  : "rounded-none",
-                          )}
+                        <EventItem
+                          key={`spanning-${event.id}`}
                           onClick={(e) => handleEventClick(event, e)}
+                          event={event}
+                          view="month"
+                          isFirstDay={isFirstDay}
+                          isLastDay={isLastDay}
                         >
                           {/* Show title if it's the first day of the event or the first visible day in the week */}
                           <div className={cn("truncate", !shouldShowTitle && "invisible")} aria-hidden={!shouldShowTitle}>
                             {event.title}
                           </div>
-                        </div>
+                        </EventItem>
                       )
                     }
                   })}
@@ -287,11 +279,11 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         </div>
       )}
 
-      <div className="grid grid-cols-8 flex-1 relative" style={{ "--hour-height": `${HOUR_HEIGHT}px` } as React.CSSProperties }>
+      <div className="grid grid-cols-8 flex-1 relative">
         <div className="border-r border-border/70 relative">
           <div className="sticky top-0 z-10 bg-background border-b py-1 text-center text-xs font-medium">Time</div>
           {hours.map((hour) => (
-            <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
+            <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
               <span className="absolute h-4 -top-2 left-0 pe-2 sm:pe-4 bg-background text-[10px] sm:text-xs text-muted-foreground/70 w-16 max-w-full text-right">{format(hour, "h a")}</span>
             </div>
           ))}
@@ -312,7 +304,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               {hours.map((hour) => {
                 const hourValue = getHours(hour)
                 return (
-                  <div key={hour.toString()} className="h-[var(--hour-height)] border-b border-border/70 last:border-b-0 relative">
+                  <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
                     {/* Quarter-hour intervals */}
                     {[0, 1, 2, 3].map((quarter) => {
                       const quarterHourTime = hourValue + quarter * 0.25
@@ -323,11 +315,11 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                           date={day}
                           time={quarterHourTime}
                           className={cn(
-                            "absolute w-full h-[calc(var(--hour-height)/4)]",
+                            "absolute w-full h-[calc(var(--week-cells-height)/4)]",
                             quarter === 0 && "top-0",
-                            quarter === 1 && "top-[calc(var(--hour-height)/4)]",
-                            quarter === 2 && "top-[calc(var(--hour-height)/4*2)]",
-                            quarter === 3 && "top-[calc(var(--hour-height)/4*3)]",
+                            quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
+                            quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
+                            quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
                           )}
                           onClick={() => {
                             const startTime = new Date(day)
@@ -370,7 +362,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
               {/* Current time indicator - only show for today's column */}
               {currentTimeVisible && isToday(day) && (
-                <div 
+                <div
                   className="absolute left-0 right-0 z-20 pointer-events-none"
                   style={{ top: `${currentTimePosition}%` }}
                 >

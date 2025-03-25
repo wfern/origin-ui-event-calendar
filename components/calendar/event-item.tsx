@@ -17,6 +17,42 @@ const formatTimeWithOptionalMinutes = (date: Date) => {
   return format(date, getMinutes(date) === 0 ? 'ha' : 'h:mma').toLowerCase();
 };
 
+interface EventWrapperProps {
+  event: CalendarEvent
+  isFirstDay?: boolean
+  isLastDay?: boolean
+  isDragging?: boolean
+  onClick?: (e: React.MouseEvent) => void
+  className?: string
+  children: React.ReactNode
+}
+
+// Shared wrapper component for event styling
+function EventWrapper({
+  event,
+  isFirstDay = true,
+  isLastDay = true,
+  isDragging,
+  onClick,
+  className,
+  children
+}: EventWrapperProps) {
+  return (
+    <div
+      className={cn(
+        "font-medium cursor-pointer select-none backdrop-blur-md transition h-full flex overflow-hidden px-1 sm:px-2",
+        getEventColorClasses(event.color),
+        getBorderRadiusClasses(isFirstDay, isLastDay),
+        isDragging && "shadow-lg",
+        className
+      )}
+      onClick={onClick}
+    >
+      {children}
+    </div>
+  )
+}
+
 interface EventItemProps {
   event: CalendarEvent
   view: "month" | "week" | "day" | "agenda"
@@ -26,6 +62,8 @@ interface EventItemProps {
   currentTime?: Date // For updating time during drag
   isFirstDay?: boolean
   isLastDay?: boolean
+  children?: React.ReactNode
+  className?: string
 }
 
 export function EventItem({
@@ -37,6 +75,8 @@ export function EventItem({
   currentTime,
   isFirstDay = true,
   isLastDay = true,
+  children,
+  className,
 }: EventItemProps) {
   const eventColor = event.color
 
@@ -65,35 +105,41 @@ export function EventItem({
 
   if (view === "month") {
     return (
-      <div
-        className={cn(
-          "h-full flex items-center px-1 sm:px-2 text-[10px] sm:text-xs font-medium cursor-pointer select-none backdrop-blur-md transition",
-          getEventColorClasses(eventColor),
-          getBorderRadiusClasses(isFirstDay, isLastDay),
-          isDragging && "shadow-lg",
-        )}
+      <EventWrapper
+        event={event}
+        isFirstDay={isFirstDay}
+        isLastDay={isLastDay}
+        isDragging={isDragging}
         onClick={onClick}
+        className={cn(
+          "h-[var(--event-height)] mt-[var(--event-gap)] items-center text-[10px] sm:text-xs",
+          className
+        )}
       >
-        <span className="truncate">
-          {!event.allDay && <span className="text-[11px] opacity-70 truncate">{formatTimeWithOptionalMinutes(displayStart)} </span>}
-          {event.title}
-        </span>
-      </div>
+        {children || (
+          <span className="truncate">
+            {!event.allDay && <span className="text-[11px] opacity-70 truncate">{formatTimeWithOptionalMinutes(displayStart)} </span>}
+            {event.title}
+          </span>    
+        )}
+      </EventWrapper>
     )
   }
 
   if (view === "week" || view === "day") {
     return (
-      <div
+      <EventWrapper
+        event={event}
+        isFirstDay={isFirstDay}
+        isLastDay={isLastDay}
+        isDragging={isDragging}
+        onClick={onClick}
         className={cn(
-          "px-1 sm:px-2 py-1 font-medium cursor-pointer select-none h-full flex overflow-hidden backdrop-blur-md transition",
+          "py-1",
           durationMinutes < 45 ? "items-center" : "flex-col",
           view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
-          getEventColorClasses(eventColor),
-          getBorderRadiusClasses(isFirstDay, isLastDay),
-          isDragging && "shadow-lg",
+          className
         )}
-        onClick={onClick}
       >
         {durationMinutes < 45 ? (
           <div className="truncate">
@@ -105,13 +151,13 @@ export function EventItem({
             {showTime && <div className="text-[11px] opacity-70 truncate">{getEventTime()}</div>}          
           </>
         )}
-      </div>
+      </EventWrapper>
     )
   }
 
-  // Agenda view
+  // Agenda view - kept separate since it's significantly different
   return (
-    <button className={cn("text-left w-full p-2 rounded font-medium cursor-pointer backdrop-blur-md transition", getEventColorClasses(eventColor))} onClick={onClick}>
+    <button className={cn("text-left w-full p-2 rounded font-medium cursor-pointer backdrop-blur-md transition", getEventColorClasses(eventColor), className)} onClick={onClick}>
       <div className="font-medium">{event.title}</div>
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">

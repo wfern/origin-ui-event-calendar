@@ -21,7 +21,8 @@ import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useEventVisibility } from "@/hooks/use-event-visibility"
-import { getEventColorClasses } from "@/components/calendar/utils"
+import { EventItem } from "@/components/calendar/event-item"
+import { EventHeight, EventGap } from "@/components/calendar/constants"
 
 interface MonthViewProps {
   currentDate: Date
@@ -30,9 +31,6 @@ interface MonthViewProps {
   onEventSelect: (event: CalendarEvent) => void
   onEventCreate: (startTime: Date) => void
 }
-
-const EVENT_HEIGHT = 24; // in pixels
-const EVENT_GAP = 4; // in pixels
 
 export function MonthView({ currentDate, events, onDateSelect, onEventSelect, onEventCreate }: MonthViewProps) {
   const days = useMemo(() => {
@@ -87,7 +85,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
       const eventStart = new Date(event.start)
       return isSameDay(day, eventStart)
     })
-    
+
     return sortEvents(dayEvents)
   }
 
@@ -95,15 +93,15 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
   const getSpanningEventsForDay = (day: Date) => {
     const spanningEvents = events.filter(event => {
       if (!isMultiDayEvent(event)) return false
-      
+
       const eventStart = new Date(event.start)
       const eventEnd = new Date(event.end)
-      
+
       // Only include if it's not the start day but is either the end day or a middle day
-      return !isSameDay(day, eventStart) && 
-             (isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd))
+      return !isSameDay(day, eventStart) &&
+        (isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd))
     })
-    
+
     return sortEvents(spanningEvents)
   }
 
@@ -112,11 +110,11 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
     const allEvents = events.filter(event => {
       const eventStart = new Date(event.start)
       const eventEnd = new Date(event.end)
-      return isSameDay(day, eventStart) || 
-             isSameDay(day, eventEnd) || 
-             (day > eventStart && day < eventEnd)
+      return isSameDay(day, eventStart) ||
+        isSameDay(day, eventEnd) ||
+        (day > eventStart && day < eventEnd)
     })
-    
+
     return sortEvents(allEvents)
   }
 
@@ -127,8 +125,8 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
 
   const [isMounted, setIsMounted] = useState(false);
   const { contentRef, getVisibleEventCount } = useEventVisibility({
-    eventHeight: EVENT_HEIGHT,
-    eventGap: EVENT_GAP
+    eventHeight: EventHeight,
+    eventGap: EventGap
   });
 
   useEffect(() => {
@@ -144,7 +142,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
           </div>
         ))}
       </div>
-      <div className="flex-1 grid auto-rows-fr" style={{ "--event-height": `${EVENT_HEIGHT}px`, "--event-gap": `${EVENT_GAP}px` } as React.CSSProperties}>
+      <div className="flex-1 grid auto-rows-fr">
         {weeks.map((week, weekIndex) => (
           <div key={`week-${weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
             {week.map((day, dayIndex) => {
@@ -182,7 +180,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                       className="inline-flex size-6 items-center justify-center rounded-full text-sm mt-1 group-data-[today]:bg-primary group-data-[today]:text-primary-foreground">
                       {format(day, "d")}
                     </div>
-                    <div 
+                    <div
                       ref={isReferenceCell ? contentRef : null}
                       className="overflow-hidden min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
                     >
@@ -198,45 +196,31 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
 
                         if (!isFirstDay) {
                           return (
-                            <div 
-                              key={`spanning-${event.id}`} 
-                              onClick={(e) => e.stopPropagation()}
+                            <EventItem
+                              key={`spanning-${event.id}`}
+                              onClick={(e) => handleEventClick(event, e)}
                               className={cn(
-                                "mt-[var(--event-gap)]",
-                                isHidden ? "hidden" : ""
+                                isHidden && "hidden"
                               )}
                               aria-hidden={isHidden ? "true" : undefined}
+                              event={event}
+                              view="month"
+                              isFirstDay={isFirstDay}
+                              isLastDay={isLastDay}
                             >
-                              <div
-                                className={cn(
-                                  "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs font-medium cursor-pointer select-none backdrop-blur-md transition",
-                                  getEventColorClasses(event.color),
-                                  isFirstDay && isLastDay
-                                    ? "rounded-md"
-                                    : isFirstDay
-                                      ? "rounded-l-md rounded-r-none"
-                                      : isLastDay
-                                        ? "rounded-r-md rounded-l-none"
-                                        : "rounded-none",
-                                )}
-                                onClick={(e) => handleEventClick(event, e)}
-                              >
-                                <div className="truncate invisible" aria-hidden={true}>
-                                  {!event.allDay && <span className="text-[11px] opacity-70 truncate">{format(new Date(event.start), "h:mm")} </span>}
-                                  {event.title}
-                                </div>
-                              </div>
-                            </div>
+                              <div className="invisible" aria-hidden={true}>
+                              {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
+                              {event.title}</div>
+                            </EventItem>
                           )
                         }
 
                         return (
-                          <div 
-                            key={event.id} 
-                            onClick={(e) => e.stopPropagation()}
+                          <div
+                            key={event.id}
                             className={cn(
                               "mt-[var(--event-gap)]",
-                              isHidden ? "hidden" : ""
+                              isHidden && "hidden" 
                             )}
                             aria-hidden={isHidden ? "true" : undefined}
                           >
@@ -246,7 +230,6 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                               onClick={(e) => handleEventClick(event, e)}
                               isFirstDay={isFirstDay}
                               isLastDay={isLastDay}
-                              height={EVENT_HEIGHT}
                             />
                           </div>
                         )
@@ -255,7 +238,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                       {hasMore && (
                         <Popover modal>
                           <PopoverTrigger asChild>
-                            <button 
+                            <button
                               type="button"
                               className="w-full mt-[var(--event-gap)] text-left"
                               onClick={(e) => e.stopPropagation()}
@@ -269,7 +252,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                               </div>
                             </button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-80 p-0" align="start" onClick={(e) => e.stopPropagation()}>
+                          <PopoverContent className="w-80 p-0" align="start" style={{ "--event-height": `${EventHeight}px` } as React.CSSProperties}>
                             <div className="p-2 border-b font-medium">{format(day, "d MMMM yyyy")}</div>
                             <div className="p-2 max-h-[300px] overflow-auto space-y-1">
                               {allEvents.map((event) => {
@@ -279,30 +262,13 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                                 const isLastDay = isSameDay(day, eventEnd)
 
                                 return (
-                                  <div
+                                  <EventItem
                                     key={event.id}
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      handleEventClick(event, e)
-                                    }}
-                                  >
-                                    <div
-                                      className={cn(
-                                        "px-2 py-1 text-xs cursor-pointer select-none backdrop-blur-md transition",
-                                        getEventColorClasses(event.color),
-                                        isFirstDay && isLastDay
-                                          ? "rounded-md"
-                                          : isFirstDay
-                                            ? "rounded-l-md rounded-r-none"
-                                            : isLastDay
-                                              ? "rounded-r-md rounded-l-none"
-                                              : "rounded-none",
-                                      )}
-                                    >
-                                      {!event.allDay && isFirstDay && <span>{format(eventStart, "h:mm")} </span>}
-                                      {event.title}
-                                    </div>
-                                  </div>
+                                    event={event}
+                                    view="month"
+                                    isFirstDay={isFirstDay}
+                                    isLastDay={isLastDay}
+                                  />
                                 )
                               })}
                             </div>
