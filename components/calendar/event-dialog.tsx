@@ -140,7 +140,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
   }
 
   // Updated color options to match types.ts
-  const colorOptions: Array<{value: EventColor; label: string; bgClass: string; borderClass: string}> = [
+  const colorOptions: Array<{ value: EventColor; label: string; bgClass: string; borderClass: string }> = [
     { value: "sky", label: "Sky", bgClass: "bg-sky-100", borderClass: "border-sky-200" },
     { value: "amber", label: "Amber", bgClass: "bg-amber-100", borderClass: "border-amber-200" },
     { value: "violet", label: "Violet", bgClass: "bg-violet-100", borderClass: "border-violet-200" },
@@ -184,23 +184,32 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label>Start Date</Label>
+              <Label htmlFor="start-date">Start Date</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
-                    className={cn("justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                    id="start-date"
+                    variant={"outline"}
+                    className={cn(
+                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      !startDate && "text-muted-foreground",
+                    )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {startDate ? format(startDate, "PPP") : "Pick a date"}
+                    <span className={cn("truncate", !startDate && "text-muted-foreground")}>
+                      {startDate ? format(startDate, "PPP") : "Pick a date"}
+                    </span>
+                    <CalendarIcon
+                      size={16}
+                      className="text-muted-foreground/80 shrink-0"
+                      aria-hidden="true"
+                    />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-2" align="start">
                   <Calendar
                     mode="single"
                     selected={startDate}
                     onSelect={(date) => date && setStartDate(date)}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -227,18 +236,28 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label>End Date</Label>
+              <Label htmlFor="end-date">End Date</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
-                    className={cn("justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                    id="end-date"
+                    variant={"outline"}
+                    className={cn(
+                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      !startDate && "text-muted-foreground",
+                    )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {endDate ? format(endDate, "PPP") : "Pick a date"}
+                    <span className={cn("truncate", !startDate && "text-muted-foreground")}>
+                      {startDate ? format(startDate, "PPP") : "Pick a date"}
+                    </span>
+                    <CalendarIcon
+                      size={16}
+                      className="text-muted-foreground/80 shrink-0"
+                      aria-hidden="true"
+                    />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-2" align="start">
                   <Calendar
                     mode="single"
                     selected={endDate}
@@ -248,7 +267,6 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                         setError(null) // Clear error when user changes the date
                       }
                     }}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
