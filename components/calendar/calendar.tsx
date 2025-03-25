@@ -171,7 +171,7 @@ export function Calendar({
     } else {
       onEventAdd?.({
         ...event,
-        id: eventId,
+        id: Math.random().toString(36).substring(2, 11),
       })
     }
     setIsEventDialogOpen(false)
