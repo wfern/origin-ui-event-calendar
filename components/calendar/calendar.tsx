@@ -12,10 +12,15 @@ import {
   subMonths,
   subWeeks,
 } from "date-fns"
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, ChevronDownIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import type { CalendarEvent, CalendarView } from "@/components/calendar/types"
 import { MonthView } from "@/components/calendar/month-view"
@@ -165,10 +170,10 @@ export function Calendar({
         <div className={cn("flex items-center justify-between p-4 border-b border-border/70", className)}>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" onClick={handlePrevious}>
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeftIcon className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="icon" onClick={handleNext}>
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRightIcon className="h-4 w-4" />
             </Button>
             <Button variant="outline" className="ml-2" onClick={handleToday}>
               Today
@@ -176,25 +181,39 @@ export function Calendar({
             <h2 className="text-lg font-semibold ml-4">{viewTitle}</h2>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="px-3 gap-1.5">
+                  <span>{isMobile ? getViewShortName(view) : getViewFullName(view)}</span>
+                  <ChevronDownIcon className="-me-1 opacity-60" size={16} aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setView("month")}>
+                  Month
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setView("week")}>
+                  Week
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setView("day")}>
+                  Day
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setView("agenda")}>
+                  Agenda
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>            
+            <Button 
+              size="sm" 
+              className="aspect-square max-sm:p-0"
               onClick={() => {
                 setSelectedEvent(null) // Ensure we're creating a new event
                 setIsEventDialogOpen(true)
               }}
             >
-              <Plus className="h-4 w-4 mr-2" />
-              {isMobile ? "" : "Create"}
-            </Button>
-            <Tabs value={view} onValueChange={(v) => setView(v as CalendarView)} className="ml-4">
-              <TabsList>
-                <TabsTrigger value="month">{isMobile ? "M" : "Month"}</TabsTrigger>
-                <TabsTrigger value="week">{isMobile ? "W" : "Week"}</TabsTrigger>
-                <TabsTrigger value="day">{isMobile ? "D" : "Day"}</TabsTrigger>
-                <TabsTrigger value="agenda">{isMobile ? "A" : "Agenda"}</TabsTrigger>
-              </TabsList>
-            </Tabs>
+              <PlusIcon className="opacity-60 sm:-ms-1" size={16} aria-hidden="true" />
+              <span className="max-sm:sr-only">New event</span>
+            </Button>            
           </div>
         </div>
 
@@ -258,4 +277,23 @@ function addHoursToDate(date: Date, hours: number): Date {
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 11)
+}
+
+// Helper functions for view names
+function getViewShortName(view: CalendarView): string {
+  switch (view) {
+    case "month": return "M"
+    case "week": return "W"
+    case "day": return "D"
+    case "agenda": return "A"
+  }
+}
+
+function getViewFullName(view: CalendarView): string {
+  switch (view) {
+    case "month": return "Month"
+    case "week": return "Week"
+    case "day": return "Day"
+    case "agenda": return "Agenda"
+  }
 }
