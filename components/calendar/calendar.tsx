@@ -200,7 +200,7 @@ export function Calendar({
         return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`
       }
     } else if (view === "day") {
-      return <><span className="min-[480px]:hidden" aria-hidden="true">{format(currentDate, "MMM d, yyyy")}</span><span className="max-[479px]:hidden">{format(currentDate, "EEE MMMM d, yyyy")}</span></>
+      return <><span className="min-[480px]:hidden" aria-hidden="true">{format(currentDate, "MMM d, yyyy")}</span><span className="max-[479px]:hidden min-md:hidden" aria-hidden="true">{format(currentDate, "MMMM d, yyyy")}</span><span className="max-md:hidden">{format(currentDate, "EEE MMMM d, yyyy")}</span></>
     } else {
       return format(currentDate, "MMMM yyyy")
     }
@@ -218,7 +218,7 @@ export function Calendar({
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
         <div className={cn("flex items-center justify-between p-2 sm:p-4", className)}>
           <div className="flex items-center gap-1 sm:gap-4">
-            <Button variant="outline" size="sm" className="aspect-square max-[479px]:p-0" onClick={handleToday}>
+            <Button variant="outline" className="aspect-square max-[479px]:p-0!" onClick={handleToday}>
               <RiCalendarCheckLine className="min-[480px]:hidden" size={16} aria-hidden="true" />
               <span className="max-[479px]:sr-only">Today</span>
             </Button>
@@ -235,7 +235,7 @@ export function Calendar({
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="max-[479px]:h-8 gap-1.5">
+                <Button variant="outline" className="max-[479px]:h-8 gap-1.5">
                   <span><span className="min-[480px]:hidden" aria-hidden="true">{view.charAt(0).toUpperCase()}</span><span className="max-[479px]:sr-only">{view.charAt(0).toUpperCase() + view.slice(1)}</span></span>
                   <ChevronDownIcon className="-me-1 opacity-60" size={16} aria-hidden="true" />
                 </Button>
@@ -256,8 +256,7 @@ export function Calendar({
               </DropdownMenuContent>
             </DropdownMenu>
             <Button 
-              size="sm" 
-              className="aspect-square max-sm:p-0"
+              className="aspect-square max-[479px]:p-0!"
               onClick={() => {
                 setSelectedEvent(null) // Ensure we're creating a new event
                 setIsEventDialogOpen(true)

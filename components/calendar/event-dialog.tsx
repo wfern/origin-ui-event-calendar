@@ -12,7 +12,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { CalendarIcon, Trash2Icon } from "lucide-react"
+import { CalendarIcon } from "lucide-react"
+import { RiDeleteBinLine } from "@remixicon/react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -178,8 +179,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className="flex gap-4">
+            <div className="grid gap-2 flex-1">
               <Label htmlFor="start-date">Start Date</Label>
               <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
                 <PopoverTrigger asChild>
@@ -218,7 +219,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             </div>
 
             {!allDay && (
-              <div className="grid gap-2">
+              <div className="grid gap-2 min-w-28">
                 <Label htmlFor="start-time">Start Time</Label>
                 <Select value={startTime} onValueChange={setStartTime}>
                   <SelectTrigger id="start-time">
@@ -236,8 +237,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className="flex gap-4">
+            <div className="grid gap-2 flex-1">
               <Label htmlFor="end-date">End Date</Label>
               <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
                 <PopoverTrigger asChild>
@@ -277,7 +278,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             </div>
 
             {!allDay && (
-              <div className="grid gap-2">
+              <div className="grid gap-2 min-w-28">
                 <Label htmlFor="end-time">End Time</Label>
                 <Select value={endTime} onValueChange={setEndTime}>
                   <SelectTrigger id="end-time">
@@ -331,14 +332,13 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             </RadioGroup>
           </fieldset>
         </div>
-        <DialogFooter className="flex justify-between">
+        <DialogFooter className="sm:justify-between flex-row">
           {event?.id && (
-            <Button variant="destructive" onClick={handleDelete} type="button">
-              <Trash2Icon className="h-4 w-4 mr-2" />
-              Delete
-            </Button>
+            <Button variant="outline" size="icon" onClick={handleDelete} aria-label="Delete event">
+              <RiDeleteBinLine size={16} aria-hidden="true" />
+            </Button>            
           )}
-          <div className="flex gap-2">
+          <div className="flex-1 flex justify-end gap-2">
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
