@@ -214,7 +214,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                   <div
                     key={`spanning-${event.id}`}
                     className={cn(
-                      "px-2 py-1 text-xs cursor-pointer select-none backdrop-blur-md transition mb-1",
+                      "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex items-center overflow-hidden backdrop-blur-md transition",
                       getEventColorClasses(event.color),
                       isFirstDay && isLastDay
                         ? "rounded-md"
@@ -227,7 +227,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                     onClick={(e) => handleEventClick(event, e)}
                   >
                     {/* Always show the title in day view for better usability */}
-                    <div>{event.title}</div>
+                    <div className="truncate">{event.title}</div>
                   </div>
                 )
               }

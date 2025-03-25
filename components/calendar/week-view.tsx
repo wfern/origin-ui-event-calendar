@@ -260,7 +260,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                         <div
                           key={`${event.id}-${day.toISOString()}`}
                           className={cn(
-                            "px-2 py-1 text-xs cursor-pointer select-none mb-1 backdrop-blur-md transition",
+                            "px-2 py-1 text-xs font-medium cursor-pointer select-none mb-1 flex items-center overflow-hidden backdrop-blur-md transition",
                             getEventColorClasses(event.color),
                             isFirstDay && isLastDay
                               ? "rounded-md"
@@ -273,7 +273,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                           onClick={(e) => handleEventClick(event, e)}
                         >
                           {/* Show title if it's the first day of the event or the first visible day in the week */}
-                          <div className={cn(!shouldShowTitle && "invisible")} aria-hidden={!shouldShowTitle}>
+                          <div className={cn("truncate", !shouldShowTitle && "invisible")} aria-hidden={!shouldShowTitle}>
                             {event.title}
                           </div>
                         </div>

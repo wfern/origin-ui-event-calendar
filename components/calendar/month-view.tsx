@@ -209,7 +209,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                             >
                               <div
                                 className={cn(
-                                  "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs cursor-pointer select-none backdrop-blur-md transition",
+                                  "h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs font-medium cursor-pointer select-none backdrop-blur-md transition",
                                   getEventColorClasses(event.color),
                                   isFirstDay && isLastDay
                                     ? "rounded-md"
@@ -221,8 +221,8 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                                 )}
                                 onClick={(e) => handleEventClick(event, e)}
                               >
-                                <div className="invisible" aria-hidden={true}>
-                                  {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
+                                <div className="truncate invisible" aria-hidden={true}>
+                                  {!event.allDay && <span className="text-[11px] opacity-70 truncate">{format(new Date(event.start), "h:mm")} </span>}
                                   {event.title}
                                 </div>
                               </div>

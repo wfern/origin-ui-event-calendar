@@ -83,38 +83,28 @@ export function EventItem({
   }
 
   if (view === "week" || view === "day") {
-    // For short events (less than 45 minutes), display title and time on the same line
-    if (durationMinutes < 45) {
-      return (
-        <div
-          className={cn(
-            "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex items-center overflow-hidden backdrop-blur-md transition",
-            getEventColorClasses(eventColor),
-            getBorderRadiusClasses(isFirstDay, isLastDay),
-            isDragging && "shadow-lg",
-          )}
-          onClick={onClick}
-        >
-          <div className="truncate">
-            {event.title} {showTime && <span className="text-[11px] opacity-70">{formatTimeWithOptionalMinutes(displayStart)}</span>}
-          </div>
-        </div>
-      )
-    }
-
-    // For longer events, display title and time on separate lines
     return (
       <div
         className={cn(
-          "px-2 py-1 text-xs font-medium cursor-pointer select-none h-full flex flex-col overflow-hidden backdrop-blur-md transition",
+          "px-1 sm:px-2 py-1 font-medium cursor-pointer select-none h-full flex overflow-hidden backdrop-blur-md transition",
+          durationMinutes < 45 ? "items-center" : "flex-col",
+          view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
           getEventColorClasses(eventColor),
           getBorderRadiusClasses(isFirstDay, isLastDay),
           isDragging && "shadow-lg",
         )}
         onClick={onClick}
       >
-        <div className="font-medium truncate">{event.title}</div>
-        {showTime && <div className="text-[11px] opacity-70 truncate">{getEventTime()}</div>}
+        {durationMinutes < 45 ? (
+          <div className="truncate">
+            {event.title} {showTime && <span className={cn("opacity-70", view === "week" ? "m:text-[11px]" : "text-[11px]")}>{formatTimeWithOptionalMinutes(displayStart)}</span>}
+          </div>
+        ) : (
+          <>
+            <div className="font-medium truncate">{event.title}</div>
+            {showTime && <div className="text-[11px] opacity-70 truncate">{getEventTime()}</div>}          
+          </>
+        )}
       </div>
     )
   }

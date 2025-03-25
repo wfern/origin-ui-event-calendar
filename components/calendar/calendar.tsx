@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import {
   addDays,
   addMonths,
@@ -53,6 +53,41 @@ export function Calendar({
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
   const isMobile = useMediaQuery("(max-width: 640px)")
+
+  // Add keyboard shortcuts for view switching
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Skip if user is typing in an input, textarea or contentEditable element
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target instanceof HTMLElement && e.target.isContentEditable)
+      ) {
+        return
+      }
+
+      switch (e.key.toLowerCase()) {
+        case "m":
+          setView("month")
+          break
+        case "w":
+          setView("week")
+          break
+        case "d":
+          setView("day")
+          break
+        case "a":
+          setView("agenda")
+          break
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [])
 
   const handlePrevious = () => {
     if (view === "month") {
@@ -190,19 +225,19 @@ export function Calendar({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setView("month")}>
-                  Month
+                  Month <span className="ml-auto text-xs text-muted-foreground">M</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("week")}>
-                  Week
+                  Week <span className="ml-auto text-xs text-muted-foreground">W</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("day")}>
-                  Day
+                  Day <span className="ml-auto text-xs text-muted-foreground">D</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("agenda")}>
-                  Agenda
+                  Agenda <span className="ml-auto text-xs text-muted-foreground">A</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>            
+            </DropdownMenu>
             <Button 
               size="sm" 
               className="aspect-square max-sm:p-0"
