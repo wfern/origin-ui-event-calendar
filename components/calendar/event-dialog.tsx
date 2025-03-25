@@ -264,6 +264,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                   <Calendar
                     mode="single"
                     selected={endDate}
+                    disabled={{ before: startDate }}
                     onSelect={(date) => {
                       if (date) {
                         setEndDate(date)
