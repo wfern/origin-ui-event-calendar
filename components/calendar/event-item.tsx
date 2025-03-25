@@ -40,7 +40,7 @@ function EventWrapper({
   return (
     <div
       className={cn(
-        "font-medium cursor-pointer select-none backdrop-blur-md transition h-full flex overflow-hidden px-1 sm:px-2",
+        "font-medium select-none backdrop-blur-md transition h-full flex overflow-hidden px-1 sm:px-2",
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         isDragging && "shadow-lg",
@@ -157,7 +157,7 @@ export function EventItem({
 
   // Agenda view - kept separate since it's significantly different
   return (
-    <button className={cn("text-left w-full p-2 rounded font-medium cursor-pointer backdrop-blur-md transition", getEventColorClasses(eventColor), className)} onClick={onClick}>
+    <button className={cn("text-left w-full p-2 rounded font-medium backdrop-blur-md transition", getEventColorClasses(eventColor), className)} onClick={onClick}>
       <div className="font-medium">{event.title}</div>
       <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
