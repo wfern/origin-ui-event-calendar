@@ -13,16 +13,14 @@ import {
   startOfDay,
   differenceInMinutes,
   areIntervalsOverlapping,
-  differenceInDays,
 } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
-import { getEventColorClasses } from "@/components/calendar/utils"
-import { useCurrentTimeIndicator } from "@/components/calendar/utils"
+import { useCurrentTimeIndicator } from "@/hooks/use-current-time-indicator"
 import { EventItem } from "@/components/calendar/event-item"
-import { EventHeight, EventGap, WeekCellsHeight } from "@/components/calendar/constants"
+import { WeekCellsHeight } from "@/components/calendar/constants"
 import { isMultiDayEvent } from "@/components/calendar/utils"
 
 interface DayViewProps {

@@ -24,7 +24,8 @@ import type { CalendarEvent } from "@/components/calendar/types"
 import { DraggableEvent } from "@/components/calendar/draggable-event"
 import { DroppableCell } from "@/components/calendar/droppable-cell"
 import {  WeekCellsHeight } from "@/components/calendar/constants"
-import { useCurrentTimeIndicator, isMultiDayEvent } from "@/components/calendar/utils"
+import { isMultiDayEvent } from "@/components/calendar/utils"
+import { useCurrentTimeIndicator } from "@/hooks/use-current-time-indicator"
 import { EventItem } from "./event-item"
 
 interface WeekViewProps {

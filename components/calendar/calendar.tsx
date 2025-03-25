@@ -30,6 +30,7 @@ import { AgendaView } from "@/components/calendar/agenda-view"
 import { EventDialog } from "@/components/calendar/event-dialog"
 import { CalendarDndProvider } from "@/hooks/use-calendar-dnd"
 import { EventHeight, EventGap, WeekCellsHeight } from "@/components/calendar/constants"
+import { addHoursToDate } from "@/components/calendar/utils"
 
 export interface CalendarProps {
   events?: CalendarEvent[]
@@ -312,13 +313,6 @@ export function Calendar({
       </CalendarDndProvider>
     </div>
   )
-}
-
-// Helper functions
-function addHoursToDate(date: Date, hours: number): Date {
-  const result = new Date(date)
-  result.setHours(result.getHours() + hours)
-  return result
 }
 
 // Helper functions for view names

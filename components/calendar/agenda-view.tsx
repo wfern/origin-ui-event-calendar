@@ -26,9 +26,6 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
     return Array.from({ length: daysToShow }, (_, i) => addDays(new Date(currentDate), i))
   }, [currentDate, daysToShow])
 
-  const getEventsForDay = (day: Date) => {
-    return getAgendaEventsForDay(events, day)
-  }
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -37,7 +34,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
   }
 
   // Check if there are any days with events
-  const hasEvents = days.some(day => getEventsForDay(day).length > 0);
+  const hasEvents = days.some(day => getAgendaEventsForDay(events, day).length > 0);
 
   return (
     <div className="p-4">
@@ -49,7 +46,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
         </div>
       ) : (
         days.map((day) => {
-          const dayEvents = getEventsForDay(day)
+          const dayEvents = getAgendaEventsForDay(events, day)
 
           if (dayEvents.length === 0) return null
 
