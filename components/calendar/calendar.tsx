@@ -218,15 +218,15 @@ export function Calendar({
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
         <div className={cn("flex items-center justify-between p-2 sm:p-4 border-b border-border/70", className)}>
           <div className="flex items-center gap-1 sm:gap-4">
-            <Button variant="outline" className="aspect-square max-[480px]:p-0 max-[480px]:size-8" onClick={handleToday}>
+            <Button variant="outline" size="sm" className="aspect-square max-[480px]:p-0" onClick={handleToday}>
               <RiCalendarCheckLine className="min-[480px]:hidden" size={16} aria-hidden="true" />
               <span className="max-[480px]:sr-only">Today</span>
             </Button>
             <div className="flex items-center sm:gap-2">
-              <Button variant="ghost" size="icon" className="max-[480px]:size-8" onClick={handlePrevious} aria-label="Previous">
+              <Button variant="ghost" size="icon" onClick={handlePrevious} aria-label="Previous">
                 <ChevronLeftIcon size={16} aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" className="max-[480px]:size-8" onClick={handleNext} aria-label="Next">
+              <Button variant="ghost" size="icon" onClick={handleNext} aria-label="Next">
                 <ChevronRightIcon size={16} aria-hidden="true" />
               </Button>            
             </div>
@@ -240,7 +240,7 @@ export function Calendar({
                   <ChevronDownIcon className="-me-1 opacity-60" size={16} aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="min-w-32">
                 <DropdownMenuItem onClick={() => setView("month")}>
                   Month <DropdownMenuShortcut>M</DropdownMenuShortcut>
                 </DropdownMenuItem>
@@ -257,7 +257,7 @@ export function Calendar({
             </DropdownMenu>
             <Button 
               size="sm" 
-              className="aspect-square max-sm:p-0 max-[480px]:size-8"
+              className="aspect-square max-sm:p-0"
               onClick={() => {
                 setSelectedEvent(null) // Ensure we're creating a new event
                 setIsEventDialogOpen(true)
