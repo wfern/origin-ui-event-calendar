@@ -38,7 +38,7 @@ export function DroppableCell({ id, date, time, children, className, onClick }: 
       ref={setNodeRef}
       onClick={onClick}
       className={cn(
-        "h-full flex flex-col px-0.5 py-1 sm:px-1 data-[dragging]:bg-accent",
+        "h-full flex flex-col px-0.5 py-1 sm:px-1 data-dragging:bg-accent",
         className,
       )}
       title={formattedTime ? `${formattedTime}` : undefined}

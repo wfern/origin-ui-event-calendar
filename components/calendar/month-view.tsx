@@ -103,7 +103,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                 <div
                   key={day.toString()}
                   className={cn(
-                    "group border-b border-r last:border-r-0 border-border/70 data-[outside-cell]:bg-muted/25 data-[outside-cell]:text-muted-foreground/70",
+                    "group border-b border-r last:border-r-0 border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70",
                   )}
                   data-today={isToday(day) || undefined}
                   data-outside-cell={!isCurrentMonth || undefined}
@@ -118,7 +118,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                     }}
                   >
                     <div
-                      className="inline-flex size-6 items-center justify-center rounded-full text-sm mt-1 group-data-[today]:bg-primary group-data-[today]:text-primary-foreground">
+                      className="inline-flex size-6 items-center justify-center rounded-full text-sm mt-1 group-data-today:bg-primary group-data-today:text-primary-foreground">
                       {format(day, "d")}
                     </div>
                     <div
