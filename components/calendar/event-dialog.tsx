@@ -208,6 +208,12 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                     onSelect={(date) => {
                       if (date) {
                         setStartDate(date)
+                        
+                        // If end date is before the new start date, update it to match the start date
+                        if (isBefore(endDate, date)) {
+                          setEndDate(date)
+                        }
+                        
                         setError(null)
                         setStartDateOpen(false)
                       }
