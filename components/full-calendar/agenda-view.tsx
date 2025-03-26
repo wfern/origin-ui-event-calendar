@@ -4,11 +4,13 @@ import type React from "react"
 
 import { useMemo } from "react"
 import { addDays, format, isToday } from "date-fns"
-import type { CalendarEvent } from "@/components/calendar/types"
-import { EventItem } from "@/components/calendar/event-item"
+import { 
+  CalendarEvent, 
+  EventItem,
+  getAgendaEventsForDay,
+  AgendaDaysToShow 
+} from "@/components/full-calendar"
 import { RiCalendarEventLine } from "@remixicon/react"
-import { getAgendaEventsForDay } from "@/components/calendar/utils"
-import { AgendaDaysToShow } from "@/components/calendar/constants"
 
 interface AgendaViewProps {
   currentDate: Date

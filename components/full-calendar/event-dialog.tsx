@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { format, isBefore } from "date-fns"
-import type { CalendarEvent, EventColor } from "@/components/calendar/types"
+import { CalendarEvent, EventColor } from "@/components/full-calendar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -212,12 +212,10 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                     onSelect={(date) => {
                       if (date) {
                         setStartDate(date)
-                        
                         // If end date is before the new start date, update it to match the start date
                         if (isBefore(endDate, date)) {
                           setEndDate(date)
                         }
-                        
                         setError(null)
                         setStartDateOpen(false)
                       }

@@ -25,17 +25,23 @@ import {
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import type { CalendarEvent, CalendarView } from "@/components/calendar/types"
-import { MonthView } from "@/components/calendar/month-view"
-import { WeekView } from "@/components/calendar/week-view"
-import { DayView } from "@/components/calendar/day-view"
-import { AgendaView } from "@/components/calendar/agenda-view"
-import { EventDialog } from "@/components/calendar/event-dialog"
+import { 
+  CalendarEvent, 
+  CalendarView,
+  MonthView,
+  WeekView,
+  DayView,
+  AgendaView,
+  EventDialog,
+  EventHeight, 
+  EventGap, 
+  WeekCellsHeight, 
+  AgendaDaysToShow,
+  addHoursToDate
+} from "@/components/full-calendar"
 import { CalendarDndProvider } from "@/hooks/use-calendar-dnd"
-import { EventHeight, EventGap, WeekCellsHeight, AgendaDaysToShow } from "@/components/calendar/constants"
-import { addHoursToDate } from "@/components/calendar/utils"
 
-export interface CalendarProps {
+export interface FullCalendarProps {
   events?: CalendarEvent[]
   onEventAdd?: (event: CalendarEvent) => void
   onEventUpdate?: (event: CalendarEvent) => void
@@ -44,14 +50,14 @@ export interface CalendarProps {
   initialView?: CalendarView
 }
 
-export function Calendar({
+export function FullCalendar({
   events = [],
   onEventAdd,
   onEventUpdate,
   onEventDelete,
   className,
   initialView = "month",
-}: CalendarProps) {
+}: FullCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>(initialView)

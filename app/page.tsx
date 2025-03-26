@@ -2,9 +2,8 @@
 
 import { useState } from "react"
 import { addDays, setHours, setMinutes } from "date-fns"
-import { Calendar } from "@/components/calendar/calendar"
+import { FullCalendar, CalendarEvent } from "@/components/full-calendar"
 import ThemeToggle from "@/components/theme-toggle"
-import type { CalendarEvent } from "@/components/calendar/types"
 
 // Sample events data with hardcoded times
 const sampleEvents: CalendarEvent[] = [
@@ -91,7 +90,7 @@ export default function Home() {
   return (
     // Add min-h-screen to make it full height
     <div className="flex flex-col p-1 sm:p-4 md:p-8">
-      <Calendar
+      <FullCalendar
         events={events}
         onEventAdd={handleEventAdd}
         onEventUpdate={handleEventUpdate}

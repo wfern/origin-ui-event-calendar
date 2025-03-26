@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react"
 import { format, isSameDay } from "date-fns"
 import { XIcon } from "lucide-react"
-import type { CalendarEvent } from "@/components/calendar/types"
-import { EventItem } from "@/components/calendar/event-item"
+import { CalendarEvent, EventItem } from "@/components/full-calendar"
 
 interface EventsPopupProps {
   date: Date
@@ -108,4 +107,3 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
     </div>
   )
 }
-

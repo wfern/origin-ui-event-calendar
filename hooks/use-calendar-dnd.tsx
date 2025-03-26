@@ -16,8 +16,8 @@ import {
 } from "@dnd-kit/core"
 import { restrictToWindowEdges } from "@dnd-kit/modifiers"
 import { addMinutes, differenceInMinutes } from "date-fns"
-import type { CalendarEvent } from "@/components/calendar/types"
-import { EventItem } from "@/components/calendar/event-item"
+import type { CalendarEvent } from "@/components/full-calendar/types"
+import { EventItem } from "@/components/full-calendar/event-item"
 
 // Define the context type
 type CalendarDndContextType = {

@@ -20,13 +20,16 @@ import {
   isBefore,
 } from "date-fns"
 import { cn } from "@/lib/utils"
-import type { CalendarEvent } from "@/components/calendar/types"
-import { DraggableEvent } from "@/components/calendar/draggable-event"
-import { DroppableCell } from "@/components/calendar/droppable-cell"
-import { WeekCellsHeight } from "@/components/calendar/constants"
-import { isMultiDayEvent } from "@/components/calendar/utils"
+import { 
+  CalendarEvent, 
+  CalendarView,
+  DraggableEvent,
+  DroppableCell,
+  EventItem,
+  WeekCellsHeight,
+  isMultiDayEvent
+} from "@/components/full-calendar"
 import { useCurrentTimeIndicator } from "@/hooks/use-current-time-indicator"
-import { EventItem } from "./event-item"
 
 interface WeekViewProps {
   currentDate: Date

@@ -4,9 +4,12 @@ import type React from "react"
 
 import { format, differenceInMinutes, getMinutes, isPast } from "date-fns"
 import { cn } from "@/lib/utils"
-import type { CalendarEvent } from "@/components/calendar/types"
+import { 
+  CalendarEvent,
+  getEventColorClasses, 
+  getBorderRadiusClasses 
+} from "@/components/full-calendar"
 import { useMemo } from "react"
-import { getEventColorClasses, getBorderRadiusClasses } from "@/components/calendar/utils"
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)

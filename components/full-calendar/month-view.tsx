@@ -14,15 +14,20 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns"
-import { cn } from "@/lib/utils"
-import type { CalendarEvent } from "@/components/calendar/types"
-import { DraggableEvent } from "@/components/calendar/draggable-event"
-import { DroppableCell } from "@/components/calendar/droppable-cell"
-import { EventHeight, EventGap } from "@/components/calendar/constants"
-import { getEventsForDay, getSpanningEventsForDay, getAllEventsForDay, sortEvents } from "@/components/calendar/utils"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { 
+  CalendarEvent, 
+  DraggableEvent,
+  DroppableCell,
+  getEventsForDay,
+  getSpanningEventsForDay,
+  getAllEventsForDay,
+  sortEvents,
+  EventHeight,
+  EventGap,
+  EventItem,
+} from "@/components/full-calendar"
 import { useEventVisibility } from "@/hooks/use-event-visibility"
-import { EventItem } from "@/components/calendar/event-item"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface MonthViewProps {
   currentDate: Date
