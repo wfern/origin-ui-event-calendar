@@ -13,7 +13,6 @@ A flexible, interactive calendar component built with [v0](https://v0.dev/) UI c
 - 📍 Location support for events
 - 🔄 Easy navigation between time periods
 
-
 ## Usage
 
 ```jsx
@@ -27,9 +26,7 @@ function App() {
   };
 
   const handleEventUpdate = (updatedEvent) => {
-    setEvents(
-      events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event))
-    );
+    setEvents(events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event)));
   };
 
   const handleEventDelete = (eventId) => {
@@ -50,14 +47,14 @@ function App() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `events` | `CalendarEvent[]` | `[]` | Array of events to display in the calendar |
-| `onEventAdd` | `(event: CalendarEvent) => void` | - | Callback function when an event is added |
-| `onEventUpdate` | `(event: CalendarEvent) => void` | - | Callback function when an event is updated |
-| `onEventDelete` | `(eventId: string) => void` | - | Callback function when an event is deleted |
-| `className` | `string` | - | Additional CSS class for styling |
-| `initialView` | `"month" \| "week" \| "day" \| "agenda"` | `"month"` | Initial view mode of the calendar |
+| Prop            | Type                                     | Default   | Description                                |
+| --------------- | ---------------------------------------- | --------- | ------------------------------------------ |
+| `events`        | `CalendarEvent[]`                        | `[]`      | Array of events to display in the calendar |
+| `onEventAdd`    | `(event: CalendarEvent) => void`         | -         | Callback function when an event is added   |
+| `onEventUpdate` | `(event: CalendarEvent) => void`         | -         | Callback function when an event is updated |
+| `onEventDelete` | `(eventId: string) => void`              | -         | Callback function when an event is deleted |
+| `className`     | `string`                                 | -         | Additional CSS class for styling           |
+| `initialView`   | `"month" \| "week" \| "day" \| "agenda"` | `"month"` | Initial view mode of the calendar          |
 
 ## Event Object Structure
 
@@ -77,17 +74,20 @@ interface CalendarEvent {
 ## View Modes
 
 ### Month View
+
 Displays a traditional month calendar with events. Events that span multiple days are properly displayed across the days they span.
 
 ### Week View
+
 Shows a detailed week view with hour slots. Events are positioned according to their time and can span multiple days.
 
 ### Day View
+
 Provides a detailed view of a single day with hour slots. Perfect for seeing all events scheduled for a specific day.
 
 ### Agenda View
-Lists all events in a chronological list format, making it easy to see upcoming events at a glance.
 
+Lists all events in a chronological list format, making it easy to see upcoming events at a glance.
 
 ## Limitations and Known Issues
 

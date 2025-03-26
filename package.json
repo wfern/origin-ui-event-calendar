@@ -20,7 +20,7 @@
         }
       }
     ]
-  },  
+  },
   "scripts": {
     "format": "prettier --write .",
     "dev": "next dev --turbopack",
