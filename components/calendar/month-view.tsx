@@ -180,7 +180,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                         <Popover modal>
                           <PopoverTrigger asChild>                     
                             <button
-                              className="w-full text-left font-medium select-none backdrop-blur-md transition flex overflow-hidden px-1 sm:px-2 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-dragging:shadow-lg data-dragging:cursor-grabbing data-past-event:line-through h-[var(--event-height)] mt-[var(--event-gap)] items-center text-[10px] sm:text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                              className="w-full text-left select-none backdrop-blur-md transition flex overflow-hidden px-1 sm:px-2 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-dragging:shadow-lg data-dragging:cursor-grabbing data-past-event:line-through h-[var(--event-height)] mt-[var(--event-gap)] items-center text-[10px] sm:text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50"
                               onClick={(e) => e.stopPropagation()}
                             >
                               <span>
