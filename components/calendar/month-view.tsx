@@ -178,19 +178,14 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
 
                       {hasMore && (
                         <Popover modal>
-                          <PopoverTrigger asChild>
+                          <PopoverTrigger asChild>                     
                             <button
-                              type="button"
-                              className="w-full mt-[var(--event-gap)] text-left"
+                              className="w-full text-left font-medium select-none backdrop-blur-md transition flex overflow-hidden px-1 sm:px-2 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-dragging:shadow-lg data-dragging:cursor-grabbing data-past-event:line-through h-[var(--event-height)] mt-[var(--event-gap)] items-center text-[10px] sm:text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <div
-                                className="h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition"
-                              >
-                                <span>
-                                  + {remainingCount} <span className="max-sm:sr-only">more</span>
-                                </span>
-                              </div>
+                              <span>
+                                + {remainingCount} <span className="max-sm:sr-only">more</span>
+                              </span>
                             </button>
                           </PopoverTrigger>
                           <PopoverContent align="center" className="p-3 max-w-52" style={{ "--event-height": `${EventHeight}px` } as React.CSSProperties}>
