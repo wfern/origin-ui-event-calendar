@@ -56,13 +56,13 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        "w-full text-left font-medium select-none backdrop-blur-md transition h-full flex overflow-hidden px-1 sm:px-2 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "w-full text-left font-medium select-none backdrop-blur-md transition h-full flex overflow-hidden px-1 sm:px-2 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-dragging:shadow-lg data-dragging:cursor-grabbing data-past-event:line-through",
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
-        isDragging && "shadow-lg",
-        isEventInPast && "line-through",
         className
       )}
+      data-dragging={isDragging || undefined}
+      data-past-event={isEventInPast || undefined}
       onClick={onClick}
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
