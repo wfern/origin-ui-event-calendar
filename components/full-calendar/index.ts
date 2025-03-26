@@ -14,5 +14,10 @@ export { EventsPopup } from "./events-popup"
 export * from "./constants"
 export * from "./utils"
 
+// Hook exports
+export { useCurrentTimeIndicator } from "./hooks/use-current-time-indicator"
+export { useEventVisibility } from "./hooks/use-event-visibility"
+export { useCalendarDnd, CalendarDndProvider } from "./hooks/use-calendar-dnd"
+
 // Type exports
 export type { CalendarView, CalendarEvent, EventColor } from "./types"

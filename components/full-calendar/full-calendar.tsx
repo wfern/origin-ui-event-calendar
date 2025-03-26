@@ -37,9 +37,9 @@ import {
   EventGap, 
   WeekCellsHeight, 
   AgendaDaysToShow,
-  addHoursToDate
+  addHoursToDate,
+  CalendarDndProvider
 } from "@/components/full-calendar"
-import { CalendarDndProvider } from "@/hooks/use-calendar-dnd"
 
 export interface FullCalendarProps {
   events?: CalendarEvent[]

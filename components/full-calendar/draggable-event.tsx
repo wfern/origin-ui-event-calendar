@@ -8,9 +8,9 @@ import { useRef, useState } from "react"
 import { differenceInDays } from "date-fns"
 import { 
   CalendarEvent,
-  EventItem
+  EventItem,
+  useCalendarDnd
 } from "@/components/full-calendar"
-import { useCalendarDnd } from "@/hooks/use-calendar-dnd"
 
 interface DraggableEventProps {
   event: CalendarEvent

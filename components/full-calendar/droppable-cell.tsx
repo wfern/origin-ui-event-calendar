@@ -1,15 +1,15 @@
 "use client"
 
+import React from "react"
 import { useDroppable } from "@dnd-kit/core"
-import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
-import { useCalendarDnd } from "@/hooks/use-calendar-dnd"
+import { useCalendarDnd } from "@/components/full-calendar/hooks/use-calendar-dnd"
 
 interface DroppableCellProps {
   id: string
   date: Date
   time?: number // For week/day views, represents hours (e.g., 9.25 for 9:15)
-  children?: ReactNode
+  children?: React.ReactNode
   className?: string
   onClick?: () => void
 }

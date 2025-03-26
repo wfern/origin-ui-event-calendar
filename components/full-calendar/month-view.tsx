@@ -24,8 +24,8 @@ import {
   EventHeight,
   EventGap,
   EventItem,
+  useEventVisibility,
 } from "@/components/full-calendar"
-import { useEventVisibility } from "@/hooks/use-event-visibility"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface MonthViewProps {

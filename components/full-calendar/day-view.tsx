@@ -19,9 +19,9 @@ import {
   DroppableCell, 
   EventItem,
   WeekCellsHeight,
-  isMultiDayEvent
+  isMultiDayEvent,
+  useCurrentTimeIndicator
 } from "@/components/full-calendar"
-import { useCurrentTimeIndicator } from "@/hooks/use-current-time-indicator"
 import { cn } from "@/lib/utils"
 
 interface DayViewProps {
