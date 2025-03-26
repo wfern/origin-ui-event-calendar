@@ -191,7 +191,6 @@ export function Calendar({
 
   const handleEventDelete = (eventId: string) => {
     const deletedEvent = events.find(e => e.id === eventId)
-    const newEvents = events.filter(e => e.id !== eventId)
     onEventDelete?.(eventId)
     setIsEventDialogOpen(false)
     setSelectedEvent(null)
