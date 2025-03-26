@@ -102,9 +102,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
               return (
                 <div
                   key={day.toString()}
-                  className={cn(
-                    "group border-b border-r last:border-r-0 border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70",
-                  )}
+                  className="group border-b border-r last:border-r-0 border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70"
                   data-today={isToday(day) || undefined}
                   data-outside-cell={!isCurrentMonth || undefined}
                 >
@@ -137,32 +135,30 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
 
                         if (!isFirstDay) {
                           return (
-                            <EventItem
+                            <div
                               key={`spanning-${event.id}-${day.toISOString().slice(0, 10)}`}
-                              onClick={(e) => handleEventClick(event, e)}
-                              className={cn(
-                                isHidden && "hidden"
-                              )}
-                              aria-hidden={isHidden ? "true" : undefined}
-                              event={event}
-                              view="month"
-                              isFirstDay={isFirstDay}
-                              isLastDay={isLastDay}
+                              className="aria-hidden:hidden"
+                              aria-hidden={isHidden ? "true" : undefined}                            
                             >
-                              <div className="invisible" aria-hidden={true}>
-                              {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
-                              {event.title}</div>
-                            </EventItem>
+                              <EventItem
+                                onClick={(e) => handleEventClick(event, e)}
+                                event={event}
+                                view="month"
+                                isFirstDay={isFirstDay}
+                                isLastDay={isLastDay}
+                              >
+                                <div className="invisible" aria-hidden={true}>
+                                {!event.allDay && <span>{format(new Date(event.start), "h:mm")} </span>}
+                                {event.title}</div>
+                              </EventItem>
+                            </div>
                           )
                         }
 
                         return (
                           <div
                             key={event.id}
-                            className={cn(
-                              "mt-[var(--event-gap)]",
-                              isHidden && "hidden" 
-                            )}
+                            className="aria-hidden:hidden"
                             aria-hidden={isHidden ? "true" : undefined}
                           >
                             <DraggableEvent

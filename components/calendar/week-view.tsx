@@ -196,12 +196,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         {days.map((day) => (
           <div 
             key={day.toString()} 
-            className={cn(
-              "py-2 text-center text-sm",
-              isToday(day) 
-                ? "font-medium text-foreground" 
-                : "text-muted-foreground/70"
-            )}
+            className="py-2 text-center text-sm data-today:font-medium data-today:text-foreground text-muted-foreground/70"
+            data-today={isToday(day) || undefined}
           >
             <span className="sm:hidden" aria-hidden="true">{format(day, "E")[0]}{" "}{format(day, "d")}</span>
             <span className="max-sm:hidden">{format(day, "EEE dd")}</span>

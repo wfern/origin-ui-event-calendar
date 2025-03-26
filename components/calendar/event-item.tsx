@@ -152,7 +152,7 @@ export function EventItem({
       >
         {children || (
           <span className="truncate">
-            {!event.allDay && <span className="text-[11px] opacity-70 truncate">{formatTimeWithOptionalMinutes(displayStart)} </span>}
+            {!event.allDay && <span className="text-[11px] font-normal opacity-70 truncate">{formatTimeWithOptionalMinutes(displayStart)} </span>}
             {event.title}
           </span>
         )}
@@ -182,12 +182,12 @@ export function EventItem({
       >
         {durationMinutes < 45 ? (
           <div className="truncate">
-            {event.title} {showTime && <span className={cn("opacity-70", view === "week" ? "m:text-[11px]" : "text-[11px]")}>{formatTimeWithOptionalMinutes(displayStart)}</span>}
+            {event.title} {showTime && <span className={cn("opacity-70", view === "week" ? "sm:text-[11px]" : "text-[11px]")}>{formatTimeWithOptionalMinutes(displayStart)}</span>}
           </div>
         ) : (
           <>
             <div className="font-medium truncate">{event.title}</div>
-            {showTime && <div className="text-[11px] opacity-70 truncate">{getEventTime()}</div>}
+            {showTime && <div className="text-[11px] font-normal opacity-70 truncate">{getEventTime()}</div>}
           </>
         )}
       </EventWrapper>
@@ -198,11 +198,11 @@ export function EventItem({
   return (
     <button
       className={cn(
-        "text-left w-full flex flex-col gap-1 p-2 rounded transition outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "text-left w-full flex flex-col gap-1 p-2 rounded transition outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
         getEventColorClasses(eventColor),
-        isPast(new Date(event.end)) && "line-through opacity-75",
         className
       )}
+      data-past-event={isPast(new Date(event.end)) || undefined}
       onClick={onClick}
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
@@ -224,8 +224,8 @@ export function EventItem({
         )}
       </div>
       {event.description && (
-        <div className="opacity-90 my-1">
-          <div className="text-sm">{event.description}</div>
+        <div className="opacity-90 text-xs my-1">
+          {event.description}
         </div>
       )}
     </button>

@@ -42,7 +42,6 @@ export function DroppableCell({ id, date, time, children, className, onClick }: 
         className,
       )}
       title={formattedTime ? `${formattedTime}` : undefined}
-      data-slot="droppable-cell"
       data-dragging={(isOver && activeEvent) || undefined}
     >
       {children}
