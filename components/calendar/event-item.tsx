@@ -192,7 +192,7 @@ export function EventItem({
         )}
       </div>
       {event.description && (
-        <div className="opacity-85 my-1">
+        <div className="opacity-90 my-1">
           <div className="text-sm">{event.description}</div>
         </div>
       )}
