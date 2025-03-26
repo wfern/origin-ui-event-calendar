@@ -1,9 +1,9 @@
 "use client"
 
 import { useMemo } from "react"
-import { differenceInMinutes, format, getMinutes, isPast } from "date-fns"
 import type { DraggableAttributes } from "@dnd-kit/core"
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
+import { differenceInMinutes, format, getMinutes, isPast } from "date-fns"
 
 import { cn } from "@/lib/utils"
 import {
@@ -120,7 +120,7 @@ export function EventItem({
   const displayStart = useMemo(() => {
     return currentTime || new Date(event.start)
   }, [currentTime, event.start])
-  
+
   const displayEnd = useMemo(() => {
     return currentTime
       ? new Date(

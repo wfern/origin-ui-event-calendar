@@ -61,27 +61,27 @@ export function EventsPopup({
 
   // Adjust position to ensure popup stays within viewport
   const adjustedPosition = useMemo(() => {
-    const positionCopy = { ...position };
-    
+    const positionCopy = { ...position }
+
     // Check if we need to adjust the position to fit in the viewport
     if (popupRef.current) {
-      const rect = popupRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      
+      const rect = popupRef.current.getBoundingClientRect()
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+
       // Adjust horizontally if needed
       if (positionCopy.left + rect.width > viewportWidth) {
-        positionCopy.left = Math.max(0, viewportWidth - rect.width);
+        positionCopy.left = Math.max(0, viewportWidth - rect.width)
       }
-      
+
       // Adjust vertically if needed
       if (positionCopy.top + rect.height > viewportHeight) {
-        positionCopy.top = Math.max(0, viewportHeight - rect.height);
+        positionCopy.top = Math.max(0, viewportHeight - rect.height)
       }
     }
-    
-    return positionCopy;
-  }, [position]);
+
+    return positionCopy
+  }, [position])
 
   return (
     <div
