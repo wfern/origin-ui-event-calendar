@@ -170,7 +170,7 @@ export function EventItem({
   return (
     <button
       className={cn(
-        "text-left w-full flex flex-col gap-1 p-2 rounded transition",
+        "text-left w-full flex flex-col gap-1 p-2 rounded transition outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
         getEventColorClasses(eventColor),
         isPast(new Date(event.end)) && "line-through opacity-75",
         className

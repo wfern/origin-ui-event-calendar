@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useMemo } from "react"
 import { addDays, format, isToday } from "date-fns"
-import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
 import { EventItem } from "@/components/calendar/event-item"
 import { RiCalendarEventLine } from "@remixicon/react"
@@ -18,7 +17,7 @@ interface AgendaViewProps {
   onDateSelect: (date: Date) => void
 }
 
-export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }: AgendaViewProps) {
+export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewProps) {
   // Show events for the next days based on constant
   const days = useMemo(() => {
     console.log("Agenda view updating with date:", currentDate.toISOString())
@@ -53,9 +52,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
               <span className="absolute flex items-center h-6 -top-3 left-0 pe-4 sm:pe-4 bg-background text-[10px] sm:text-xs uppercase data-today:font-medium" data-today={isToday(day) || undefined}>{format(day, "d MMM, EEEE")}</span>
               <div className="space-y-2 mt-6">
                 {dayEvents.map((event) => (
-                  <div key={event.id} className="rounded-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
-                    <EventItem event={event} view="agenda" onClick={(e) => handleEventClick(event, e)} />
-                  </div>
+                  <EventItem key={event.id} event={event} view="agenda" onClick={(e) => handleEventClick(event, e)} />
                 ))}
               </div>
             </div>
