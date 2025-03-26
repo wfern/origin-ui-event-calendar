@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { format, isAfter, isBefore } from "date-fns"
+import { format, isBefore } from "date-fns"
 import type { CalendarEvent, EventColor } from "@/components/calendar/types"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -156,6 +156,9 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
+          <DialogDescription className="sr-only">
+            {event?.id ? "Edit the details of this event" : "Add a new event to your calendar"}
+          </DialogDescription>
         </DialogHeader>
         {error && (
           <div className="bg-destructive/15 text-destructive px-3 py-2 rounded-md text-sm">

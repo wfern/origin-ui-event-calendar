@@ -46,9 +46,9 @@ function EventWrapper({
   const isEventInPast = isPast(displayEnd)
 
   return (
-    <div
+    <button
       className={cn(
-        "font-medium select-none backdrop-blur-md transition h-full flex overflow-hidden px-1 sm:px-2",
+        "w-full font-medium select-none backdrop-blur-md transition h-full flex overflow-hidden px-1 sm:px-2 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         isDragging && "shadow-lg",
@@ -58,7 +58,7 @@ function EventWrapper({
       onClick={onClick}
     >
       {children}
-    </div>
+    </button>
   )
 }
 
