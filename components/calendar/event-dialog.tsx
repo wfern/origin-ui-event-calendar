@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { format, isBefore } from "date-fns"
 import type { CalendarEvent, EventColor } from "@/components/calendar/types"
 import { Button } from "@/components/ui/button"
@@ -83,21 +83,22 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     return `${hours}:${minutes.toString().padStart(2, "0")}`
   }
 
-  const generateTimeOptions = () => {
+  // Memoize time options so they're only calculated once
+  const timeOptions = useMemo(() => {
     const options = []
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 15) {
         const formattedHour = hour.toString().padStart(2, "0")
         const formattedMinute = minute.toString().padStart(2, "0")
         const value = `${formattedHour}:${formattedMinute}`
-        const label = format(new Date().setHours(hour, minute), "h:mm a")
+        // Use a fixed date to avoid unnecessary date object creations
+        const date = new Date(2000, 0, 1, hour, minute)
+        const label = format(date, "h:mm a")
         options.push({ value, label })
       }
     }
     return options
-  }
-
-  const timeOptions = generateTimeOptions()
+  }, []) // Empty dependency array ensures this only runs once
 
   const handleSave = () => {
     const start = new Date(startDate)
