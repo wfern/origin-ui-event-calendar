@@ -279,6 +279,7 @@ export function EventDialog({
                   <Calendar
                     mode="single"
                     selected={startDate}
+                    defaultMonth={startDate}
                     onSelect={(date) => {
                       if (date) {
                         setStartDate(date)
@@ -346,6 +347,7 @@ export function EventDialog({
                   <Calendar
                     mode="single"
                     selected={endDate}
+                    defaultMonth={endDate}
                     disabled={{ before: startDate }}
                     onSelect={(date) => {
                       if (date) {
