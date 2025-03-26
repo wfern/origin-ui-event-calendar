@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { addDays, setHours, setMinutes } from "date-fns"
 import { Calendar } from "@/components/calendar/calendar"
+import ThemeToggle from "@/components/theme-toggle"
 import type { CalendarEvent } from "@/components/calendar/types"
 
 // Sample events data with hardcoded times
@@ -96,6 +97,9 @@ export default function Home() {
         onEventUpdate={handleEventUpdate}
         onEventDelete={handleEventDelete}
       />
+      <div className="mt-4">
+        <ThemeToggle />
+      </div>
     </div>
   )
 }
