@@ -1,8 +1,7 @@
 "use client"
 
-import type React from "react"
+import React, { useMemo } from "react"
 
-import { useMemo } from "react"
 import {
   addHours,
   eachHourOfInterval,
@@ -15,7 +14,7 @@ import {
   areIntervalsOverlapping,
 } from "date-fns"
 import { 
-  CalendarEvent, 
+  type CalendarEvent, 
   DraggableEvent, 
   DroppableCell, 
   EventItem,

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { addDays, setHours, setMinutes } from "date-fns"
-import { FullCalendar, CalendarEvent } from "@/components/full-calendar"
+import { FullCalendar, type CalendarEvent } from "@/components/full-calendar"
 import ThemeToggle from "@/components/theme-toggle"
 
 // Sample events data with hardcoded times

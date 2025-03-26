@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-import { useMemo, useEffect, useState } from "react"
+import React, { useMemo, useEffect, useState } from "react"
 
 import {
   eachDayOfInterval,
@@ -15,7 +14,7 @@ import {
   startOfWeek,
 } from "date-fns"
 import { 
-  CalendarEvent, 
+  type CalendarEvent,
   DraggableEvent,
   DroppableCell,
   getEventsForDay,

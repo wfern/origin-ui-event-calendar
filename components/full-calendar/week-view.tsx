@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useMemo } from "react"
+import React, { useMemo } from "react"
 import {
   addHours,
   eachDayOfInterval,
@@ -21,8 +19,7 @@ import {
 } from "date-fns"
 import { cn } from "@/lib/utils"
 import { 
-  CalendarEvent, 
-  CalendarView,
+  type CalendarEvent,
   DraggableEvent,
   DroppableCell,
   EventItem,

@@ -12,16 +12,3 @@ export interface CalendarEvent {
 }
 
 export type EventColor = "sky" | "amber" | "violet" | "rose" | "emerald" | "orange"
-
-export interface TimeSlot {
-  start: Date
-  end: Date
-}
-
-export interface DragState {
-  active: boolean
-  event: CalendarEvent | null
-  initialPosition: { x: number; y: number } | null
-  currentPosition: { x: number; y: number } | null
-}
-

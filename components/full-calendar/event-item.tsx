@@ -5,7 +5,7 @@ import type React from "react"
 import { format, differenceInMinutes, getMinutes, isPast } from "date-fns"
 import { cn } from "@/lib/utils"
 import { 
-  CalendarEvent,
+  type CalendarEvent,
   getEventColorClasses, 
   getBorderRadiusClasses 
 } from "@/components/full-calendar"
