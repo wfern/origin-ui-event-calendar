@@ -24,7 +24,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu"
-import { useMediaQuery } from "@/hooks/use-media-query"
 import { 
   CalendarEvent, 
   CalendarView,
@@ -63,8 +62,6 @@ export function FullCalendar({
   const [view, setView] = useState<CalendarView>(initialView)
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
-  const isMobile = useMediaQuery("(max-width: 640px)")
-  const eventId = useId()
 
   // Add keyboard shortcuts for view switching
   useEffect(() => {
