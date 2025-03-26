@@ -32,7 +32,7 @@ import { DayView } from "@/components/calendar/day-view"
 import { AgendaView } from "@/components/calendar/agenda-view"
 import { EventDialog } from "@/components/calendar/event-dialog"
 import { CalendarDndProvider } from "@/hooks/use-calendar-dnd"
-import { EventHeight, EventGap, WeekCellsHeight } from "@/components/calendar/constants"
+import { EventHeight, EventGap, WeekCellsHeight, AgendaDaysToShow } from "@/components/calendar/constants"
 import { addHoursToDate } from "@/components/calendar/utils"
 
 export interface CalendarProps {
@@ -106,7 +106,7 @@ export function Calendar({
       setCurrentDate(addDays(currentDate, -1))
     } else if (view === "agenda") {
       // For agenda view, go back 30 days (a full month)
-      setCurrentDate(addDays(currentDate, -30))
+      setCurrentDate(addDays(currentDate, -AgendaDaysToShow))
     }
   }
 
@@ -119,7 +119,7 @@ export function Calendar({
       setCurrentDate(addDays(currentDate, 1))
     } else if (view === "agenda") {
       // For agenda view, go forward 30 days (a full month)
-      setCurrentDate(addDays(currentDate, 30))
+      setCurrentDate(addDays(currentDate, AgendaDaysToShow))
     }
   }
 
@@ -228,6 +228,16 @@ export function Calendar({
       }
     } else if (view === "day") {
       return <><span className="min-[480px]:hidden" aria-hidden="true">{format(currentDate, "MMM d, yyyy")}</span><span className="max-[479px]:hidden min-md:hidden" aria-hidden="true">{format(currentDate, "MMMM d, yyyy")}</span><span className="max-md:hidden">{format(currentDate, "EEE MMMM d, yyyy")}</span></>
+    } else if (view === "agenda") {
+      // Show the month range for agenda view
+      const start = currentDate
+      const end = addDays(currentDate, AgendaDaysToShow - 1)
+      
+      if (isSameMonth(start, end)) {
+        return format(start, "MMMM yyyy")
+      } else {
+        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`
+      }
     } else {
       return format(currentDate, "MMMM yyyy")
     }

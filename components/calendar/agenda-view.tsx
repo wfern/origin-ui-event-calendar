@@ -9,6 +9,7 @@ import type { CalendarEvent } from "@/components/calendar/types"
 import { EventItem } from "@/components/calendar/event-item"
 import { RiCalendarEventLine } from "@remixicon/react"
 import { getAgendaEventsForDay } from "@/components/calendar/utils"
+import { AgendaDaysToShow } from "@/components/calendar/constants"
 
 interface AgendaViewProps {
   currentDate: Date
@@ -18,14 +19,11 @@ interface AgendaViewProps {
 }
 
 export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }: AgendaViewProps) {
-  // Show events for the next 30 days
-  const daysToShow = 30
-
+  // Show events for the next days based on constant
   const days = useMemo(() => {
     console.log("Agenda view updating with date:", currentDate.toISOString())
-    return Array.from({ length: daysToShow }, (_, i) => addDays(new Date(currentDate), i))
-  }, [currentDate, daysToShow])
-
+    return Array.from({ length: AgendaDaysToShow }, (_, i) => addDays(new Date(currentDate), i))
+  }, [currentDate])
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
