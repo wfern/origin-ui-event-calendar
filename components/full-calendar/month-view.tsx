@@ -12,6 +12,7 @@ import {
   isToday,
   startOfMonth,
   startOfWeek,
+  addDays,
 } from "date-fns"
 import { 
   type CalendarEvent,
@@ -46,7 +47,12 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
     return eachDayOfInterval({ start: calendarStart, end: calendarEnd })
   }, [currentDate])
 
-  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  const weekdays = useMemo(() => {
+    return Array.from({ length: 7 }).map((_, i) => {
+      const date = addDays(startOfWeek(new Date()), i)
+      return format(date, 'EEE') 
+    })
+  }, [])
 
   const weeks = useMemo(() => {
     const result = []
