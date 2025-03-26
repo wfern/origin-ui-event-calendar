@@ -245,6 +245,7 @@ export function MonthView({
                                   return (
                                     <EventItem
                                       key={event.id}
+                                      onClick={(e) => handleEventClick(event, e)}
                                       event={event}
                                       view="month"
                                       isFirstDay={isFirstDay}
