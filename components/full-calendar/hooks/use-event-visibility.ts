@@ -1,3 +1,5 @@
+"use client"
+
 import { useLayoutEffect, useMemo, useRef, useState } from "react"
 
 interface EventVisibilityOptions {
