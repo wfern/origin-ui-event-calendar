@@ -83,6 +83,18 @@ export function DraggableEvent({
         width: isMultiDayEvent && multiDayWidth ? `${multiDayWidth}%` : undefined,
       }
 
+  // Handle touch start to track where on the event the user touched
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (elementRef.current) {
+      const rect = elementRef.current.getBoundingClientRect()
+      const touch = e.touches[0]
+      setDragHandlePosition({
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top,
+      })
+    }
+  }
+
   return (
     <div
       ref={(node) => {
@@ -90,24 +102,21 @@ export function DraggableEvent({
         if (elementRef) elementRef.current = node
       }}
       style={style}
-      {...listeners}
-      {...attributes}
-      onClick={onClick}
-      onMouseDown={handleMouseDown}
-      onTouchStart={(e) => {
-        if (elementRef.current) {
-          const rect = elementRef.current.getBoundingClientRect()
-          const touch = e.touches[0]
-          setDragHandlePosition({
-            x: touch.clientX - rect.left,
-            y: touch.clientY - rect.top,
-          })
-        }
-      }}
       className="touch-none"
     >
-      <EventItem event={event} view={view} showTime={showTime} isFirstDay={isFirstDay} isLastDay={isLastDay} />
+      <EventItem 
+        event={event} 
+        view={view} 
+        showTime={showTime} 
+        isFirstDay={isFirstDay} 
+        isLastDay={isLastDay}
+        isDragging={isDragging}
+        onClick={onClick}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        dndListeners={listeners}
+        dndAttributes={attributes}
+      />
     </div>
   )
 }
-

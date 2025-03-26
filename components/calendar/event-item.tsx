@@ -25,6 +25,10 @@ interface EventWrapperProps {
   className?: string
   children: React.ReactNode
   currentTime?: Date
+  dndListeners?: any
+  dndAttributes?: any
+  onMouseDown?: (e: React.MouseEvent) => void
+  onTouchStart?: (e: React.TouchEvent) => void
 }
 
 // Shared wrapper component for event styling
@@ -36,7 +40,11 @@ function EventWrapper({
   onClick,
   className,
   children,
-  currentTime
+  currentTime,
+  dndListeners,
+  dndAttributes,
+  onMouseDown,
+  onTouchStart
 }: EventWrapperProps) {
   // Always use the currentTime (if provided) to determine if the event is in the past
   const displayEnd = currentTime
@@ -56,6 +64,10 @@ function EventWrapper({
         className
       )}
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onTouchStart={onTouchStart}
+      {...dndListeners}
+      {...dndAttributes}
     >
       {children}
     </button>
@@ -73,6 +85,10 @@ interface EventItemProps {
   isLastDay?: boolean
   children?: React.ReactNode
   className?: string
+  dndListeners?: any
+  dndAttributes?: any
+  onMouseDown?: (e: React.MouseEvent) => void
+  onTouchStart?: (e: React.TouchEvent) => void
 }
 
 export function EventItem({
@@ -86,6 +102,10 @@ export function EventItem({
   isLastDay = true,
   children,
   className,
+  dndListeners,
+  dndAttributes,
+  onMouseDown,
+  onTouchStart,
 }: EventItemProps) {
   const eventColor = event.color
 
@@ -125,6 +145,10 @@ export function EventItem({
           className
         )}
         currentTime={currentTime}
+        dndListeners={dndListeners}
+        dndAttributes={dndAttributes}
+        onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
       >
         {children || (
           <span className="truncate">
@@ -151,6 +175,10 @@ export function EventItem({
           className
         )}
         currentTime={currentTime}
+        dndListeners={dndListeners}
+        dndAttributes={dndAttributes}
+        onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
       >
         {durationMinutes < 45 ? (
           <div className="truncate">
@@ -176,6 +204,10 @@ export function EventItem({
         className
       )}
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onTouchStart={onTouchStart}
+      {...dndListeners}
+      {...dndAttributes}
     >
       <div className="font-medium text-sm">{event.title}</div>
       <div className="opacity-70 text-xs">
