@@ -16,7 +16,7 @@ A flexible, interactive calendar component built with [v0](https://v0.dev/) UI c
 ## Usage
 
 ```jsx
-import { Calendar } from "@/components/calendar/calendar";
+import { FullCalendar, type CalendarEvent } from "@/components/full-calendar";
 
 function App() {
   const [events, setEvents] = useState([]);
@@ -34,7 +34,7 @@ function App() {
   };
 
   return (
-    <Calendar
+    <FullCalendar
       events={events}
       onEventAdd={handleEventAdd}
       onEventUpdate={handleEventUpdate}
@@ -66,7 +66,7 @@ interface CalendarEvent {
   start: Date;
   end: Date;
   allDay?: boolean;
-  color?: string;
+  color?: "sky" | "amber" | "violet" | "rose" | "emerald" | "orange";
   location?: string;
 }
 ```
@@ -91,12 +91,32 @@ Lists all events in a chronological list format, making it easy to see upcoming 
 
 ## Limitations and Known Issues
 
-This calendar component is not production-ready and has several limitations:
+This calendar component is in early alpha stage and is not recommended for production use. There are several limitations and issues that need to be addressed:
 
+### Drag and Drop Limitations
+- In month view, only the first day of multi-day events is draggable
+- In week and day views, multi-day events are placed in an "All day" section at the top of the view and are not draggable
+- Some drag and drop operations may not update the event data correctly in certain edge cases
+
+### Visual and UX Issues
+- Limited responsiveness on very small screens
+- Event overlapping is not handled optimally in some views
+- Limited keyboard navigation support
+- Accessibility features are incomplete
+
+### Technical Limitations
 - Limited testing across different browsers and devices
 - Performance may degrade with a large number of events
-- Some edge cases in drag-and-drop functionality may not be handled correctly
 - Time zone support is limited
+- No recurring event support
+- No integration with external calendars (Google, Outlook, etc.)
+
+### Other Considerations
+- The component has not undergone extensive testing
+- Error handling is minimal
+- Documentation is still evolving
+
+We are actively working on improving these aspects and welcome contributions to address these limitations.
 
 ## Contributing
 
