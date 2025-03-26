@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import { FullCalendar, type CalendarEvent } from "@/components/full-calendar";
-import ThemeToggle from "@/components/theme-toggle";
-import { addDays, setHours, setMinutes } from "date-fns";
-import { useState } from "react";
+import { useState } from "react"
+import { addDays, setHours, setMinutes } from "date-fns"
+
+import { FullCalendar, type CalendarEvent } from "@/components/full-calendar"
+import ThemeToggle from "@/components/theme-toggle"
 
 // Sample events data with hardcoded times
 const sampleEvents: CalendarEvent[] = [
@@ -70,22 +71,26 @@ const sampleEvents: CalendarEvent[] = [
     color: "amber",
     location: "Conference Room A",
   },
-];
+]
 
 export default function Home() {
-  const [events, setEvents] = useState<CalendarEvent[]>(sampleEvents);
+  const [events, setEvents] = useState<CalendarEvent[]>(sampleEvents)
 
   const handleEventAdd = (event: CalendarEvent) => {
-    setEvents([...events, event]);
-  };
+    setEvents([...events, event])
+  }
 
   const handleEventUpdate = (updatedEvent: CalendarEvent) => {
-    setEvents(events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event)));
-  };
+    setEvents(
+      events.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      )
+    )
+  }
 
   const handleEventDelete = (eventId: string) => {
-    setEvents(events.filter((event) => event.id !== eventId));
-  };
+    setEvents(events.filter((event) => event.id !== eventId))
+  }
 
   return (
     // Add min-h-screen to make it full height
@@ -100,5 +105,5 @@ export default function Home() {
         <ThemeToggle />
       </div>
     </div>
-  );
+  )
 }
