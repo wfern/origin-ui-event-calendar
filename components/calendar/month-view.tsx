@@ -193,25 +193,27 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                               </div>
                             </button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-80 p-0" align="start" style={{ "--event-height": `${EventHeight}px` } as React.CSSProperties}>
-                            <div className="p-2 border-b font-medium">{format(day, "d MMMM yyyy")}</div>
-                            <div className="p-2 max-h-[300px] overflow-auto space-y-1">
-                              {sortEvents(allEvents).map((event) => {
-                                const eventStart = new Date(event.start)
-                                const eventEnd = new Date(event.end)
-                                const isFirstDay = isSameDay(day, eventStart)
-                                const isLastDay = isSameDay(day, eventEnd)
+                          <PopoverContent align="center" className="p-3 max-w-52" style={{ "--event-height": `${EventHeight}px` } as React.CSSProperties}>
+                            <div className="space-y-2">
+                              <div className="text-sm font-medium">{format(day, "EEE d")}</div>
+                              <div className="space-y-1">
+                                {sortEvents(allEvents).map((event) => {
+                                  const eventStart = new Date(event.start)
+                                  const eventEnd = new Date(event.end)
+                                  const isFirstDay = isSameDay(day, eventStart)
+                                  const isLastDay = isSameDay(day, eventEnd)
 
-                                return (
-                                  <EventItem
-                                    key={event.id}
-                                    event={event}
-                                    view="month"
-                                    isFirstDay={isFirstDay}
-                                    isLastDay={isLastDay}
-                                  />
-                                )
-                              })}
+                                  return (
+                                    <EventItem
+                                      key={event.id}
+                                      event={event}
+                                      view="month"
+                                      isFirstDay={isFirstDay}
+                                      isLastDay={isLastDay}
+                                    />
+                                  )
+                                })}
+                              </div>
                             </div>
                           </PopoverContent>
                         </Popover>
