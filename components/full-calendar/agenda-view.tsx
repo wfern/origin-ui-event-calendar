@@ -15,7 +15,6 @@ interface AgendaViewProps {
   currentDate: Date
   events: CalendarEvent[]
   onEventSelect: (event: CalendarEvent) => void
-  onDateSelect: (date: Date) => void
 }
 
 export function AgendaView({

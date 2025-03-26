@@ -35,7 +35,14 @@ type CalendarDndContextType = {
   eventHeight: number | null
   isMultiDay: boolean
   multiDayWidth: number | null
-  dragHandlePosition: { x: number; y: number } | null
+  dragHandlePosition: {
+    x?: number
+    y?: number
+    data?: {
+      isFirstDay?: boolean
+      isLastDay?: boolean
+    }
+  } | null
 }
 
 // Create the context
@@ -72,7 +79,14 @@ export function CalendarDndProvider({
   const [eventHeight, setEventHeight] = useState<number | null>(null)
   const [isMultiDay, setIsMultiDay] = useState(false)
   const [multiDayWidth, setMultiDayWidth] = useState<number | null>(null)
-  const [dragHandlePosition, setDragHandlePosition] = useState<any>(null)
+  const [dragHandlePosition, setDragHandlePosition] = useState<{
+    x?: number
+    y?: number
+    data?: {
+      isFirstDay?: boolean
+      isLastDay?: boolean
+    }
+  } | null>(null)
 
   // Store original event dimensions
   const eventDimensions = useRef<{ height: number }>({ height: 0 })
@@ -125,7 +139,14 @@ export function CalendarDndProvider({
       height?: number
       isMultiDay?: boolean
       multiDayWidth?: number
-      dragHandlePosition?: { x: number; y: number }
+      dragHandlePosition?: {
+        x?: number
+        y?: number
+        data?: {
+          isFirstDay?: boolean
+          isLastDay?: boolean
+        }
+      }
     }
 
     setActiveEvent(calendarEvent)

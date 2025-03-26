@@ -64,7 +64,6 @@ export function FullCalendar({
   initialView = "month",
 }: FullCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [selectedDate, setSelectedDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>(initialView)
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
@@ -134,10 +133,6 @@ export function FullCalendar({
 
   const handleToday = () => {
     setCurrentDate(new Date())
-  }
-
-  const handleDateSelect = (date: Date) => {
-    setSelectedDate(date)
   }
 
   const handleEventSelect = (event: CalendarEvent) => {
@@ -372,7 +367,6 @@ export function FullCalendar({
             <MonthView
               currentDate={currentDate}
               events={events}
-              onDateSelect={handleDateSelect}
               onEventSelect={handleEventSelect}
               onEventCreate={handleEventCreate}
             />
@@ -398,7 +392,6 @@ export function FullCalendar({
               currentDate={currentDate}
               events={events}
               onEventSelect={handleEventSelect}
-              onDateSelect={handleDateSelect}
             />
           )}
         </div>

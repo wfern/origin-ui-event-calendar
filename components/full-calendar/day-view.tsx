@@ -170,7 +170,7 @@ export function DayView({
     })
 
     return result
-  }, [timeEvents, currentDate, WeekCellsHeight])
+  }, [currentDate, timeEvents])
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()

@@ -181,8 +181,6 @@ export function WeekView({
         columns[columnIndex].push({ event, end: adjustedEnd })
 
         // Calculate width and left position based on number of columns
-        const totalColumns = columns.length
-        // First column takes full width, others are indented by 10% and take 90% width
         const width = columnIndex === 0 ? 1 : 0.9
         const left = columnIndex === 0 ? 0 : columnIndex * 0.1
 
@@ -200,7 +198,7 @@ export function WeekView({
     })
 
     return result
-  }, [days, events, WeekCellsHeight])
+  }, [days, events])
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()

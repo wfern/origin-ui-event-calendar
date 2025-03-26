@@ -2,6 +2,8 @@
 
 import { useMemo } from "react"
 import { differenceInMinutes, format, getMinutes, isPast } from "date-fns"
+import type { DraggableAttributes } from "@dnd-kit/core"
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
 
 import { cn } from "@/lib/utils"
 import {
@@ -27,8 +29,8 @@ interface EventWrapperProps {
   className?: string
   children: React.ReactNode
   currentTime?: Date
-  dndListeners?: any
-  dndAttributes?: any
+  dndListeners?: SyntheticListenerMap
+  dndAttributes?: DraggableAttributes
   onMouseDown?: (e: React.MouseEvent) => void
   onTouchStart?: (e: React.TouchEvent) => void
 }
@@ -90,8 +92,8 @@ interface EventItemProps {
   isLastDay?: boolean
   children?: React.ReactNode
   className?: string
-  dndListeners?: any
-  dndAttributes?: any
+  dndListeners?: SyntheticListenerMap
+  dndAttributes?: DraggableAttributes
   onMouseDown?: (e: React.MouseEvent) => void
   onTouchStart?: (e: React.TouchEvent) => void
 }
@@ -115,13 +117,18 @@ export function EventItem({
   const eventColor = event.color
 
   // Use the provided currentTime (for dragging) or the event's actual time
-  const displayStart = currentTime || new Date(event.start)
-  const displayEnd = currentTime
-    ? new Date(
-        new Date(currentTime).getTime() +
-          (new Date(event.end).getTime() - new Date(event.start).getTime())
-      )
-    : new Date(event.end)
+  const displayStart = useMemo(() => {
+    return currentTime || new Date(event.start)
+  }, [currentTime, event.start])
+  
+  const displayEnd = useMemo(() => {
+    return currentTime
+      ? new Date(
+          new Date(currentTime).getTime() +
+            (new Date(event.end).getTime() - new Date(event.start).getTime())
+        )
+      : new Date(event.end)
+  }, [currentTime, event.start, event.end])
 
   // Calculate event duration in minutes
   const durationMinutes = useMemo(() => {

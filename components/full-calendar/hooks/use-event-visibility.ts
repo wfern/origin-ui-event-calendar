@@ -26,17 +26,12 @@ export function useEventVisibility({
 
   // Use layout effect for synchronous measurement before paint
   useLayoutEffect(() => {
-    // Skip if ref is not attached
     if (!contentRef.current) return
 
-    // Function to measure height
+    // Function to update the content height
     const updateHeight = () => {
       if (contentRef.current) {
-        const height = contentRef.current.clientHeight
-        // Only update state if height has changed
-        if (height !== contentHeight) {
-          setContentHeight(height)
-        }
+        setContentHeight(contentRef.current.clientHeight)
       }
     }
 
