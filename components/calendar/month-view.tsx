@@ -185,7 +185,7 @@ export function MonthView({ currentDate, events, onDateSelect, onEventSelect, on
                               onClick={(e) => e.stopPropagation()}
                             >
                               <div
-                                className="h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded"
+                                className="h-[var(--event-height)] flex items-center px-1 sm:px-2 text-[10px] sm:text-xs truncate cursor-pointer select-none text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition"
                               >
                                 <span>
                                   + {remainingCount} <span className="max-sm:sr-only">more</span>
