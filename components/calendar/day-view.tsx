@@ -217,40 +217,6 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
 
         <div className="relative">
-          {/* Time grid */}
-          {hours.map((hour) => {
-            const hourValue = getHours(hour)
-            return (
-              <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
-                {/* Quarter-hour intervals */}
-                {[0, 1, 2, 3].map((quarter) => {
-                  const quarterHourTime = hourValue + quarter * 0.25
-                  return (
-                    <DroppableCell
-                      key={`${hour.toString()}-${quarter}`}
-                      id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}
-                      date={currentDate}
-                      time={quarterHourTime}
-                      className={cn(
-                        "absolute w-full h-[calc(var(--week-cells-height)/4)]",
-                        quarter === 0 && "top-0",
-                        quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
-                        quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
-                        quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
-                      )}
-                      onClick={() => {
-                        const startTime = new Date(currentDate)
-                        startTime.setHours(hourValue)
-                        startTime.setMinutes(quarter * 15)
-                        onEventCreate(startTime)
-                      }}
-                    />
-                  )
-                })}
-              </div>
-            )
-          })}
-
           {/* Positioned events */}
           {positionedEvents.map((positionedEvent) => (
             <div
@@ -288,6 +254,40 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
               </div>
             </div>
           )}
+                    
+          {/* Time grid */}
+          {hours.map((hour) => {
+            const hourValue = getHours(hour)
+            return (
+              <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
+                {/* Quarter-hour intervals */}
+                {[0, 1, 2, 3].map((quarter) => {
+                  const quarterHourTime = hourValue + quarter * 0.25
+                  return (
+                    <DroppableCell
+                      key={`${hour.toString()}-${quarter}`}
+                      id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}
+                      date={currentDate}
+                      time={quarterHourTime}
+                      className={cn(
+                        "absolute w-full h-[calc(var(--week-cells-height)/4)]",
+                        quarter === 0 && "top-0",
+                        quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
+                        quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
+                        quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
+                      )}
+                      onClick={() => {
+                        const startTime = new Date(currentDate)
+                        startTime.setHours(hourValue)
+                        startTime.setMinutes(quarter * 15)
+                        onEventCreate(startTime)
+                      }}
+                    />
+                  )
+                })}
+              </div>
+            )
+          })}
         </div>
       </div>
     </>

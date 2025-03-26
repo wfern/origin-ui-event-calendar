@@ -280,39 +280,6 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             className="border-r border-border/70 last:border-r-0 relative"
             data-today={isToday(day) || undefined}
           >
-            {hours.map((hour) => {
-              const hourValue = getHours(hour)
-              return (
-                <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
-                  {/* Quarter-hour intervals */}
-                  {[0, 1, 2, 3].map((quarter) => {
-                    const quarterHourTime = hourValue + quarter * 0.25
-                    return (
-                      <DroppableCell
-                        key={`${hour.toString()}-${quarter}`}
-                        id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
-                        date={day}
-                        time={quarterHourTime}
-                        className={cn(
-                          "absolute w-full h-[calc(var(--week-cells-height)/4)]",
-                          quarter === 0 && "top-0",
-                          quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
-                          quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
-                          quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
-                        )}
-                        onClick={() => {
-                          const startTime = new Date(day)
-                          startTime.setHours(hourValue)
-                          startTime.setMinutes(quarter * 15)
-                          onEventCreate(startTime)
-                        }}
-                      />
-                    )
-                  })}
-                </div>
-              )
-            })}
-
             {/* Positioned events */}
             {processedDayEvents[dayIndex].map((positionedEvent) => (
               <div
@@ -350,7 +317,39 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                   <div className="w-full h-[2px] bg-primary"></div>
                 </div>
               </div>
-            )}
+            )}            
+            {hours.map((hour) => {
+              const hourValue = getHours(hour)
+              return (
+                <div key={hour.toString()} className="h-[var(--week-cells-height)] border-b border-border/70 last:border-b-0 relative">
+                  {/* Quarter-hour intervals */}
+                  {[0, 1, 2, 3].map((quarter) => {
+                    const quarterHourTime = hourValue + quarter * 0.25
+                    return (
+                      <DroppableCell
+                        key={`${hour.toString()}-${quarter}`}
+                        id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
+                        date={day}
+                        time={quarterHourTime}
+                        className={cn(
+                          "absolute w-full h-[calc(var(--week-cells-height)/4)]",
+                          quarter === 0 && "top-0",
+                          quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
+                          quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
+                          quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]",
+                        )}
+                        onClick={() => {
+                          const startTime = new Date(day)
+                          startTime.setHours(hourValue)
+                          startTime.setMinutes(quarter * 15)
+                          onEventCreate(startTime)
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+              )
+            })}
           </div>
         ))}
       </div>
