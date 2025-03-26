@@ -35,7 +35,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
   const hasEvents = days.some(day => getAgendaEventsForDay(events, day).length > 0);
 
   return (
-    <div className="p-4">
+    <div className="px-4 border-t border-border/70">
       {!hasEvents ? (
         <div className="flex flex-col items-center justify-center py-16 min-h-[70svh] text-center">
           <RiCalendarEventLine size={32} className="text-muted-foreground/50 mb-2" />
@@ -49,19 +49,9 @@ export function AgendaView({ currentDate, events, onEventSelect, onDateSelect }:
           if (dayEvents.length === 0) return null
 
           return (
-            <div key={day.toString()} className="mb-6">
-              <div
-                className={cn("flex items-center gap-2 mb-2 cursor-pointer", isToday(day) && "text-primary font-medium")}
-                onClick={() => onDateSelect(day)}
-              >
-                <div className="text-sm font-medium">{format(day, "d")}</div>
-                <div>
-                <div>{format(day, "EEEE")}</div>
-                  <div className="text-sm text-muted-foreground">{format(day, "MMMM yyyy")}</div>
-                </div>
-              </div>
-
-              <div className="space-y-2 pl-10">
+            <div key={day.toString()} className="my-12 border-t border-border/70 relative">
+              <span className="absolute flex items-center h-6 -top-3 left-0 pe-4 sm:pe-4 bg-background text-[10px] sm:text-xs uppercase data-today:font-medium" data-today={isToday(day) || undefined}>{format(day, "d MMM, EEEE")}</span>
+              <div className="space-y-2 mt-6">
                 {dayEvents.map((event) => (
                   <div key={event.id} className="rounded-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
                     <EventItem event={event} view="agenda" onClick={(e) => handleEventClick(event, e)} />

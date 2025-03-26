@@ -5,7 +5,6 @@ import type React from "react"
 import { format, differenceInMinutes, getMinutes, isPast } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/components/calendar/types"
-import { ClockIcon, MapPinIcon } from "lucide-react"
 import { useMemo } from "react"
 import { getEventColorClasses, getBorderRadiusClasses } from "@/components/calendar/utils"
 
@@ -43,7 +42,7 @@ function EventWrapper({
   const displayEnd = currentTime
     ? new Date(new Date(currentTime).getTime() + (new Date(event.end).getTime() - new Date(event.start).getTime()))
     : new Date(event.end)
-  
+
   const isEventInPast = isPast(displayEnd)
 
   return (
@@ -131,7 +130,7 @@ export function EventItem({
           <span className="truncate">
             {!event.allDay && <span className="text-[11px] opacity-70 truncate">{formatTimeWithOptionalMinutes(displayStart)} </span>}
             {event.title}
-          </span>    
+          </span>
         )}
       </EventWrapper>
     )
@@ -160,7 +159,7 @@ export function EventItem({
         ) : (
           <>
             <div className="font-medium truncate">{event.title}</div>
-            {showTime && <div className="text-[11px] opacity-70 truncate">{getEventTime()}</div>}          
+            {showTime && <div className="text-[11px] opacity-70 truncate">{getEventTime()}</div>}
           </>
         )}
       </EventWrapper>
@@ -169,33 +168,34 @@ export function EventItem({
 
   // Agenda view - kept separate since it's significantly different
   return (
-    <button 
+    <button
       className={cn(
-        "text-left w-full p-2 rounded font-medium backdrop-blur-md transition", 
-        getEventColorClasses(eventColor), 
+        "text-left w-full flex flex-col gap-1 p-2 rounded transition",
+        getEventColorClasses(eventColor),
         isPast(new Date(event.end)) && "line-through opacity-75",
         className
-      )} 
+      )}
       onClick={onClick}
     >
-      <div className="font-medium">{event.title}</div>
-      <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <ClockIcon className="size-3" />
-          {event.allDay ? (
-            <span>All day</span>
-          ) : (
-            <span>{formatTimeWithOptionalMinutes(displayStart)} - {formatTimeWithOptionalMinutes(displayEnd)}</span>
-          )}
-        </div>
+      <div className="font-medium text-sm">{event.title}</div>
+      <div className="opacity-70 text-xs">
+        {event.allDay ? (
+          <span>All day</span>
+        ) : (
+          <span className="uppercase">{formatTimeWithOptionalMinutes(displayStart)} - {formatTimeWithOptionalMinutes(displayEnd)}</span>
+        )}
         {event.location && (
-          <div className="flex items-center gap-1">
-            <MapPinIcon className="size-3" />
-            {event.location}
-          </div>
+          <>
+            <span className="opacity-35 px-1"> · </span>
+            <span>{event.location}</span>
+          </>
         )}
       </div>
-      {event.description && <div className="mt-1 text-sm">{event.description}</div>}
+      {event.description && (
+        <div className="opacity-85 my-1">
+          <div className="text-sm">{event.description}</div>
+        </div>
+      )}
     </button>
   )
 }
