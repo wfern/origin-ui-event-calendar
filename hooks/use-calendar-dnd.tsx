@@ -295,7 +295,6 @@ export function CalendarDndProvider({ children, onEventUpdate }: CalendarDndProv
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
-      modifiers={[restrictToWindowEdges]}
     >
       <CalendarDndContext.Provider
         value={{
