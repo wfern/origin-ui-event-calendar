@@ -10,7 +10,7 @@ import {
   getBorderRadiusClasses,
   getEventColorClasses,
   type CalendarEvent,
-} from "@/components/full-calendar"
+} from "@/components/event-calendar"
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)

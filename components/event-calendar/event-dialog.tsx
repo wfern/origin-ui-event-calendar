@@ -32,7 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import type { CalendarEvent, EventColor } from "@/components/full-calendar"
+import type { CalendarEvent, EventColor } from "@/components/event-calendar"
 
 interface EventDialogProps {
   event: CalendarEvent | null

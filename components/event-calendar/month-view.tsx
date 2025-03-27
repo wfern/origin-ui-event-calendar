@@ -31,7 +31,7 @@ import {
   getSpanningEventsForDay,
   sortEvents,
   useEventVisibility,
-} from "@/components/full-calendar"
+} from "@/components/event-calendar"
 
 interface MonthViewProps {
   currentDate: Date

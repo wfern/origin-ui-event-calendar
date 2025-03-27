@@ -16,7 +16,7 @@ A flexible, interactive calendar component built with [v0](https://v0.dev/) UI c
 ## Usage
 
 ```jsx
-import { FullCalendar, type CalendarEvent } from "@/components/full-calendar";
+import { EventCalendar, type CalendarEvent } from "@/components/event-calendar";
 
 function App() {
   const [events, setEvents] = useState([]);
@@ -34,7 +34,7 @@ function App() {
   };
 
   return (
-    <FullCalendar
+    <EventCalendar
       events={events}
       onEventAdd={handleEventAdd}
       onEventUpdate={handleEventUpdate}

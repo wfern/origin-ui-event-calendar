@@ -44,9 +44,9 @@ import {
   MonthView,
   WeekCellsHeight,
   WeekView,
-} from "@/components/full-calendar"
+} from "@/components/event-calendar"
 
-export interface FullCalendarProps {
+export interface EventCalendarProps {
   events?: CalendarEvent[]
   onEventAdd?: (event: CalendarEvent) => void
   onEventUpdate?: (event: CalendarEvent) => void
@@ -55,14 +55,14 @@ export interface FullCalendarProps {
   initialView?: CalendarView
 }
 
-export function FullCalendar({
+export function EventCalendar({
   events = [],
   onEventAdd,
   onEventUpdate,
   onEventDelete,
   className,
   initialView = "month",
-}: FullCalendarProps) {
+}: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>(initialView)
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)

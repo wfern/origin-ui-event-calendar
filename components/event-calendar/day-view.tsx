@@ -22,7 +22,7 @@ import {
   useCurrentTimeIndicator,
   WeekCellsHeight,
   type CalendarEvent,
-} from "@/components/full-calendar"
+} from "@/components/event-calendar"
 
 interface DayViewProps {
   currentDate: Date
