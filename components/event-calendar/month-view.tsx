@@ -20,7 +20,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import {
-  type CalendarEvent,
   DraggableEvent,
   DroppableCell,
   EventGap,
@@ -31,6 +30,7 @@ import {
   getSpanningEventsForDay,
   sortEvents,
   useEventVisibility,
+  type CalendarEvent,
 } from "@/components/event-calendar"
 
 interface MonthViewProps {
