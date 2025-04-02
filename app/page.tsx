@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { addDays, subDays, setHours, setMinutes } from "date-fns"
+import { addDays, setHours, setMinutes, subDays } from "date-fns"
 
 import { EventCalendar, type CalendarEvent } from "@/components/event-calendar"
 import ThemeToggle from "@/components/theme-toggle"
@@ -36,7 +36,7 @@ const sampleEvents: CalendarEvent[] = [
     allDay: true,
     color: "orange",
     location: "Main Conference Hall",
-  },  
+  },
   {
     id: "4",
     title: "Team Meeting",
