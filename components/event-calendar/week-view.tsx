@@ -185,7 +185,7 @@ export function WeekView({
         currentColumn.push({ event, end: adjustedEnd })
 
         // Calculate width and left position based on number of columns
-        const width = columnIndex === 0 ? 1 : 0.9
+        const width = columnIndex === 0 ? 1 : 1 - (columnIndex * 0.1)
         const left = columnIndex === 0 ? 0 : columnIndex * 0.1
 
         positionedEvents.push({
