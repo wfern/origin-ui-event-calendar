@@ -158,7 +158,7 @@ export function DayView({
       currentColumn.push({ event, end: adjustedEnd })
 
       // First column takes full width, others are indented by 10% and take 90% width
-      const width = columnIndex === 0 ? 1 : 0.9
+      const width = columnIndex === 0 ? 1 : 1 - (columnIndex * 0.1)
       const left = columnIndex === 0 ? 0 : columnIndex * 0.1
 
       result.push({
