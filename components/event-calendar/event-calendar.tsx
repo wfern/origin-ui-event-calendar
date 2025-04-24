@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { RiCalendarCheckLine } from "@remixicon/react"
 import {
   addDays,
+  addHours,
   addMonths,
   addWeeks,
   endOfWeek,
@@ -31,7 +32,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  addHoursToDate,
   AgendaDaysToShow,
   AgendaView,
   CalendarDndProvider,
@@ -163,7 +163,7 @@ export function EventCalendar({
       id: "",
       title: "",
       start: startTime,
-      end: addHoursToDate(startTime, 1),
+      end: addHours(startTime, 1),
       allDay: false,
     }
     setSelectedEvent(newEvent)
