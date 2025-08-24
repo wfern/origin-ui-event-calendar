@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react"
 import { format, isBefore } from "date-fns"
 
@@ -48,13 +48,15 @@ interface EventDialogProps {
   onDelete: (eventId: string) => void
 }
 
-export function EventDialog({
+export const EventDialog = memo(function EventDialog({
   event,
   isOpen,
   onClose,
   onSave,
   onDelete,
 }: EventDialogProps) {
+  // "use memo"
+
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [startDate, setStartDate] = useState<Date>(new Date())
@@ -72,6 +74,8 @@ export function EventDialog({
   useEffect(() => {
     console.log("EventDialog received event:", event)
   }, [event])
+
+  console.log("event-dialog")
 
   useEffect(() => {
     if (event) {
@@ -324,13 +328,18 @@ export function EventDialog({
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
                   <SelectContent>
-                    {timeOptions.map((option) => (
+                    {/* {timeOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
-                    ))}
+                    ))} */}
                   </SelectContent>
                 </Select>
+                {/* <FuckingSelect
+                  timeOptions={timeOptions}
+                  value={startTime}
+                  onChange={setStartTime}
+                /> */}
               </div>
             )}
           </div>
@@ -384,7 +393,7 @@ export function EventDialog({
             {!allDay && (
               <div className="min-w-28 *:not-first:mt-1.5">
                 <Label htmlFor="end-time">End Time</Label>
-                <Select value={endTime} onValueChange={setEndTime}>
+                {/* <Select value={endTime} onValueChange={setEndTime}>
                   <SelectTrigger id="end-time">
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
@@ -395,7 +404,7 @@ export function EventDialog({
                       </SelectItem>
                     ))}
                   </SelectContent>
-                </Select>
+                </Select> */}
               </div>
             )}
           </div>
@@ -464,4 +473,31 @@ export function EventDialog({
       </DialogContent>
     </Dialog>
   )
-}
+})
+
+const FuckingSelect = memo(function FuckingSelect({
+  timeOptions,
+  value,
+  onChange,
+}: {
+  timeOptions: { value: string; label: string }[]
+  value: string
+  onChange: (value: string) => void
+}) {
+  console.log("render fucking select")
+
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger id="start-time">
+        <SelectValue placeholder="Select time" />
+      </SelectTrigger>
+      <SelectContent>
+        {timeOptions.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+})

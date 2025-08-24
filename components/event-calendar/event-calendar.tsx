@@ -218,6 +218,13 @@ export function EventCalendar({
     })
   }
 
+  const handleDialogClose = () => {
+    setIsEventDialogOpen(false)
+    setSelectedEvent(null)
+  }
+
+  console.log("event-calendar")
+
   const viewTitle = useMemo(() => {
     if (view === "month") {
       return format(currentDate, "MMMM yyyy")
@@ -395,18 +402,14 @@ export function EventCalendar({
             />
           )}
         </div>
-
-        <EventDialog
-          event={selectedEvent}
-          isOpen={isEventDialogOpen}
-          onClose={() => {
-            setIsEventDialogOpen(false)
-            setSelectedEvent(null)
-          }}
-          onSave={handleEventSave}
-          onDelete={handleEventDelete}
-        />
       </CalendarDndProvider>
+      <EventDialog
+        event={selectedEvent}
+        isOpen={isEventDialogOpen}
+        onClose={handleDialogClose}
+        onSave={handleEventSave}
+        onDelete={handleEventDelete}
+      />
     </div>
   )
 }

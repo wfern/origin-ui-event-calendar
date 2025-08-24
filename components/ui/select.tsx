@@ -49,7 +49,7 @@ function SelectTrigger({
   )
 }
 
-function SelectContent({
+const SelectContent = React.memo(function SelectContent({
   className,
   children,
   position = "popper",
@@ -81,7 +81,7 @@ function SelectContent({
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
   )
-}
+})
 
 function SelectLabel({
   className,
